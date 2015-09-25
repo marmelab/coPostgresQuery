@@ -1,0 +1,25 @@
+{
+  "name": "co-postgres",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node_modules/mocha/bin/mocha --harmony test/*.js test/**/*.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^3.3.0",
+    "co-mocha": "^1.1.2",
+    "eslint": "^1.5.1",
+    "mocha": "^2.3.3",
+    "moment": "^2.10.6"
+  },
+  "dependencies": {
+    "babel": "^5.8.23",
+    "co": "^4.6.0",
+    "co-pg": "^1.3.1",
+    "node-postgres-named": "^2.2.0",
+    "pg": "^4.4.2"
+  }
+}

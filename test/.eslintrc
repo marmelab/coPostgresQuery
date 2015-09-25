@@ -1,0 +1,13 @@
+{
+    "globals": {
+        "describe": false,
+        "before": false,
+        "beforeEach": false,
+        "it": false,
+        "after": false,
+        "afterEach": false,
+        "db": false,
+        "assert": false,
+        "fixtureLoader": false
+    }
+}

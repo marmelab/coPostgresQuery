@@ -1,0 +1,15 @@
+test:
+  build: ./
+  volumes:
+    - .:/app
+  working_dir: /app
+  command: make test
+  links:
+    - db
+
+db:
+  image: postgres:9.4
+  volumes:
+    - .:/app
+  ports:
+    - 5432:5432
