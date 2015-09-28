@@ -27,15 +27,15 @@ module.exports = function (client, table, historyTable, fields, idFieldName, idA
 
         var query = 'UPDATE ' + historyTable + ' SET ' + setQuery.join(', ') +
          ' WHERE version_id IN (SELECT version_id FROM ' + historyTable + ' WHERE id = $id ORDER BY version_id DESC LIMIT 1) ';
-        yield client.query_(query, parameters);
+        yield client.query(query, parameters);
     };
 
     var getColumnNames = function* getColumnNames() {
         var columnNamesQuery = 'SELECT column_name FROM information_schema.columns WHERE table_name = $tableName';
 
-        return (yield client.query_(columnNamesQuery, {
+        return (yield client.query({sql: columnNamesQuery, parameters: {
             tableName: table
-        })).rows.map(function (row) {
+        }})).map(function (row) {
             return row.column_name;
         });
     };
@@ -53,11 +53,12 @@ module.exports = function (client, table, historyTable, fields, idFieldName, idA
         if (!newVersion) {
             yield updateLastVersion(entity);
         } else {
-            var numVersion = (yield client.query_(
-              'SELECT COUNT(version_id) FROM ' + historyTable + ' WHERE id=$id GROUP BY id',
-          {
-              id: entity.id
-          })).rows[0];
+            var numVersion = (yield client.query({
+                sql: 'SELECT COUNT(version_id) FROM ' + historyTable + ' WHERE id=$id GROUP BY id',
+                parameters: {
+                    id: entity.id
+                }
+            }))[0];
             numVersion = numVersion ? numVersion.count : 0;
             numVersion++;
             var subSelect =
@@ -68,7 +69,7 @@ module.exports = function (client, table, historyTable, fields, idFieldName, idA
               ' WHERE id = $id';
 
             var query = 'INSERT INTO ' + historyTable + ' (' + columnNames.join(', ') + ', version_trigger, version) (' + subSelect + ') ';
-            yield client.query_(query, {
+            yield client.query(query, {
                 id: entity.id
             });
         }

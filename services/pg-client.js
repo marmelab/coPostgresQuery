@@ -10,18 +10,24 @@ export default function* pgClient(dsn) {
     var client = connect[0];
 
     named.patch(client);
-    var query = client.query;
 
-    client.query_ = function (queryString, values) {
+    const query_ = function (queryString, values) {
         return function (cb) {
-            query(queryString, values, cb);
+            client.query(queryString, values, cb);
         };
     };
 
-    client.id = (yield client.query_('SELECT pg_backend_pid()')).rows[0].pg_backend_pid;
+    const query = function* ({ sql, parameters }) {
+        if (!sql) {
+            throw new Error('sql cannot be null');
+        }
+        return (yield query_(sql, parameters)).rows;
+    };
+
+    client.id = (yield query_('SELECT pg_backend_pid()')).rows[0].pg_backend_pid;
 
     return {
-        client: client,
-        done: connect[1]
+        done: connect[1],
+        query
     };
 }

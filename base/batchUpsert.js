@@ -9,7 +9,7 @@ module.exports = function (client, table, primaryFields, secondaryFields, autoIn
 
     return function* batchUpsert(entities) {
         try {
-            yield client.query_('CREATE TEMPORARY TABLE ' + tempTable + ' AS SELECT * FROM ' + table + ' WHERE true = false;'); // copy the table structure without the constraint
+            yield client.query('CREATE TEMPORARY TABLE ' + tempTable + ' AS SELECT * FROM ' + table + ' WHERE true = false;'); // copy the table structure without the constraint
             yield tempBatchInsert(entities);
 
             var setQuery = secondaryFields.map(function (field) {
@@ -41,12 +41,12 @@ module.exports = function (client, table, primaryFields, secondaryFields, autoIn
     ');'
 );
             var error;
-            yield client.query_(query);
+            yield client.query(query);
         } catch (e) {
             error = e;
         }
 
-        yield client.query_('DROP TABLE ' + tempTable);
+        yield client.query('DROP TABLE ' + tempTable);
 
         if (error) {
             throw error;

@@ -10,7 +10,7 @@ describe('upsertOne', function () {
         let tag;
 
         before(function* () {
-            upsertOneQuery = upsertOne(db.client, 'tag', ['id'], ['name'], 'id', ['id', 'name']);
+            upsertOneQuery = upsertOne(db, 'tag', ['id'], ['name'], 'id', ['id', 'name']);
         });
 
         beforeEach(function* () {
@@ -22,7 +22,7 @@ describe('upsertOne', function () {
 
             yield upsertOneQuery(newTag);
 
-            var updatedTags = (yield db.client.query_('SELECT * from tag ORDER BY id')).rows;
+            var updatedTags = (yield db.query({ sql: 'SELECT * from tag ORDER BY id'})).rows;
 
             assert.deepEqual(updatedTags, [
                 { id: tag.id, name: 'renamedTag1' }
@@ -34,8 +34,8 @@ describe('upsertOne', function () {
 
             yield upsertOneQuery(newTag);
 
-            var updatedTags = (yield db.client.query_('SELECT * from tag ORDER BY id')).rows;
-            var lastId = (yield db.client.query_('SELECT id FROM tag ORDER BY id DESC LIMIT 1'))
+            var updatedTags = (yield db.query({ sql: 'SELECT * from tag ORDER BY id'})).rows;
+            var lastId = (yield db.query({ sql: 'SELECT id FROM tag ORDER BY id DESC LIMIT 1'}))
             .rows.map(lastTag => lastTag.id)[0];
 
             assert.deepEqual(updatedTags, [
@@ -45,7 +45,7 @@ describe('upsertOne', function () {
         });
 
         afterEach(function* () {
-            yield db.client.query_('TRUNCATE tag CASCADE');
+            yield db.query({ sql: 'TRUNCATE tag CASCADE'});
         });
     });
 
@@ -53,7 +53,7 @@ describe('upsertOne', function () {
         const currentMonth = moment().endOf('month').startOf('day').toDate();
         let authors;
         before(function* () {
-            upsertOneQuery = upsertOne(db.client, 'post', ['author', 'date'], ['title'], null, ['author', 'date', 'title']);
+            upsertOneQuery = upsertOne(db, 'post', ['author', 'date'], ['title'], null, ['author', 'date', 'title']);
 
             authors = yield [
                 { name: 'doe', firstname: 'john'},
@@ -70,7 +70,7 @@ describe('upsertOne', function () {
 
             yield upsertOneQuery(newPost);
 
-            var updatedPost = (yield db.client.query_('SELECT author, date, title from post ORDER BY id')).rows;
+            var updatedPost = (yield db.query({ sql: 'SELECT author, date, title from post ORDER BY id'})).rows;
 
             assert.deepEqual(updatedPost, [
                 { author: authors[0].id, date: currentMonth, title: '1 vs 100' }
@@ -82,7 +82,7 @@ describe('upsertOne', function () {
 
             yield upsertOneQuery(newPost);
 
-            var updatedPost = (yield db.client.query_('SELECT author, date, title from post ORDER BY id')).rows;
+            var updatedPost = (yield db.query({ sql: 'SELECT author, date, title from post ORDER BY id'})).rows;
 
             assert.deepEqual(updatedPost, [
                 { author: authors[0].id, date: currentMonth, title: '1 vs 1' },
@@ -91,11 +91,11 @@ describe('upsertOne', function () {
         });
 
         afterEach(function* () {
-            yield db.client.query_('TRUNCATE post CASCADE');
+            yield db.query({ sql: 'TRUNCATE post CASCADE'});
         });
 
         after(function* () {
-            yield db.client.query_('TRUNCATE author CASCADE');
+            yield db.query({ sql: 'TRUNCATE author CASCADE'});
         });
     });
 

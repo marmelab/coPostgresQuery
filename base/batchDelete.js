@@ -1,20 +1,15 @@
 'use strict';
 
-module.exports = function (client, table, fields, idFieldName) {
+import batchDeleteQueryFactory from '../queries/batchDelete';
 
-    return function* batchInsert(ids) {
-        var idsQuery = ids.reduce(function (query, id, index) {
-            var fieldName = idFieldName + index;
-            query.parameters[fieldName] = id;
-            query.sql.push('$' + fieldName);
+module.exports = function (table, fields, idFieldName) {
+    const batchDeleteQuery = batchDeleteQueryFactory(table, fields, idFieldName);
 
-            return query;
-        }, {
-            parameters: {},
-            sql: []
-        });
-        var query = 'DELETE FROM ' + table + ' WHERE ' + idFieldName + ' IN (' + idsQuery.sql.join(', ') + ') RETURNING ' + fields.join(', ');
+    return function (db) {
+        return function* batchInsert(ids) {
 
-        return (yield client.query_(query, idsQuery.parameters)).rows;
+            return yield db.query(batchDeleteQuery(ids));
+        };
     };
+
 };

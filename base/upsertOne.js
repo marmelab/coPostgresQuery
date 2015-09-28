@@ -33,8 +33,8 @@ module.exports = function (client, table, primaryFields, secondaryFields, autoIn
             SELECT * FROM upsert
         )`;
 
-        yield client.query_(query, entity);
+        yield client.query(query, entity);
 
-        return yield client.query_(`SELECT ${returningFields.join(', ')} FROM ${table} WHERE ${whereQuery}`, entity);
+        return yield client.query(`SELECT ${returningFields.join(', ')} FROM ${table} WHERE ${whereQuery}`, entity);
     };
 };

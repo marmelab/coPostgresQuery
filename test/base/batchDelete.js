@@ -2,11 +2,11 @@
 
 import batchDelete from '../../base/batchDelete';
 
-describe('batchDelete', function () {
+describe.only('batchDelete', function () {
     var ids, tags, batchDeleteQuery;
 
     before(function* () {
-        batchDeleteQuery = batchDelete(db.client, 'tag', ['id', 'name'], 'id');
+        batchDeleteQuery = batchDelete('tag', ['id', 'name'], 'id')(db);
     });
 
     beforeEach(function* () {
@@ -15,7 +15,6 @@ describe('batchDelete', function () {
             { name: 'tag2' },
             { name: 'tag3' }
         ].map(fixtureLoader.addTag);
-
         ids = tags.map(tag => tag.id);
     });
 
@@ -24,11 +23,11 @@ describe('batchDelete', function () {
 
         assert.deepEqual(result, tags.slice(1));
 
-        var remainingTags = (yield db.client.query_('SELECT * from tag ORDER BY id')).rows;
+        var remainingTags = yield db.query({ sql: 'SELECT * from tag ORDER BY id' });
         assert.deepEqual(remainingTags, tags.slice(0, 1));
     });
 
     afterEach(function* () {
-        yield db.client.query_('TRUNCATE tag CASCADE');
+        yield db.query({sql: 'TRUNCATE tag CASCADE'});
     });
 });

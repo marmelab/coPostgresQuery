@@ -97,9 +97,9 @@ module.exports = function (client, tableName, exposedFields, searchableFields, s
             params.offset = offset || 0;
         }
 
-        var results = yield client.query_(query, params);
+        var results = yield client.query(query, params);
 
-        return results.rows;
+        return results;
     }
 
     return selectPage;

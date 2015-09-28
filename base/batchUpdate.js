@@ -6,7 +6,7 @@ module.exports = function (client, table, fields, idFieldName) {
     var tempBatchInsert = batchInsert(client, tempTable, fields, idFieldName, false, null, true);
 
     return function* batchUpdate(entities) {
-        yield client.query_('CREATE TEMPORARY TABLE ' + tempTable + ' AS SELECT * FROM ' + table + ' WHERE true = false;'); // copy the table structure without the constraint
+        yield client.query('CREATE TEMPORARY TABLE ' + tempTable + ' AS SELECT * FROM ' + table + ' WHERE true = false;'); // copy the table structure without the constraint
 
         yield tempBatchInsert(entities);
 
@@ -24,11 +24,11 @@ module.exports = function (client, table, fields, idFieldName) {
 
         var error;
         try {
-            entities = (yield client.query_(query)).rows;
+            entities = yield client.query(query);
         } catch (e) {
             error = e;
         }
-        yield client.query_('DROP TABLE ' + tempTable);
+        yield client.query('DROP TABLE ' + tempTable);
 
         if (error) {
             throw error;

@@ -33,9 +33,9 @@ var base = function (client, tableName, exposedFields, searchableFields, sortabl
     var removeOne = require('./removeOne')(client, tableName, exposedFields, idFieldName, version);
 
     function* exists(entityId) {
-        var result = yield client.query_('SELECT EXISTS(SELECT 1 FROM ' + tableName + ' WHERE ' + idFieldName + ' = $id)', {id: entityId});
+        var result = yield client.query('SELECT EXISTS(SELECT 1 FROM ' + tableName + ' WHERE ' + idFieldName + ' = $id)', {id: entityId});
 
-        return result.rows[0].exists;
+        return result[0].exists;
     }
 
     return {

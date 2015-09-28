@@ -11,7 +11,7 @@ module.exports = function (client, tableName, fields, idFieldName, version) {
         }
 
         var query = 'DELETE FROM ' + tableName + ' WHERE ' + idFieldName + ' = $id RETURNING ' + fields.join(', ');
-        var entity = (yield client.query_(query, { id: id })).rows[0];
+        var entity = yield client.query(query, { id: id })[0];
         if (!entity) {
             throw new Error('not found');
         }

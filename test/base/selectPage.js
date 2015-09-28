@@ -7,7 +7,7 @@ describe('selectPage', function () {
 
     var mockClientFactory = function () {
         return {
-            query_: function* (query, params) {
+            query: function* (query, params) {
                 this.query = query;
                 this.params = params;
 

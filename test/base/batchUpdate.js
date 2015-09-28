@@ -6,7 +6,7 @@ describe('batchUpdate', function () {
     var ids, batchUpdateQuery;
 
     before(function* () {
-        batchUpdateQuery = batchUpdate(db.client, 'tag', ['id', 'name'], 'id', true);
+        batchUpdateQuery = batchUpdate(db, 'tag', ['id', 'name'], 'id', true);
     });
 
     beforeEach(function* () {
@@ -29,7 +29,7 @@ describe('batchUpdate', function () {
 
         assert.deepEqual(result, newTags);
 
-        var updatedTags = (yield db.client.query_('SELECT * from tag ORDER BY id')).rows;
+        var updatedTags = yield db.query({ sql: 'SELECT * from tag ORDER BY id'});
 
         assert.deepEqual(updatedTags, [
             { id: ids[0], name: 'newTag1' },
@@ -50,7 +50,7 @@ describe('batchUpdate', function () {
             { id: ids[1], name: 'newTag2' }
         ]);
 
-        var updatedTags = (yield db.client.query_('SELECT * from tag ORDER BY id')).rows;
+        var updatedTags = yield db.query({ sql: 'SELECT * from tag ORDER BY id'});
 
         assert.deepEqual(updatedTags, [
             { id: ids[0], name: 'newTag1' },
@@ -67,7 +67,7 @@ describe('batchUpdate', function () {
 
         assert.deepEqual(result, []);
 
-        var updatedTags = (yield db.client.query_('SELECT * from tag ORDER BY id')).rows;
+        var updatedTags = yield db.query({ sql: 'SELECT * from tag ORDER BY id'});
 
         assert.deepEqual(updatedTags, [
             { id: ids[0], name: 'tag1' },
@@ -77,6 +77,6 @@ describe('batchUpdate', function () {
     });
 
     afterEach(function* () {
-        yield db.client.query_('TRUNCATE tag CASCADE');
+        yield db.query({ sql: 'TRUNCATE tag CASCADE'});
     });
 });

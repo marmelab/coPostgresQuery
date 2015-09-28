@@ -25,8 +25,8 @@ module.exports = function (client, tableName, fields, idFieldName, idAutoGenerat
             shouldTriggerNewVersion = true;
         }
 
-        var query = 'UPDATE ' + tableName + ' SET ' + setQuery.join(', ') + ' WHERE ' + idFieldName + ' = $' + idFieldName + ' RETURNING ' + returningFields.join(', ');
-        var entity = (yield client.query_(query, parameters)).rows[0];
+        var sql = 'UPDATE ' + tableName + ' SET ' + setQuery.join(', ') + ' WHERE ' + idFieldName + ' = $' + idFieldName + ' RETURNING ' + returningFields.join(', ');
+        var entity = yield client.query({ sql, parameters })[0];
         if (!entity) {
             throw new Error('not found');
         }

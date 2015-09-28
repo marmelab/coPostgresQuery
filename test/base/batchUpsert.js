@@ -13,7 +13,7 @@ describe('batchUpsert', function () {
         var ids;
 
         before(function* () {
-            batchUpsertQuery = batchUpsert(db.client, 'tag', ['id'], ['name'], 'id');
+            batchUpsertQuery = batchUpsert(db, 'tag', ['id'], ['name'], 'id');
         });
 
         beforeEach(function* () {
@@ -34,7 +34,7 @@ describe('batchUpsert', function () {
 
             yield batchUpsertQuery(newTags);
 
-            var updatedTags = (yield db.client.query_('SELECT * from tag ORDER BY id')).rows;
+            var updatedTags = yield db.query({ sql: 'SELECT * from tag ORDER BY id'});
 
             assert.deepEqual(updatedTags, [
                 { id: ids[0], name: 'newTag1' },
@@ -53,9 +53,9 @@ describe('batchUpsert', function () {
 
             yield batchUpsertQuery(newTags);
 
-            var updatedTags = (yield db.client.query_('SELECT * from tag ORDER BY id')).rows;
-            var lastIds = (yield db.client.query_('SELECT id FROM tag ORDER BY id DESC LIMIT 2'))
-            .rows.map(tag => tag.id);
+            var updatedTags = yield db.query({ sql: 'SELECT * from tag ORDER BY id'});
+            var lastIds = (yield db.query({ sql: 'SELECT id FROM tag ORDER BY id DESC LIMIT 2'}))
+            .map(tag => tag.id);
 
             assert.deepEqual(updatedTags, [
                 { id: ids[0], name: 'newTag1' },
@@ -67,14 +67,14 @@ describe('batchUpsert', function () {
         });
 
         afterEach(function* () {
-            yield db.client.query_('TRUNCATE tag CASCADE');
+            yield db.query({ sql: 'TRUNCATE tag CASCADE'});
         });
     });
 
     describe('with multiple key (date and author)', function (argument) {
         let authors;
         before(function* () {
-            batchUpsertQuery = batchUpsert(db.client, 'post', ['author', 'date'], ['title']);
+            batchUpsertQuery = batchUpsert(db, 'post', ['author', 'date'], ['title']);
             authors = yield [
                 { name: 'doe', firstname: 'john'},
                 { name: 'dee', firstname: 'jane'}
@@ -99,7 +99,7 @@ describe('batchUpsert', function () {
 
             yield batchUpsertQuery(newPost);
 
-            var updatedPost = (yield db.client.query_('SELECT author, title, date from post ORDER BY id')).rows;
+            var updatedPost = yield db.query({ sql: 'SELECT author, title, date from post ORDER BY id'});
 
             assert.deepEqual(updatedPost, [
                 { author: authors[0].id, date: currentMonth, title: '1 vs 100' },
@@ -118,7 +118,7 @@ describe('batchUpsert', function () {
 
             yield batchUpsertQuery(newPost);
 
-            var updatedPost = (yield db.client.query_('SELECT author title, date from post ORDER BY id')).rows;
+            var updatedPost = yield db.query({ sql: 'SELECT author title, date from post ORDER BY id'});
 
             assert.deepEqual(updatedPost, [
                 { author: authors[0].id, date: currentMonth, title: '1 vs 100' },
@@ -131,11 +131,11 @@ describe('batchUpsert', function () {
         });
 
         afterEach(function* () {
-            yield db.client.query_('TRUNCATE post CASCADE');
+            yield db.query({ sql: 'TRUNCATE post CASCADE'});
         });
 
         after(function* () {
-            yield db.client.query_('TRUNCATE author CASCADE');
+            yield db.query({ sql: 'TRUNCATE author CASCADE'});
         });
     });
 
