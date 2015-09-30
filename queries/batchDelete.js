@@ -5,7 +5,7 @@ module.exports = function (table, fields, idFieldName) {
         const idsQuery = ids.reduce(function (query, id, index) {
             const fieldName = idFieldName + index;
             query.parameters[fieldName] = id;
-            query.sql.push('$' + fieldName);
+            query.sql.push(`$${fieldName}`);
 
             return query;
         }, {

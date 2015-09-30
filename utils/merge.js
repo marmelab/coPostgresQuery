@@ -1,13 +1,9 @@
 'use strict';
 
-module.exports = function merge(obj1, obj2) {
-    for (var attrName in obj2) {
-        if (!obj2.hasOwnProperty(attrName)) {
-            continue;
-        }
-
-        obj1[attrName] = obj2[attrName];
-    }
-
-    return obj1;
+export default function merge(obj1, obj2) {
+    return Object.keys(obj2)
+    .reduce((mergedObject, key) => {
+        mergedObject[key] = obj2[key];
+        return mergedObject;
+    }, obj1);
 };

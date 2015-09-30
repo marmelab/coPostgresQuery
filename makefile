@@ -1,4 +1,3 @@
-export PGUSER?=postgres
 .PHONY: default install run test
 
 test:

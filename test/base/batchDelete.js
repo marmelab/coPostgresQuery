@@ -2,7 +2,7 @@
 
 import batchDelete from '../../base/batchDelete';
 
-describe.only('batchDelete', function () {
+describe('batchDelete', function () {
     var ids, tags, batchDeleteQuery;
 
     before(function* () {

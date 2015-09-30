@@ -1,22 +1,24 @@
 'use strict';
 
+import merge from '../utils/merge';
+
 module.exports = function (writableFields) {
     return function getValueSubQuery(data, suffix = '') {
-        var query = [];
-        var parameters = {};
-        var columns = [];
 
-        writableFields.forEach(function (field) {
-            if (typeof data[field] === 'undefined') return;
-            columns.push(field);
-            query.push(`$${field}${suffix}`);
-            parameters[field + suffix] = data[field];
-        });
+        let valueSubQuery = writableFields
+        // .filter(field => typeof data[field] !== 'undefined')
+        .map((field) => ({
+            column: field,
+            sql: `$${field}${suffix}`,
+            parameter: {
+                [`${field}${suffix}`]: data[field] || 'NULL'
+            }
+        }));
+        const columns = valueSubQuery.map(v => v.column);
+        const sql = valueSubQuery.map(v => v.sql).join(', ');
+        const parameters = valueSubQuery.map(v => v.parameter)
+        .reduce((result, v) => merge(v, result), {});
 
-        return {
-            query: query.join(', '),
-            parameters: parameters,
-            columns: columns
-        };
+        return { columns, sql, parameters };
     };
 };
