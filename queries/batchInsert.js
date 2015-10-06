@@ -1,7 +1,7 @@
 'use strict';
 
 import merge from '../utils/merge';
-import valueSubQuery from '../base/valueSubQuery';
+import valueSubQuery from './valueSubQuery';
 
 export default function (tableName, insertFields, returnFields = '*') {
     var getValueSubQuery = valueSubQuery(insertFields);

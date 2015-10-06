@@ -1,6 +1,6 @@
 'use strict';
 
-import valueSubQuery from '../../base/valueSubQuery';
+import valueSubQuery from '../../queries/valueSubQuery';
 
 describe('base/valueSubQuery', function () {
 
