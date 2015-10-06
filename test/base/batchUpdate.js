@@ -3,14 +3,14 @@
 import batchUpdate from '../../base/batchUpdate';
 
 describe.only('batchUpdate', function () {
-    var ids, batchUpdateQuery;
+    let ids, batchUpdateQuery;
 
     before(function* () {
         batchUpdateQuery = batchUpdate('tag', ['id', 'name'], 'id', true)(db);
     });
 
     beforeEach(function* () {
-        var tags = yield [
+        const tags = yield [
             { name: 'tag1' },
             { name: 'tag2' },
             { name: 'tag3' }
@@ -20,16 +20,16 @@ describe.only('batchUpdate', function () {
     });
 
     it('should update array of entities in a single request', function* () {
-        var newTags = [
+        const newTags = [
             { id: ids[0], name: 'newTag1' },
             { id: ids[1], name: 'newTag2' }
         ];
 
-        var result = yield batchUpdateQuery(newTags);
+        const result = yield batchUpdateQuery(newTags);
 
         assert.deepEqual(result, newTags);
 
-        var updatedTags = yield db.query({ sql: 'SELECT * from tag ORDER BY id'});
+        const updatedTags = yield db.query({ sql: 'SELECT * from tag ORDER BY id'});
 
         assert.deepEqual(updatedTags, [
             { id: ids[0], name: 'newTag1' },
@@ -39,7 +39,7 @@ describe.only('batchUpdate', function () {
     });
 
     it('should ignore unexisting entity', function* () {
-        var result = yield batchUpdateQuery([
+        const result = yield batchUpdateQuery([
             { id: ids[0], name: 'newTag1' },
             { id: ids[1], name: 'newTag2' },
             { id: 404, name: 'newTag' }
@@ -50,7 +50,7 @@ describe.only('batchUpdate', function () {
             { id: ids[1], name: 'newTag2' }
         ]);
 
-        var updatedTags = yield db.query({ sql: 'SELECT * from tag ORDER BY id'});
+        const updatedTags = yield db.query({ sql: 'SELECT * from tag ORDER BY id'});
 
         assert.deepEqual(updatedTags, [
             { id: ids[0], name: 'newTag1' },
@@ -60,14 +60,14 @@ describe.only('batchUpdate', function () {
     });
 
     it('should update nothing on unexisting entity', function* () {
-        var result = yield batchUpdateQuery([
+        const result = yield batchUpdateQuery([
             { id: 4, name: 'newTag' },
             { id: 5, name: 'newTag' }
         ]);
 
         assert.deepEqual(result, []);
 
-        var updatedTags = yield db.query({ sql: 'SELECT * from tag ORDER BY id'});
+        const updatedTags = yield db.query({ sql: 'SELECT * from tag ORDER BY id'});
 
         assert.deepEqual(updatedTags, [
             { id: ids[0], name: 'tag1' },

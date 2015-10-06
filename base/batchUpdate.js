@@ -1,8 +1,8 @@
 'use strict';
 
-var batchInsert = require('./batchInsert');
+import batchInsert from './batchInsert';
 
-module.exports = function (table, fields, idFieldName) {
+export default function (table, fields, idFieldName) {
 
     return function (client) {
         const tempTable = `temp_${table}_${client.id}`;
