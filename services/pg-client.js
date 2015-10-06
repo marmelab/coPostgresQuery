@@ -24,10 +24,11 @@ export default function* pgClient(dsn) {
         return (yield query_(sql, parameters)).rows;
     };
 
-    client.id = (yield query_('SELECT pg_backend_pid()')).rows[0].pg_backend_pid;
+    const id = (yield query_('SELECT pg_backend_pid()')).rows[0].pg_backend_pid;
 
     return {
         done: connect[1],
-        query
+        query,
+        id
     };
 }

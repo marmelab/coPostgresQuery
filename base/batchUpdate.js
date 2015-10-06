@@ -1,39 +1,40 @@
 'use strict';
+
 var batchInsert = require('./batchInsert');
 
-module.exports = function (client, table, fields, idFieldName) {
-    var tempTable = 'temp_' + table + '_' + client.id;
-    var tempBatchInsert = batchInsert(client, tempTable, fields, idFieldName, false, null, true);
+module.exports = function (table, fields, idFieldName) {
 
-    return function* batchUpdate(entities) {
-        yield client.query('CREATE TEMPORARY TABLE ' + tempTable + ' AS SELECT * FROM ' + table + ' WHERE true = false;'); // copy the table structure without the constraint
+    return function (client) {
+        const tempTable = `temp_${table}_${client.id}`;
+        const tempBatchInsert = batchInsert(tempTable, fields)(client);
+        return function* batchUpdate(entities) {
+            yield client.query({ sql: `CREATE TEMPORARY TABLE ${tempTable} AS SELECT * FROM ${table} WHERE true = false;` }); // copy the table structure without the constraint
 
-        yield tempBatchInsert(entities);
+            yield tempBatchInsert(entities);
 
-        var setQuery = fields.map(function (field) {
-            return field + '=' + tempTable + '.' + field;
-        });
+            const setQuery = fields.map(function (field) {
+                return `${field} = ${tempTable}.${field}`;
+            });
 
-        var query = (
-            'UPDATE ' + table +
-            ' SET ' + setQuery.join(', ') +
-            ' FROM ' + tempTable +
-            ' WHERE ' + table + '.' + idFieldName + ' = ' + tempTable + '.' + idFieldName +
-            ' RETURNING ' + fields.map(f => table + '.' + f).join(', ')
-        );
+            const sql = `UPDATE ${table}
+                SET ${setQuery.join(', ')}
+                FROM ${tempTable}
+                WHERE ${table}.${idFieldName} = ${tempTable}.${idFieldName}
+                RETURNING ${fields.map(f => `${table}.${f}`).join(', ')}`;
 
-        var error;
-        try {
-            entities = yield client.query(query);
-        } catch (e) {
-            error = e;
-        }
-        yield client.query('DROP TABLE ' + tempTable);
+            var error;
+            try {
+                entities = yield client.query({ sql });
+            } catch (e) {
+                error = e;
+            }
+            yield client.query({ sql: `DROP TABLE ${tempTable}` });
 
-        if (error) {
-            throw error;
-        }
+            if (error) {
+                throw error;
+            }
 
-        return entities;
+            return entities;
+        };
     };
 };

@@ -6,7 +6,6 @@ module.exports = function (writableFields) {
     return function getValueSubQuery(data, suffix = '') {
 
         let valueSubQuery = writableFields
-        // .filter(field => typeof data[field] !== 'undefined')
         .map((field) => ({
             column: field,
             sql: `$${field}${suffix}`,

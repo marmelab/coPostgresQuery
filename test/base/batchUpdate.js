@@ -2,11 +2,11 @@
 
 import batchUpdate from '../../base/batchUpdate';
 
-describe('batchUpdate', function () {
+describe.only('batchUpdate', function () {
     var ids, batchUpdateQuery;
 
     before(function* () {
-        batchUpdateQuery = batchUpdate(db, 'tag', ['id', 'name'], 'id', true);
+        batchUpdateQuery = batchUpdate('tag', ['id', 'name'], 'id', true)(db);
     });
 
     beforeEach(function* () {
