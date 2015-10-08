@@ -24,11 +24,33 @@ export default function* pgClient(dsn) {
         return (yield query_(sql, parameters)).rows;
     };
 
+    const begin = function* () {
+        yield query({ sql: 'BEGIN' });
+    };
+
+    const commit = function* () {
+        yield query({ sql: 'COMMIT' });
+    };
+
+    const savepoint = function* (name) {
+        yield query({ sql: 'SAVEPOINT ${name}' });
+    };
+
+    const rollback = function* (name) {
+        const sql = `ROLLBACK`;
+
+        yield query({ sql: name ? sql.concat(` TO ${name}`) : sql });
+    };
+
     const id = (yield query_('SELECT pg_backend_pid()')).rows[0].pg_backend_pid;
 
     return {
         done: connect[1],
         query,
-        id
+        id,
+        begin,
+        commit,
+        savepoint,
+        rollback
     };
 }
