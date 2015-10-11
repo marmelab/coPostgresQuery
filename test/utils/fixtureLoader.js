@@ -11,13 +11,10 @@ export default function fixtureLoaderFactory(db) {
         }}))[0];
     };
 
-    const addPost = function* ({ author, title = 'My Title', date = new Date() }) {
-        if (typeof author === 'object') {
-            author = (yield addAuthor(author)).id;
-        }
+    const addPost = function* ({ author = 'john', title = 'My Title', date = new Date() }) {
         const sql = 'INSERT INTO post (author, title, date) VALUES ($author, $title, $date) RETURNING *';
 
-        return yield (db.query({ sql, parameters: {
+        return (yield db.query({ sql, parameters: {
             author,
             title,
             date

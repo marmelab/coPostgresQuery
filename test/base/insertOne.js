@@ -2,7 +2,7 @@
 
 import insertOne from '../../base/insertOne';
 
-describe.only('insertOne', function () {
+describe('insertOne', function () {
 
     it('should insert entity returning all field by default', function* () {
         const insertOneQuery = insertOne('tag', ['name'])(db);
