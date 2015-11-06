@@ -2,14 +2,14 @@
 
 import selectPageFactory from '../../base/selectPage';
 
-describe('selectPage', function () {
+describe.only('selectPage', function () {
     var selectPage;
 
     var mockClientFactory = function () {
         return {
-            query: function* (query, params) {
+            query: function* ({query, parameters}) {
                 this.query = query;
-                this.params = params;
+                this.parameters = parameters;
 
                 return {
                     rows: []
@@ -20,7 +20,7 @@ describe('selectPage', function () {
 
     it('should use a simple query if querying on a single table', function* () {
         var client = mockClientFactory();
-        selectPage = selectPageFactory(client, 'table', ['field1', 'field2']);
+        selectPage = selectPageFactory('table', ['field1', 'field2'])(client);
 
         yield selectPage();
 
@@ -29,7 +29,7 @@ describe('selectPage', function () {
 
     it('should use a "WITH result AS" query if querying on a joined table', function* () {
         var client = mockClientFactory();
-        selectPage = selectPageFactory(client, 'table1 JOIN table2 ON table1.table2_id table2.id', ['field1', 'field2']);
+        selectPage = selectPageFactory('table1 JOIN table2 ON table1.table2_id table2.id', ['field1', 'field2'])(client);
 
         yield selectPage();
 
@@ -38,7 +38,7 @@ describe('selectPage', function () {
 
     it('should use a "WITH result AS" query if enabling the withQuery extraOptions', function* () {
         var client = mockClientFactory();
-        selectPage = selectPageFactory(client, 'table', ['field1', 'field2'], [], [], {}, {withQuery: true});
+        selectPage = selectPageFactory('table', ['field1', 'field2'], ['field1', 'field2'], {withQuery: true})(client);
 
         yield selectPage();
 

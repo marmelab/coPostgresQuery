@@ -3,7 +3,7 @@
 import deleteOne from '../../base/deleteOne';
 import moment from 'moment';
 
-describe.only('deleteOne', function () {
+describe('deleteOne', function () {
     var deleteOneQuery;
 
     describe('with simple id', function () {
