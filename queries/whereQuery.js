@@ -3,16 +3,17 @@
 import middleware from '../utils/middleware';
 
 export function getFieldPlaceHolder(field, value) {
-    return `${field} ${ value === 'IS_NULL' || value === 'IS_NOT_NULL' ? value : `$${field}`}`;
+    value = Array.isArray(value) ? 'ANY' : value;
+    return (value === 'IS_NULL' || value === 'IS_NOT_NULL' || value === 'ANY') ? `${value}` : `$${field}`;
 }
 
-export function getMatch({ filter, searchableFields }, result = { whereParts: [], parameters: {} }) {
-    return Object.keys(filter)
+export function getMatch({ filters, searchableFields }, result = { whereParts: [], parameters: {} }) {
+    return Object.keys(filters)
     .filter((field) => field === 'match' && searchableFields.length > 0)
     .reduce(({ parameters, whereParts }, field) => ({
         parameters: {
             ...parameters,
-            [field]: `%${filter[field]}%`
+            [field]: `%${filters[field]}%`
         },
         whereParts: [
             ...whereParts,

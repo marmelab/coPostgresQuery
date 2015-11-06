@@ -2,7 +2,7 @@
 
 import selectPageFactory from '../../base/selectPage';
 
-describe.only('selectPage', function () {
+describe('selectPage', function () {
     var selectPage;
 
     var mockClientFactory = function () {
