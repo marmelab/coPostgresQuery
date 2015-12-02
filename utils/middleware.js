@@ -1,17 +1,18 @@
 'use strict';
 
-export default function init(data) {
+export default function init(entry, options) {
     var handlers = [];
+    // var spreadMap = [];
 
     return {
-        chain: function (fn) {
-            handlers.push(fn);
+        use: function (fn, target) {
+            handlers.push({ fn, target });
             return this;
         },
-        execute: function execute() {
-            return handlers.reduce(function (result, handler) {
-                return handler(data, result);
-            });
+        execute: function execute(emptyResult) {
+            return handlers.reduce(function (result, { fn, target }) {
+                return fn(target ? entry[target] || {} : entry, options, result);
+            }, emptyResult);
 
         }
     };

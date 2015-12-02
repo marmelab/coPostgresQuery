@@ -7,9 +7,39 @@ export function getFieldPlaceHolder(field, value) {
     return (value === 'IS_NULL' || value === 'IS_NOT_NULL' || value === 'ANY') ? `${value}` : `$${field}`;
 }
 
-export function getMatch({ filters, searchableFields }, result = { whereParts: [], parameters: {} }) {
-    return Object.keys(filters)
-    .filter((field) => field === 'match' && searchableFields.length > 0)
+export function getFieldType(field, searchableFields) {
+    if (!searchableFields.length) {
+        return 'discarded';
+    }
+    if (field === 'match' && searchableFields.length > 0) {
+        return 'match';
+    }
+    if (searchableFields.indexOf(field) !== -1) {
+        return 'query';
+    }
+    if (field.indexOf('from_') === 0 && searchableFields.indexOf(field.substr(5)) !== -1) {
+        return 'from';
+    }
+    if (field.indexOf('to_') === 0 && searchableFields.indexOf(field.substr(3)) !== -1) {
+        return 'to';
+    }
+
+    return 'discarded';
+}
+
+export function sortQueryType(filters, searchableFields) {
+    return Object.keys(filters).reduce(function (result, field) {
+        const fieldType = getFieldType(field, searchableFields);
+        return {
+            ...result,
+            [fieldType]: { ...result[fieldType], [field]: filters[field] }
+        };
+
+    }, { match: {}, from: {}, to: {}, query: {} });
+}
+
+export function getMatch(filters, searchableFields, result = { whereParts: [], parameters: {} }) {
+    return !searchableFields.length ? result : Object.keys(filters)
     .reduce(({ parameters, whereParts }, field) => ({
         parameters: {
             ...parameters,
@@ -22,9 +52,8 @@ export function getMatch({ filters, searchableFields }, result = { whereParts: [
     }), result);
 }
 
-export function getFrom({ filters, searchableFields }, result = { whereParts: [], parameters: {} }) {
+export function getFrom(filters, searchableFields, result = { whereParts: [], parameters: {} }) {
     return Object.keys(filters)
-    .filter((field) => field.indexOf('from_') === 0 && searchableFields.indexOf(field.substr(5)) !== -1)
     .reduce(({ parameters, whereParts }, field) => ({
         parameters: {
             ...parameters,
@@ -37,9 +66,8 @@ export function getFrom({ filters, searchableFields }, result = { whereParts: []
     }), result);
 }
 
-export function getTo({ filters, searchableFields }, result = { whereParts: [], parameters: {} }) {
+export function getTo(filters, searchableFields, result = { whereParts: [], parameters: {} }) {
     return Object.keys(filters)
-    .filter((field) => field.indexOf('to_') === 0 && searchableFields.indexOf(field.substr(3)) !== -1)
     .reduce(({ parameters, whereParts }, field) => ({
         parameters: {
             ...parameters,
@@ -52,9 +80,8 @@ export function getTo({ filters, searchableFields }, result = { whereParts: [], 
     }), result);
 }
 
-export function getQuery({ filters, searchableFields }, result = { whereParts: [], parameters: {} }) {
+export function getQuery(filters, searchableFields, result = { whereParts: [], parameters: {} }) {
     return Object.keys(filters)
-    .filter((field) => searchableFields.indexOf(field) !== -1)
     .reduce(({ parameters, whereParts }, field) => ({
         parameters: {
             ...parameters,
@@ -67,20 +94,19 @@ export function getQuery({ filters, searchableFields }, result = { whereParts: [
     }), result);
 }
 
-export function getResult({ filters, searchableFields }, { whereParts = [], parameters = {} }) {
+export function getResult(filters, searchableFields, { whereParts = [], parameters = {} }) {
     return {
         parameters,
-        query: ` WHERE ${whereParts.join(' AND ')}`
+        query: `WHERE ${whereParts.join(' AND ')}`
     };
 }
 
 export default function whereQuery(filters, searchableFields) {
-
-    return middleware({ filters, searchableFields })
-    .chain(getMatch)
-    .chain(getFrom)
-    .chain(getTo)
-    .chain(getQuery)
-    .chain(getResult)
+    return middleware(sortQueryType(filters, searchableFields), searchableFields)
+    .use(getMatch, 'match')
+    .use(getFrom, 'from')
+    .use(getTo, 'to')
+    .use(getQuery, 'query')
+    .use(getResult)
     .execute({ whereParts: [], parameters: {} });
 }
