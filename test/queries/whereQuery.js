@@ -3,7 +3,7 @@
 import * as whereQueryGet from '../../queries/whereQuery';
 import whereQuery, { sortQueryType, getFieldType } from '../../queries/whereQuery';
 
-describe.only('whereQuery', function () {
+describe('whereQuery', function () {
 
     it('should return whereQuery', function () {
         assert.deepEqual(whereQuery({
