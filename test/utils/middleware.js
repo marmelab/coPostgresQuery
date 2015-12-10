@@ -10,11 +10,11 @@ describe('middleware', function () {
 
             return 'fResult';
         };
-        const result = middleware('entry')
+        const result = middleware('entry', 'options')
         .use(f)
         .execute('empty result');
 
-        assert.deepEqual(receivedArgs, ['entry', 'empty result']);
+        assert.deepEqual(receivedArgs, ['entry', 'options', 'empty result']);
         assert.equal(result, 'fResult');
     });
 
@@ -28,14 +28,14 @@ describe('middleware', function () {
             nextArguments = args;
             return 'nextResult';
         };
-        const result = middleware('entry')
+        const result = middleware('entry', 'options')
         .use(first)
         .use(next)
         .execute('empty result');
 
-        assert.deepEqual(firstArguments, ['entry', 'empty result']);
+        assert.deepEqual(firstArguments, ['entry', 'options', 'empty result']);
 
-        assert.deepEqual(nextArguments, ['entry', 'firstResult']);
+        assert.deepEqual(nextArguments, ['entry', 'options', 'firstResult']);
 
         assert.equal(result, 'nextResult');
     });
@@ -50,14 +50,14 @@ describe('middleware', function () {
             targetFaceArguments = args;
             return 'targetFaceResult';
         };
-        const result = middleware({ pile: 'tic', face: 'tac'})
+        const result = middleware({ pile: 'tic', face: 'tac'}, 'options')
         .use(targetPile, 'pile')
         .use(targetFace, 'face')
         .execute('empty result');
 
-        assert.deepEqual(targetPileArguments, ['tic', 'empty result']);
+        assert.deepEqual(targetPileArguments, ['tic', 'options', 'empty result']);
 
-        assert.deepEqual(targetFaceArguments, ['tac', 'targetPileResult']);
+        assert.deepEqual(targetFaceArguments, ['tac', 'options', 'targetPileResult']);
 
         assert.equal(result, 'targetFaceResult');
     });
