@@ -1,40 +1,16 @@
-'use strict';
+import upsertOneQuerier from '../queries/upsertOne';
+import selectOneQuerier from '../queries/selectOne';
 
-module.exports = function (client, table, primaryFields, secondaryFields, autoIncrementField, returningFields=secondaryFields) {
-    const fields = primaryFields.concat(secondaryFields);
-    const insertFields = fields.filter(f => f !== autoIncrementField);
+export default function (table, primaryFields, secondaryFields, autoIncrementField, returningFields = secondaryFields) {
 
-    return function* upsertOne(entity) {
-        const setQuery = secondaryFields.map(function (field) {
-            return field + '=$' + field;
-        });
+    const upsertOneQuery = upsertOneQuerier(table, primaryFields, secondaryFields, autoIncrementField, returningFields);
+    const selectOneQuery = selectOneQuerier(table, primaryFields, returningFields);
 
-        if (autoIncrementField) {
-            entity[autoIncrementField] = entity[autoIncrementField] || null;
-        }
+    return function (client) {
+        return function* upsertOne(entity) {
+            yield client.query(upsertOneQuery(entity));
 
-        const valuesQuery = Object.keys(entity)
-        .filter(key => key !== autoIncrementField)
-        .map(key => `$${key}`);
-
-        const whereQuery = primaryFields
-        .map(field => `${table}.${field}=$${field}`)
-        .join(' AND ');
-
-        const query = `WITH upsert AS (
-            UPDATE ${table}
-            SET ${setQuery.join(',')}
-            WHERE ${whereQuery}
-            RETURNING ${table}.*
-        )
-        INSERT INTO ${table} (${insertFields.join(', ')})
-        SELECT ${valuesQuery.join(', ')}
-        WHERE NOT EXISTS (
-            SELECT * FROM upsert
-        )`;
-
-        yield client.query(query, entity);
-
-        return yield client.query(`SELECT ${returningFields.join(', ')} FROM ${table} WHERE ${whereQuery}`, entity);
+            return yield client.query(selectOneQuery(entity));
+        };
     };
 };

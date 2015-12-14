@@ -1,6 +1,5 @@
 'use strict';
 
-import merge from '../utils/merge';
 import valueSubQuery from './valueSubQuery';
 
 export default function (tableName, insertFields, returnFields = '*') {
@@ -15,7 +14,7 @@ export default function (tableName, insertFields, returnFields = '*') {
         const { values, parameters } = entities
         .map((entity, index) => getValueSubQuery(entity, index + 1))
         .reduce((result, value, index) => ({
-            parameters: merge(result.parameters, value.parameters),
+            parameters: {...result.parameters, ...value.parameters},
             values: result.values.concat(`(${value.sql})`)
         }), { values: [], parameters: {} });
 

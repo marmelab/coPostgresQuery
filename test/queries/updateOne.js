@@ -1,5 +1,3 @@
-'use strict';
-
 import updateOneQuerier from '../../queries/updateOne';
 
 describe('QUERY updateOne', function () {
