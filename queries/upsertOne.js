@@ -1,7 +1,5 @@
-import whereQuerier from './whereQuery';
-
 export default function (table, primaryFields, secondaryFields, autoIncrementFields = [], returningFields = secondaryFields) {
-    const fields = primaryFields.concat(secondaryFields);
+    const fields = primaryFields.concat(secondaryFields.filter((f) => primaryFields.indexOf(f) === -1));
     const insertFields = fields.filter(f => autoIncrementFields.indexOf(f) === -1);
 
     return function upsertOne(entity) {
@@ -16,20 +14,11 @@ export default function (table, primaryFields, secondaryFields, autoIncrementFie
         .filter(key => insertFields.indexOf(key) !== -1)
         .map(field => `$${field}`);
 
-        const whereQuery = whereQuerier(entity, primaryFields);
-
         const sql = (
-`WITH upsert AS (
-    UPDATE ${table}
-    SET ${setQuery.join(', ')}
-    ${whereQuery.query}
-    RETURNING ${table}.*
-)
-INSERT INTO ${table} (${insertFields.join(', ')})
-SELECT ${valuesQuery.join(', ')}
-WHERE NOT EXISTS (
-    SELECT * FROM upsert
-)`
+`INSERT INTO ${table} (${insertFields.join(', ')})
+VALUES (${valuesQuery.join(', ')})
+ON CONFLICT (${primaryFields.join(', ')}) DO UPDATE
+SET ${setQuery.join(', ')}`
         );
 
         return { sql, parameters };

@@ -12,14 +12,15 @@ before(function* () {
     yield global.db.query({ sql: `DROP TABLE IF EXISTS tag;`});
     yield global.db.query({ sql: `CREATE TABLE IF NOT EXISTS tag (
         id              serial primary key,
-        name            varchar(255)
+        name            varchar(255) UNIQUE
     );`});
     yield global.db.query({ sql: `DROP TABLE IF EXISTS post;`});
     yield global.db.query({ sql: `CREATE TABLE IF NOT EXISTS post (
         id              serial primary key,
-        author          varchar(255) NOT NULL,
+        author          integer NOT NULL,
         title           varchar(255),
-        date            timestamp with time zone
+        date            timestamp with time zone,
+        unique          (author, date)
     );`});
     yield global.db.query({ sql: `DROP TABLE IF EXISTS author;`});
     yield global.db.query({ sql: `CREATE TABLE IF NOT EXISTS author (

@@ -46,14 +46,14 @@ describe('deleteOne', function () {
 
         beforeEach(function* () {
             posts = yield [
-                { author: 'john', date: yesterday, title: '1' },
-                { author: 'joe', date: today, title: '2' },
-                { author: 'jane', date: yesterday, title: '3' }
+                { author: 1, date: yesterday, title: '1' },
+                { author: 2, date: today, title: '2' },
+                { author: 3, date: yesterday, title: '3' }
             ].map(fixtureLoader.addPost);
         });
 
         it('should remove one entity and return it', function* () {
-            var result = yield deleteOneQuery({ author: 'john', date: yesterday});
+            var result = yield deleteOneQuery({ author: 1, date: yesterday});
 
             assert.deepEqual(result, posts[0]);
 
@@ -64,7 +64,7 @@ describe('deleteOne', function () {
         it('should throw an error if tryng to delete unexisting entity', function* () {
             let error;
             try {
-                yield deleteOneQuery({ author: 'john', date: today});
+                yield deleteOneQuery({ author: 1, date: today});
             } catch (e) {
                 error = e;
             }

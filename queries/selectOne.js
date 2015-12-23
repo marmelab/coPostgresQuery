@@ -4,7 +4,7 @@ export default function (table, selectorFields, returningFields) {
     return function (parameters) {
         const where = whereQuery(parameters, selectorFields);
 
-        const sql = `SELECT ${returningFields} ${where.query} LIMIT 1`;
+        const sql = `SELECT ${returningFields.join(', ')} FROM ${table} ${where.query} LIMIT 1`;
 
         return { sql, parameters };
     };

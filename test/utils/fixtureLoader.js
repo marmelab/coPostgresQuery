@@ -5,7 +5,7 @@ export default function fixtureLoaderFactory(db) {
     const addAuthor = function* ({ name = 'doe', firstname = 'john' }) {
         const sql = 'INSERT INTO author (name, firstname) VALUES ($name, $firstname) RETURNING *';
 
-        return yield (db.query({ sql, parameters: {
+        return (yield db.query({ sql, parameters: {
             name,
             firstname
         }}))[0];

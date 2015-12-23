@@ -1,6 +1,5 @@
 export default function valueSubQuerier(writableFields) {
     return function getValueSubQuery(data, suffix = '') {
-
         const valueSubQuery = writableFields
         .map((field) => ({
             column: field,

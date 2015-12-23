@@ -4,7 +4,7 @@ export default function (table, selectorFields, returningFields = ['*']) {
     const selectOneQuery = selectOneQuerier(table, selectorFields, returningFields);
     return function (client) {
         return function* (parameters) {
-            return yield client.query(selectOneQuery(parameters));
+            return (yield client.query(selectOneQuery(parameters)))[0];
         };
     };
 }

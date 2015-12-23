@@ -20,5 +20,4 @@ export default function (table, identifiers, returningFields = ['*']) {
             return entity;
         };
     };
-
 };

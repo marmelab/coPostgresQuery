@@ -10,23 +10,11 @@ describe('upsertOne', function () {
         let tag;
 
         before(function* () {
-            upsertOneQuery = upsertOne(db, 'tag', ['id'], ['name'], 'id', ['id', 'name']);
+            upsertOneQuery = upsertOne('tag', ['name'], ['name'], ['id'], ['id', 'name'])(db);
         });
 
         beforeEach(function* () {
             tag = yield fixtureLoader.addTag({ name: 'tag' });
-        });
-
-        it('should update entity if it exists', function* () {
-            var newTag = { id: tag.id, name: 'renamedTag1' };
-
-            yield upsertOneQuery(newTag);
-
-            var updatedTags = (yield db.query({ sql: 'SELECT * from tag ORDER BY id'})).rows;
-
-            assert.deepEqual(updatedTags, [
-                { id: tag.id, name: 'renamedTag1' }
-            ]);
         });
 
         it('should create unexisting entities', function* () {
@@ -34,11 +22,11 @@ describe('upsertOne', function () {
 
             yield upsertOneQuery(newTag);
 
-            var updatedTags = (yield db.query({ sql: 'SELECT * from tag ORDER BY id'})).rows;
+            var updsertedTags = (yield db.query({ sql: 'SELECT * from tag ORDER BY id'}));
             var lastId = (yield db.query({ sql: 'SELECT id FROM tag ORDER BY id DESC LIMIT 1'}))
-            .rows.map(lastTag => lastTag.id)[0];
+            .map(lastTag => lastTag.id)[0];
 
-            assert.deepEqual(updatedTags, [
+            assert.deepEqual(updsertedTags, [
                 { id: tag.id, name: 'tag' },
                 { id: lastId, name: 'newTag' }
             ]);
@@ -52,8 +40,9 @@ describe('upsertOne', function () {
     describe('with multiple key (date and author)', function (argument) {
         const currentMonth = moment().endOf('month').startOf('day').toDate();
         let authors;
+
         before(function* () {
-            upsertOneQuery = upsertOne(db, 'post', ['author', 'date'], ['title'], null, ['author', 'date', 'title']);
+            upsertOneQuery = upsertOne('post', ['author', 'date'], ['title'], undefined, ['author', 'date', 'title'])(db);
 
             authors = yield [
                 { name: 'doe', firstname: 'john'},
@@ -68,23 +57,21 @@ describe('upsertOne', function () {
         it('should update entity with corresponding primaryKeys if it exists', function* () {
             var newPost = { author: authors[0].id, date: currentMonth, title: '1 vs 100' };
 
-            yield upsertOneQuery(newPost);
+            const updatedPost = yield upsertOneQuery(newPost);
 
-            var updatedPost = (yield db.query({ sql: 'SELECT author, date, title from post ORDER BY id'})).rows;
-
-            assert.deepEqual(updatedPost, [
+            assert.deepEqual(updatedPost,
                 { author: authors[0].id, date: currentMonth, title: '1 vs 100' }
-            ]);
+            );
         });
 
         it('should create unexisting entities', function* () {
             var newPost = { author: authors[1].id, date: currentMonth, title: '2 much' };
 
-            yield upsertOneQuery(newPost);
+            const updatedPost = yield upsertOneQuery(newPost);
+            assert.deepEqual(updatedPost, { author: authors[1].id, date: currentMonth, title: '2 much' });
 
-            var updatedPost = (yield db.query({ sql: 'SELECT author, date, title from post ORDER BY id'})).rows;
-
-            assert.deepEqual(updatedPost, [
+            const updatedPosts = (yield db.query({ sql: 'SELECT author, date, title from post ORDER BY id'}));
+            assert.deepEqual(updatedPosts, [
                 { author: authors[0].id, date: currentMonth, title: '1 vs 1' },
                 { author: authors[1].id, date: currentMonth, title: '2 much' }
             ]);

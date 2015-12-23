@@ -6,17 +6,10 @@ describe('QUERY upsertOne', function () {
         const upsertOneQuery = upsertOneQuerier('table', [ 'id1', 'id2' ], ['fielda', 'fieldb']);
         assert.deepEqual(upsertOneQuery({ id1: 1, id2: 2, fielda: 'a', fieldb: 'b' }), {
             sql: (
-`WITH upsert AS (
-    UPDATE table
-    SET fielda = $fielda, fieldb = $fieldb
-    WHERE id1 = $id1 AND id2 = $id2
-    RETURNING table.*
-)
-INSERT INTO table (id1, id2, fielda, fieldb)
-SELECT $id1, $id2, $fielda, $fieldb
-WHERE NOT EXISTS (
-    SELECT * FROM upsert
-)`
+`INSERT INTO table (id1, id2, fielda, fieldb)
+VALUES ($id1, $id2, $fielda, $fieldb)
+ON CONFLICT (id1, id2) DO UPDATE
+SET fielda = $fielda, fieldb = $fieldb`
             ),
             parameters: {
                 id1: 1,
@@ -27,21 +20,14 @@ WHERE NOT EXISTS (
         });
     });
 
-    it('should generate sql and parameter for upserting one entity ignorig autoincrement fields', function () {
+    it('should generate sql and parameter for upserting one entity ignoring autoincrement fields', function () {
         const upsertOneQuery = upsertOneQuerier('table', [ 'id1', 'id2' ], ['fielda', 'fieldb'], ['id2']);
         assert.deepEqual(upsertOneQuery({ id1: 1, id2: 2, fielda: 'a', fieldb: 'b' }), {
             sql: (
-`WITH upsert AS (
-    UPDATE table
-    SET fielda = $fielda, fieldb = $fieldb
-    WHERE id1 = $id1 AND id2 = $id2
-    RETURNING table.*
-)
-INSERT INTO table (id1, fielda, fieldb)
-SELECT $id1, $fielda, $fieldb
-WHERE NOT EXISTS (
-    SELECT * FROM upsert
-)`
+`INSERT INTO table (id1, fielda, fieldb)
+VALUES ($id1, $fielda, $fieldb)
+ON CONFLICT (id1, id2) DO UPDATE
+SET fielda = $fielda, fieldb = $fieldb`
             ),
             parameters: {
                 id1: 1,

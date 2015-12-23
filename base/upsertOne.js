@@ -10,7 +10,7 @@ export default function (table, primaryFields, secondaryFields, autoIncrementFie
         return function* upsertOne(entity) {
             yield client.query(upsertOneQuery(entity));
 
-            return yield client.query(selectOneQuery(entity));
+            return (yield client.query(selectOneQuery(entity)))[0];
         };
     };
 };
