@@ -1,8 +1,4 @@
-'use strict';
-
-
 export default function (table, fields, identifiers, returningFields = fields) {
-
 
     return function batchUpdate(fromTable) {
 
