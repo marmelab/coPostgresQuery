@@ -1,4 +1,4 @@
-'use strict';
+import configurable from '../utils/configurable';
 
 function parametersGetter(identifiers) {
     if (!Array.isArray(identifiers)) {
@@ -8,21 +8,29 @@ function parametersGetter(identifiers) {
     return (id) => (id);
 };
 
-export default function (table, identifiers, returningFields = ['*']) {
-    let getParameters = parametersGetter(identifiers);
-    if (!Array.isArray(identifiers)) {
-        identifiers = [identifiers];
-    }
+export default function (table, identifiers, fields = ['*']) {
+    let config = {
+        table,
+        identifiers: Array.isArray(identifiers) ? identifiers : [identifiers],
+        fields
+    };
 
-    return function removeOne(id) {
+    function deleteOne(id) {
+        const {
+            table,
+            identifiers,
+            fields
+        } = config;
+        const getParameters = parametersGetter(identifiers);
         if (!id) {
             throw new Error(`No id specified for deleting ${table} entity.`);
         }
         const whereQuery = identifiers.map((field) => `${table}.${field} = $${field}`);
-        const sql = `DELETE FROM ${table} WHERE ${whereQuery.join(' AND ')} RETURNING ${returningFields.join(', ')}`;
+        const sql = `DELETE FROM ${table} WHERE ${whereQuery.join(' AND ')} RETURNING ${fields.join(', ')}`;
         const parameters = getParameters(id);
 
         return {sql, parameters};
     };
 
+    return configurable(deleteOne, config);
 };

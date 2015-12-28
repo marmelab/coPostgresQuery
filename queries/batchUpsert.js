@@ -1,15 +1,30 @@
+import configurable from '../utils/configurable';
 import valueSubQuery from './valueSubQuery';
 
-export default function (tableName, primaryFields, secondaryFields, returnFields = '*') {
-    const fields = primaryFields.concat(secondaryFields.filter((f) => primaryFields.indexOf(f) === -1));
-    var getValueSubQuery = valueSubQuery(fields);
+export default function (table, selectorFields, updatableFields, returnFields = '*') {
+    let config = {
+        table,
+        fields: selectorFields.concat(updatableFields.filter((f) => selectorFields.indexOf(f) === -1)),
+        selectorFields,
+        updatableFields,
+        returnFields
+    };
 
-    return function batchUpsert(entities) {
+    function batchUpsert(entities) {
+        const {
+            table,
+            fields,
+            selectorFields,
+            updatableFields,
+            returnFields
+        } = config;
+        const getValueSubQuery = valueSubQuery(fields);
+
         if (Array.isArray(returnFields)) {
             returnFields = returnFields.join(', ');
         }
 
-        const setQuery = secondaryFields.map(function (field) {
+        const setQuery = updatableFields.map(function (field) {
             return `${field} = excluded.${field}`;
         });
 
@@ -21,14 +36,16 @@ export default function (tableName, primaryFields, secondaryFields, returnFields
         }), { values: [], parameters: {} });
 
         const sql = (
-`INSERT INTO ${tableName}
+`INSERT INTO ${table}
 (${fields.join(', ')})
 VALUES ${values.join(', ')}
-ON CONFLICT (${primaryFields.join(', ')})
+ON CONFLICT (${selectorFields.join(', ')})
 DO UPDATE SET ${setQuery.join(', ')}
 RETURNING ${returnFields}`
         );
 
         return { sql, parameters };
     };
+
+    return configurable(batchUpsert, config);
 };

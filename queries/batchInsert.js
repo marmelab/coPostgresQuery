@@ -1,11 +1,20 @@
-'use strict';
-
+import configurable from '../utils/configurable';
 import valueSubQuery from './valueSubQuery';
 
-export default function (tableName, insertFields, returnFields = '*') {
-    var getValueSubQuery = valueSubQuery(insertFields);
+export default function (table, fields, returnFields = '*') {
+    let config = {
+        table,
+        fields,
+        returnFields
+    };
 
-    return function batchInsert(entities) {
+    function batchInsert(entities) {
+        const {
+            table,
+            fields,
+            returnFields
+        } = config;
+        const getValueSubQuery = valueSubQuery(fields);
 
         if (Array.isArray(returnFields)) {
             returnFields = returnFields.join(', ');
@@ -18,8 +27,10 @@ export default function (tableName, insertFields, returnFields = '*') {
             values: result.values.concat(`(${value.sql})`)
         }), { values: [], parameters: {} });
 
-        const sql = `INSERT INTO ${tableName}(${insertFields.join(', ')}) VALUES ${values.join(', ')} RETURNING ${returnFields}`;
+        const sql = `INSERT INTO ${table}(${fields.join(', ')}) VALUES ${values.join(', ')} RETURNING ${returnFields}`;
 
         return { sql, parameters };
     };
+
+    return configurable(batchInsert, config);
 };

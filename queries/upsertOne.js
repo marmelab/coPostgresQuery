@@ -1,9 +1,28 @@
-export default function (table, primaryFields, secondaryFields, autoIncrementFields = [], returningFields = secondaryFields) {
-    const fields = primaryFields.concat(secondaryFields.filter((f) => primaryFields.indexOf(f) === -1));
-    const insertFields = fields.filter(f => autoIncrementFields.indexOf(f) === -1);
+import configurable from '../utils/configurable';
 
-    return function upsertOne(entity) {
-        const setQuery = secondaryFields.map(function (field) {
+export default function (table, selectorFields, updatableFields, autoIncrementFields = [], returningFields = ['*']) {
+    let fields = selectorFields.concat(updatableFields.filter((f) => selectorFields.indexOf(f) === -1));
+    let config = {
+        table,
+        fields,
+        insertFields: fields.filter(f => autoIncrementFields.indexOf(f) === -1),
+        selectorFields,
+        updatableFields,
+        autoIncrementFields,
+        returningFields
+    };
+
+    function upsertOne(entity) {
+        const {
+            table,
+            fields,
+            insertFields,
+            selectorFields,
+            updatableFields,
+            autoIncrementFields,
+            returningFields
+        } = config;
+        const setQuery = updatableFields.map(function (field) {
             return `${field} = $${field}`;
         });
 
@@ -17,10 +36,12 @@ export default function (table, primaryFields, secondaryFields, autoIncrementFie
         const sql = (
 `INSERT INTO ${table} (${insertFields.join(', ')})
 VALUES (${valuesQuery.join(', ')})
-ON CONFLICT (${primaryFields.join(', ')}) DO UPDATE
+ON CONFLICT (${selectorFields.join(', ')}) DO UPDATE
 SET ${setQuery.join(', ')}`
         );
 
         return { sql, parameters };
     };
+
+    return configurable(upsertOne, config);
 };

@@ -19,7 +19,7 @@ describe('whereQuery', function () {
                 from_field3: new Date(800),
                 match: '%6%'
             },
-            query: 'WHERE (field1::text ILIKE $match OR field2::text ILIKE $match OR field3::text ILIKE $match) AND field3::timestamp >= $from_field3::timestamp AND field2::timestamp <= $to_field2::timestamp AND field1 = $field1'
+            sql: 'WHERE (field1::text ILIKE $match OR field2::text ILIKE $match OR field3::text ILIKE $match) AND field3::timestamp >= $from_field3::timestamp AND field2::timestamp <= $to_field2::timestamp AND field1 = $field1'
         });
     });
 

@@ -1,14 +1,29 @@
-'use strict';
+import configurable from '../utils/configurable';
 
 module.exports = function (table, fields, idFieldName) {
-    return function batchDelete(ids) {
-        const idsQuery = ids.reduce(function (query, id, index) {
-            const fieldName = idFieldName + index;
-            query.parameters[fieldName] = id;
-            query.sql.push(`$${fieldName}`);
+    let config = {
+        table,
+        fields,
+        idFieldName
+    };
 
-            return query;
-        }, {
+    const batchDelete = function batchDelete(ids) {
+        const {
+            table,
+            fields,
+            idFieldName
+        } = config;
+
+        const idsQuery = ids.reduce(({ parameters, sql }, id, index) => ({
+            parameters: {
+                ...parameters,
+                [idFieldName]: id
+            },
+            sql: [
+                ...sql,
+                `$${idFieldName}${index}`
+            ]
+        }), {
             parameters: {},
             sql: []
         });
@@ -20,4 +35,6 @@ module.exports = function (table, fields, idFieldName) {
             parameters: idsQuery.parameters
         };
     };
+
+    return configurable(batchDelete, config);
 };

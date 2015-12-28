@@ -1,17 +1,33 @@
-'use strict';
-
+import configurable from '../utils/configurable';
 import valueSubQuery from './valueSubQuery';
 
-export default function (tableName, insertFields, returningFields = ['*']) {
-    const getValueSubQuery = valueSubQuery(insertFields);
+export default function (table, fields, returningFields = ['*']) {
+    let config = {
+        table,
+        fields,
+        returningFields
+    };
 
-    return function insertOne(data) {
+    function insertOne(data) {
+        const {
+            table,
+            fields,
+            returningFields
+        } = config;
+        const getValueSubQuery = valueSubQuery(fields);
         const values = getValueSubQuery(data);
-        const sql = `INSERT INTO ${tableName} (${values.columns.join(', ')}) VALUES(${values.sql}) RETURNING ${returningFields.join(', ')}`;
+        const sql = (
+`INSERT INTO ${table}
+(${values.columns.join(', ')})
+VALUES(${values.sql})
+RETURNING ${returningFields.join(', ')}`
+        );
 
         return {
             sql,
             parameters: values.parameters
         };
     };
+
+    return configurable(insertOne, config);
 };

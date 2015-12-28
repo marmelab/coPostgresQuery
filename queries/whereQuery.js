@@ -97,7 +97,7 @@ export function getQuery(filters, searchableFields, result = { whereParts: [], p
 export function getResult(filters, searchableFields, { whereParts = [], parameters = {} }) {
     return {
         parameters,
-        query: whereParts.length ? `WHERE ${whereParts.join(' AND ')}` : ''
+        sql: whereParts.length ? `WHERE ${whereParts.join(' AND ')}` : ''
     };
 }
 

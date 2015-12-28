@@ -1,11 +1,25 @@
+import configurable from '../utils/configurable';
 import whereQuery from './whereQuery';
 
-export default function (table, selectorFields, returningFields) {
-    return function (parameters) {
-        const where = whereQuery(parameters, selectorFields);
+export default function (table, identifiers, fields) {
+    let config = {
+        table,
+        identifiers,
+        fields
+    };
 
-        const sql = `SELECT ${returningFields.join(', ')} FROM ${table} ${where.query} LIMIT 1`;
+    function selectOne(parameters) {
+        const {
+            table,
+            identifiers,
+            fields
+        } = config;
+        const where = whereQuery(parameters, identifiers);
+
+        const sql = `SELECT ${fields.join(', ')} FROM ${table} ${where.sql} LIMIT 1`;
 
         return { sql, parameters };
-    };
+    }
+
+    return configurable(selectOne, config);
 }

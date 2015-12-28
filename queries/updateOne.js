@@ -1,24 +1,35 @@
-'use strict';
-
+import configurable from '../utils/configurable';
 import whereQuery from './whereQuery';
 
-export default function (tableName, fields, idFieldNames = ['id'], returningFields = ['*']) {
-    idFieldNames = Array.isArray(idFieldNames) ? idFieldNames : [idFieldNames];
+export default function (table, identifiers = ['id'], fields, returningFields = ['*']) {
+    let config = {
+        table,
+        identifiers: Array.isArray(identifiers) ? identifiers : [identifiers],
+        fields,
+        returningFields
+    };
 
-    return function updateOne(id, data) {
+    function updateOne(id, data) {
+        const {
+            table,
+            identifiers,
+            fields,
+            returningFields
+        } = config;
+
         if (!id) {
-            throw new Error(`No id specified for updating ${tableName} entity.`);
+            throw new Error(`No id specified for updating ${table} entity.`);
         }
-        id = Object.prototype.toString.call(id) === '[object Object]' ? id : {[idFieldNames[0]]: id};
+        id = Object.prototype.toString.call(id) === '[object Object]' ? id : {[identifiers[0]]: id};
 
-        if (Object.keys(id).length !== idFieldNames.length || Object.keys(id).some((key) => idFieldNames.indexOf(key) === -1)) {
-            throw new Error(`Given ids: (${Object.keys(id).join(', ')}) does not match idFieldNames: (${idFieldNames.join(', ')})`);
+        if (Object.keys(id).length !== identifiers.length || Object.keys(id).some((key) => identifiers.indexOf(key) === -1)) {
+            throw new Error(`Given ids: (${Object.keys(id).join(', ')}) does not match identifiers: (${identifiers.join(', ')})`);
         }
 
-        const where = whereQuery(id, idFieldNames);
+        const where = whereQuery(id, identifiers);
 
         const { setQuery, parameters } = fields.reduce((result, field) => {
-            if (idFieldNames.indexOf(field) !== -1 || typeof data[field] === 'undefined') {
+            if (identifiers.indexOf(field) !== -1 || typeof data[field] === 'undefined') {
                 return result;
             }
 
@@ -38,11 +49,13 @@ export default function (tableName, fields, idFieldNames = ['id'], returningFiel
             throw new Error('no valid column to set');
         }
 
-        var sql = `UPDATE ${tableName} SET ${setQuery.join(', ')} ${where.query} RETURNING ${returningFields.join(', ')}`;
+        var sql = `UPDATE ${table} SET ${setQuery.join(', ')} ${where.sql} RETURNING ${returningFields.join(', ')}`;
 
         return {
             sql,
             parameters
         };
     };
+
+    return configurable(updateOne, config);
 };
