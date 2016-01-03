@@ -11,7 +11,7 @@ export default function (table, selectorFields, updatableFields, returnFields = 
     };
 
     function batchUpsert(entities) {
-        const {
+        let {
             table,
             fields,
             selectorFields,

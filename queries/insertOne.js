@@ -1,5 +1,6 @@
 import configurable from '../utils/configurable';
 import valueSubQuery from './valueSubQuery';
+import sanitizeParameter from './sanitizeParameter';
 
 export default function (table, fields, returningFields = ['*']) {
     let config = {
@@ -14,18 +15,19 @@ export default function (table, fields, returningFields = ['*']) {
             fields,
             returningFields
         } = config;
-        const getValueSubQuery = valueSubQuery(fields);
-        const values = getValueSubQuery(data);
+
+        const parameters = sanitizeParameter(fields, data);
+        const values = valueSubQuery(fields, '');
         const sql = (
 `INSERT INTO ${table}
-(${values.columns.join(', ')})
-VALUES(${values.sql})
+(${Object.keys(parameters).join(', ')})
+VALUES(${values})
 RETURNING ${returningFields.join(', ')}`
         );
 
         return {
             sql,
-            parameters: values.parameters
+            parameters
         };
     };
 

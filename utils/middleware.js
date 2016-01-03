@@ -2,7 +2,6 @@
 
 export default function init(entry, options) {
     var handlers = [];
-    // var spreadMap = [];
 
     return {
         use: function (fn, target) {

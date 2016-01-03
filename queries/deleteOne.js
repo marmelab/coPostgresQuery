@@ -1,33 +1,24 @@
 import configurable from '../utils/configurable';
+import sanitizeIdentifier from './sanitizeIdentifier';
+import whereQuery from './whereQuery';
 
-function parametersGetter(identifiers) {
-    if (!Array.isArray(identifiers)) {
-        return (id) => ({ id });
-    }
-
-    return (id) => (id);
-};
-
-export default function (table, identifiers, fields = ['*']) {
+export default function (table, idFields, returningFields = ['*']) {
     let config = {
         table,
-        identifiers: Array.isArray(identifiers) ? identifiers : [identifiers],
-        fields
+        idFields,
+        returningFields
     };
 
     function deleteOne(id) {
         const {
             table,
-            identifiers,
-            fields
+            idFields,
+            returningFields
         } = config;
-        const getParameters = parametersGetter(identifiers);
-        if (!id) {
-            throw new Error(`No id specified for deleting ${table} entity.`);
-        }
-        const whereQuery = identifiers.map((field) => `${table}.${field} = $${field}`);
-        const sql = `DELETE FROM ${table} WHERE ${whereQuery.join(' AND ')} RETURNING ${fields.join(', ')}`;
-        const parameters = getParameters(id);
+
+        const parameters = sanitizeIdentifier(idFields, id);
+        const where = whereQuery(parameters, idFields);
+        const sql = `DELETE FROM ${table} ${where} RETURNING ${returningFields.join(', ')}`;
 
         return {sql, parameters};
     };

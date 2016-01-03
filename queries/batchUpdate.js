@@ -1,4 +1,4 @@
-import configurable from '../configurable';
+import configurable from '../utils/configurable';
 
 export default function (table, fields, identifiers, returningFields = fields) {
     let config = {

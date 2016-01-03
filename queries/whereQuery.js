@@ -38,67 +38,40 @@ export function sortQueryType(filters, searchableFields) {
     }, { match: {}, from: {}, to: {}, query: {} });
 }
 
-export function getMatch(filters, searchableFields, result = { whereParts: [], parameters: {} }) {
-    return !searchableFields.length ? result : Object.keys(filters)
-    .reduce(({ parameters, whereParts }, field) => ({
-        parameters: {
-            ...parameters,
-            [field]: `%${filters[field]}%`
-        },
-        whereParts: [
-            ...whereParts,
-            `(${searchableFields.map(searchableField => `${searchableField}::text ILIKE $match`).join(' OR ')})`
-        ]
-    }), result);
+export function getMatch(filters, searchableFields, whereParts = []) {
+    return !searchableFields.length ? whereParts : Object.keys(filters)
+    .reduce((result, field) => ([
+        ...result,
+        `(${searchableFields.map(searchableField => `${searchableField}::text ILIKE %$match%`).join(' OR ')})`
+    ]), whereParts);
 }
 
-export function getFrom(filters, searchableFields, result = { whereParts: [], parameters: {} }) {
+export function getFrom(filters, searchableFields, whereParts = []) {
     return Object.keys(filters)
-    .reduce(({ parameters, whereParts }, field) => ({
-        parameters: {
-            ...parameters,
-            [field]: filters[field]
-        },
-        whereParts: [
-            ...whereParts,
-            `${field.substr(5)}::timestamp >= $${field}::timestamp`
-        ]
-    }), result);
+    .reduce((result, field) => ([
+        ...result,
+        `${field.substr(5)}::timestamp >= $${field}::timestamp`
+    ]), whereParts);
 }
 
-export function getTo(filters, searchableFields, result = { whereParts: [], parameters: {} }) {
+export function getTo(filters, searchableFields, whereParts = []) {
     return Object.keys(filters)
-    .reduce(({ parameters, whereParts }, field) => ({
-        parameters: {
-            ...parameters,
-            [field]: filters[field]
-        },
-        whereParts: [
-            ...whereParts,
-            `${field.substr(3)}::timestamp <= $${field}::timestamp`
-        ]
-    }), result);
+    .reduce((result, field) => ([
+        ...result,
+        `${field.substr(3)}::timestamp <= $${field}::timestamp`
+    ]), whereParts);
 }
 
-export function getQuery(filters, searchableFields, result = { whereParts: [], parameters: {} }) {
+export function getQuery(filters, searchableFields, whereParts = []) {
     return Object.keys(filters)
-    .reduce(({ parameters, whereParts }, field) => ({
-        parameters: {
-            ...parameters,
-            [field]: filters[field]
-        },
-        whereParts: [
-            ...whereParts,
-            `${field} = ${getFieldPlaceHolder(field, filters[field])}`
-        ]
-    }), result);
+    .reduce((result, field) => ([
+        ...result,
+        `${field} = ${getFieldPlaceHolder(field, filters[field])}`
+    ]), whereParts);
 }
 
-export function getResult(filters, searchableFields, { whereParts = [], parameters = {} }) {
-    return {
-        parameters,
-        sql: whereParts.length ? `WHERE ${whereParts.join(' AND ')}` : ''
-    };
+export function getResult(filters, searchableFields, whereParts = []) {
+    return whereParts.length ? `WHERE ${whereParts.join(' AND ')}` : '';
 }
 
 export default function whereQuery(filters, searchableFields) {
@@ -108,5 +81,5 @@ export default function whereQuery(filters, searchableFields) {
     .use(getTo, 'to')
     .use(getQuery, 'query')
     .use(getResult)
-    .execute({ whereParts: [], parameters: {} });
+    .execute([]);
 }

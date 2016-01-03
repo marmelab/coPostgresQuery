@@ -1,3 +1,5 @@
+
+import batchParameter from './batchParameter';
 import configurable from '../utils/configurable';
 
 module.exports = function (table, fields, idFieldName) {
@@ -14,25 +16,18 @@ module.exports = function (table, fields, idFieldName) {
             idFieldName
         } = config;
 
-        const idsQuery = ids.reduce(({ parameters, sql }, id, index) => ({
-            parameters: {
-                ...parameters,
-                [idFieldName]: id
-            },
-            sql: [
-                ...sql,
-                `$${idFieldName}${index}`
-            ]
-        }), {
-            parameters: {},
-            sql: []
-        });
+        const parameters = batchParameter([idFieldName], ids.map((id) => ({[idFieldName]: id})));
 
-        const sql = `DELETE FROM ${table} WHERE ${idFieldName} IN (${idsQuery.sql.join(', ')}) RETURNING ${fields.join(', ')}`;
+        const idsQuery = ids.reduce((sql, id, index) => ([
+            ...sql,
+            `$${idFieldName}${index}`
+        ]), []);
+
+        const sql = `DELETE FROM ${table} WHERE ${idFieldName} IN (${idsQuery.join(', ')}) RETURNING ${fields.join(', ')}`;
 
         return {
             sql,
-            parameters: idsQuery.parameters
+            parameters
         };
     };
 

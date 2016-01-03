@@ -1,55 +1,48 @@
 import configurable from '../utils/configurable';
 import whereQuery from './whereQuery';
+import sanitizeIdentifier from './sanitizeIdentifier';
+import sanitizeParameter from './sanitizeParameter';
 
-export default function (table, identifiers = ['id'], fields, returningFields = ['*']) {
+export default function (table, updatableFields, idFields = ['id'], returningFields = ['*']) {
     let config = {
         table,
-        identifiers: Array.isArray(identifiers) ? identifiers : [identifiers],
-        fields,
+        idFields: Array.isArray(idFields) ? idFields : [idFields],
+        updatableFields,
         returningFields
     };
 
     function updateOne(id, data) {
         const {
             table,
-            identifiers,
-            fields,
+            idFields,
+            updatableFields,
             returningFields
         } = config;
 
-        if (!id) {
-            throw new Error(`No id specified for updating ${table} entity.`);
-        }
-        id = Object.prototype.toString.call(id) === '[object Object]' ? id : {[identifiers[0]]: id};
+        const identifiers = sanitizeIdentifier(idFields, id);
+        const parameters = {
+            ...identifiers,
+            ...sanitizeParameter(updatableFields, data)
+        };
 
-        if (Object.keys(id).length !== identifiers.length || Object.keys(id).some((key) => identifiers.indexOf(key) === -1)) {
-            throw new Error(`Given ids: (${Object.keys(id).join(', ')}) does not match identifiers: (${identifiers.join(', ')})`);
-        }
+        const where = whereQuery(identifiers, idFields);
 
-        const where = whereQuery(id, identifiers);
-
-        const { setQuery, parameters } = fields.reduce((result, field) => {
-            if (identifiers.indexOf(field) !== -1 || typeof data[field] === 'undefined') {
+        const setQuery = updatableFields.reduce((result, field) => {
+            if (idFields.indexOf(field) !== -1 || typeof data[field] === 'undefined') {
                 return result;
             }
 
-            return {
-                setQuery: [
-                    ...result.setQuery,
-                    `${field}=$${field}`
-                ],
-                parameters: {
-                    ...result.parameters,
-                    [field]: data[field]
-                }
-            };
-        }, { setQuery: [], parameters: where.parameters });
+            return [
+                ...result,
+                `${field}=$${field}`
+            ];
+        }, []);
 
-        if (parameters.length === 1) {
+        if (Object.keys(parameters).length === 1) {
             throw new Error('no valid column to set');
         }
 
-        var sql = `UPDATE ${table} SET ${setQuery.join(', ')} ${where.sql} RETURNING ${returningFields.join(', ')}`;
+        var sql = `UPDATE ${table} SET ${setQuery.join(', ')} ${where} RETURNING ${returningFields.join(', ')}`;
 
         return {
             sql,

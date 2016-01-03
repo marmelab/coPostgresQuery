@@ -1,6 +1,6 @@
 import upsertOneQuerier from '../../queries/upsertOne';
 
-describe('QUERY upsertOne', function () {
+describe.only('QUERY upsertOne', function () {
 
     it('should generate sql and parameter for upserting one entity', function () {
         const upsertOneQuery = upsertOneQuerier('table', [ 'id1', 'id2' ], ['fielda', 'fieldb']);

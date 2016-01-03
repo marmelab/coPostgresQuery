@@ -12,7 +12,7 @@ export default function (table, identifiers, returningFields = ['*']) {
                 throw new Error(`No id specified for deleting ${table} entity.`);
             }
 
-            const entity = (yield client.query(deleteOneQuery(id)))[0];
+            let entity = (yield client.query(deleteOneQuery(id)))[0];
             if (!entity) {
                 throw new Error('not found');
             }

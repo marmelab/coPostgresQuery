@@ -24,6 +24,10 @@ export default function* pgClient(dsn) {
         return (yield query_(sql, parameters)).rows;
     };
 
+    const queryOne = function* ({ sql, parameters }) {
+        return (yield query({ sql, parameters }))[0];
+    };
+
     const begin = function* () {
         yield query({ sql: 'BEGIN' });
     };
@@ -47,6 +51,7 @@ export default function* pgClient(dsn) {
     return {
         done: connect[1],
         query,
+        queryOne,
         id,
         begin,
         commit,

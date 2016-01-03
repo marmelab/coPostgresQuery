@@ -1,5 +1,6 @@
 import configurable from '../utils/configurable';
 import valueSubQuery from './valueSubQuery';
+import batchParameter from './batchParameter';
 
 export default function (table, fields, returnFields = '*') {
     let config = {
@@ -9,25 +10,25 @@ export default function (table, fields, returnFields = '*') {
     };
 
     function batchInsert(entities) {
-        const {
+        let {
             table,
             fields,
             returnFields
         } = config;
+
+        const parameters = batchParameter(fields, entities);
         const getValueSubQuery = valueSubQuery(fields);
 
         if (Array.isArray(returnFields)) {
             returnFields = returnFields.join(', ');
         }
 
-        const { values, parameters } = entities
-        .map((entity, index) => getValueSubQuery(entity, index + 1))
-        .reduce((result, value, index) => ({
-            parameters: {...result.parameters, ...value.parameters},
-            values: result.values.concat(`(${value.sql})`)
-        }), { values: [], parameters: {} });
+        const values = entities
+        .map((entity, index) => getValueSubQuery(index))
+        .reduce((result, sql, index) => result.concat(`(${sql})`), [])
+        .join(', ');
 
-        const sql = `INSERT INTO ${table}(${fields.join(', ')}) VALUES ${values.join(', ')} RETURNING ${returnFields}`;
+        const sql = `INSERT INTO ${table}(${fields.join(', ')}) VALUES ${values} RETURNING ${returnFields}`;
 
         return { sql, parameters };
     };

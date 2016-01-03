@@ -1,4 +1,5 @@
 import configurable from '../utils/configurable';
+import sanitizeParameter from './sanitizeParameter';
 
 export default function (table, selectorFields, updatableFields, autoIncrementFields = [], returningFields = ['*']) {
     let fields = selectorFields.concat(updatableFields.filter((f) => selectorFields.indexOf(f) === -1));
@@ -26,16 +27,16 @@ export default function (table, selectorFields, updatableFields, autoIncrementFi
             return `${field} = $${field}`;
         });
 
-        const parameters = fields
-        .reduce((result, field) => ({ ...result, [field]: entity[field]}), {});
+        const parameters = sanitizeParameter(fields, entity);
 
         const valuesQuery = Object.keys(entity)
         .filter(key => insertFields.indexOf(key) !== -1)
-        .map(field => `$${field}`);
+        .map(field => `$${field}`)
+        .join(', ');
 
         const sql = (
 `INSERT INTO ${table} (${insertFields.join(', ')})
-VALUES (${valuesQuery.join(', ')})
+VALUES (${valuesQuery})
 ON CONFLICT (${selectorFields.join(', ')}) DO UPDATE
 SET ${setQuery.join(', ')}`
         );

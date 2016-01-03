@@ -1,22 +1,24 @@
 import configurable from '../utils/configurable';
 import whereQuery from './whereQuery';
+import sanitizeParameter from './sanitizeParameter';
 
-export default function (table, identifiers, fields) {
+export default function (table, selectors, returningFields) {
     let config = {
         table,
-        identifiers,
-        fields
+        selectors,
+        returningFields
     };
 
     function selectOne(parameters) {
         const {
             table,
-            identifiers,
-            fields
+            selectors,
+            returningFields
         } = config;
-        const where = whereQuery(parameters, identifiers);
+        parameters = sanitizeParameter(selectors)(parameters);
+        const where = whereQuery(parameters, selectors);
 
-        const sql = `SELECT ${fields.join(', ')} FROM ${table} ${where.sql} LIMIT 1`;
+        const sql = `SELECT ${returningFields.join(', ')} FROM ${table} ${where} LIMIT 1`;
 
         return { sql, parameters };
     }

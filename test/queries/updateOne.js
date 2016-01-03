@@ -2,7 +2,7 @@ import updateOneQuerier from '../../queries/updateOne';
 
 describe('QUERY updateOne', function () {
     it('shoul generate sql and parameter for updating one entity', function () {
-        const updateOneQuery = updateOneQuerier('table', [ 'fielda', 'fieldb' ]);
+        const updateOneQuery = updateOneQuerier('table', [ 'fielda', 'fieldb' ], ['id']);
         assert.deepEqual(updateOneQuery(1, { fielda: 1, fieldb: 2 }), {
             sql: 'UPDATE table SET fielda=$fielda, fieldb=$fieldb WHERE id = $id RETURNING *',
             parameters: {
@@ -38,14 +38,21 @@ describe('QUERY updateOne', function () {
         });
     });
 
-    it('should throw an error if given ids does not match idFieldNames', function () {
+    it('should ignore selector not in selectorFields', function () {
         const updateOneQuery = updateOneQuerier('table', [ 'fielda', 'fieldb' ], ['id']);
-        assert.throw(() => updateOneQuery({ id: 1, uid: 2 }, { fielda: 1, fieldb: 2 }), 'Given ids: (id, uid) does not match idFieldNames: (id)');
+        assert.deepEqual(updateOneQuery({ id: 1, uid: 2 }, { fielda: 1, fieldb: 2 }), {
+            sql: 'UPDATE table SET fielda=$fielda, fieldb=$fieldb WHERE id = $id RETURNING *',
+            parameters: {
+                id: 1,
+                fielda: 1,
+                fieldb: 2
+            }
+        });
     });
 
     it('should throw an error if given idFieldNames does not match ids', function () {
         const updateOneQuery = updateOneQuerier('table', [ 'fielda', 'fieldb' ], ['uid', 'id']);
-        assert.throw(() => updateOneQuery({id: 1}, { fielda: 1, fieldb: 2 }), 'Given ids: (id) does not match idFieldNames: (uid, id)');
+        assert.throw(() => updateOneQuery({id: 1}, { fielda: 1, fieldb: 2 }), 'Given object: (id) does not match keys: (uid, id)');
     });
 
 });
