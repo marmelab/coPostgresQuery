@@ -21,7 +21,7 @@ describe('batchParameter', function () {
         ]), {
             a0: 1, b0: 2, c0: 3,
             a1: 11, b1: 12, c1: 13,
-            a2: 21, b2: 22
+            a2: 21, b2: 22, c2: null
         });
     });
 });

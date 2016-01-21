@@ -1,15 +1,16 @@
 import configurable from '../utils/configurable';
 import whereQuery from './whereQuery';
+import sanitizeParameter from './sanitizeParameter';
 
-export default function (table, identifiers = ['id'], fields) {
+export default function (table, fields, identifiers = 'id', extraOptions = {}) {
 
     let config = {
         table,
         fields,
         searchableFields: fields,
-        identifiers,
+        identifiers: [].concat(identifiers),
         specificSorts: {},
-        withQuery: table.indexOf('JOIN') !== -1
+        withQuery: table.indexOf('JOIN') !== -1 || extraOptions.withQuery
     };
 
     const selectPage = function selectPage(limit, offset, filters = {}, sort, sortDir) {
@@ -21,13 +22,14 @@ export default function (table, identifiers = ['id'], fields) {
             specificSorts,
             withQuery
         } = config;
-        let query = `SELECT ${fields.join(', ')}, COUNT(*) OVER() as totalCount FROM ${table}`;
+        let sql = `SELECT ${fields.join(', ')}, COUNT(*) OVER() as totalCount FROM ${table}`;
         if (withQuery) {// withQuery add a temporary result table that allow to filters on computed and joined field
-            query = `WITH result AS (${query}) SELECT *, COUNT(*) OVER() as totalCount FROM result`;
+            sql = `WITH result AS (${sql}) SELECT *, COUNT(*) OVER() as totalCount FROM result`;
         }
 
-        let { sql, parameters } = whereQuery(filters, searchableFields);
-        query += sql || '';
+        sql += whereQuery(filters, searchableFields);
+
+        const parameters = sanitizeParameter(fields, filters);
 
         // always sort by id to avoid randomness in case of identical sortField value
         let sortQuery = [`${identifiers} ASC`];
@@ -42,15 +44,15 @@ export default function (table, identifiers = ['id'], fields) {
                 sortQuery.unshift(`${sort} ${(sortDir.toLowerCase() === 'asc' ? 'ASC' : 'DESC')}`);
             }
         }
-        query += ` ORDER BY ${sortQuery.join(', ')}`;
+        sql += ` ORDER BY ${sortQuery.join(', ')}`;
 
         if (limit) {
-            query += ` LIMIT $limit OFFSET $offset`;
+            sql += ` LIMIT $limit OFFSET $offset`;
             parameters.limit = limit || 30;
             parameters.offset = offset || 0;
         }
 
-        return { query, parameters };
+        return { sql, parameters };
     };
 
     return configurable(selectPage, config);

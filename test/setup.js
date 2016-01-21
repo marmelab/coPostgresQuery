@@ -17,7 +17,7 @@ before(function* () {
     yield global.db.query({ sql: `DROP TABLE IF EXISTS post;`});
     yield global.db.query({ sql: `CREATE TABLE IF NOT EXISTS post (
         id              serial primary key,
-        author          integer NOT NULL,
+        author          varchar(32) NOT NULL,
         title           varchar(255),
         date            timestamp with time zone,
         unique          (author, date)

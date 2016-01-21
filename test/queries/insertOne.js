@@ -24,13 +24,12 @@ describe('QUERY insertOne', function () {
         });
     });
 
-    it('should default missing parameter to NULL', function () {
+    it('should ignore missing parameter', function () {
         const insertOneQuery = insertOneQuerier('table', ['fielda', 'fieldb']);
         assert.deepEqual(insertOneQuery({ fielda: 'a' }), {
-            sql: 'INSERT INTO table\n(fielda, fieldb)\nVALUES($fielda, $fieldb)\nRETURNING *',
+            sql: 'INSERT INTO table\n(fielda)\nVALUES($fielda)\nRETURNING *',
             parameters: {
-                fielda: 'a',
-                fieldb: null
+                fielda: 'a'
             }
         });
     });

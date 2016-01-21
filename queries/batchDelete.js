@@ -16,7 +16,7 @@ module.exports = function (table, fields, idFieldName) {
             idFieldName
         } = config;
 
-        const parameters = batchParameter([idFieldName], ids.map((id) => ({[idFieldName]: id})));
+        const parameters = batchParameter([idFieldName])(ids.map((id) => ({[idFieldName]: id})));
 
         const idsQuery = ids.reduce((sql, id, index) => ([
             ...sql,

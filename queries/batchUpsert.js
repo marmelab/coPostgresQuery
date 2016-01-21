@@ -1,5 +1,6 @@
 import configurable from '../utils/configurable';
 import valueSubQuery from './valueSubQuery';
+import batchParameter from './batchParameter';
 
 export default function (table, selectorFields, updatableFields, returnFields = '*') {
     let config = {
@@ -19,6 +20,7 @@ export default function (table, selectorFields, updatableFields, returnFields = 
             returnFields
         } = config;
         const getValueSubQuery = valueSubQuery(fields);
+        const getParameter = batchParameter(fields);
 
         if (Array.isArray(returnFields)) {
             returnFields = returnFields.join(', ');
@@ -28,12 +30,11 @@ export default function (table, selectorFields, updatableFields, returnFields = 
             return `${field} = excluded.${field}`;
         });
 
-        const { values, parameters } = entities
-        .map((entity, index) => getValueSubQuery(entity, index + 1))
-        .reduce((result, value, index) => ({
-            parameters: {...result.parameters, ...value.parameters},
-            values: result.values.concat(`(${value.sql})`)
-        }), { values: [], parameters: {} });
+        const values = entities
+        .map((_, index) => getValueSubQuery(index))
+        .reduce((result, value, index) => result.concat(`(${value})`), []);
+
+        const parameters = getParameter(entities);
 
         const sql = (
 `INSERT INTO ${table}

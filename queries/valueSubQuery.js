@@ -1,9 +1,9 @@
 import curry from '../utils/curry';
 
-function valueSubQuerier(writableFields, suffix) {
+function valueSubQuery(writableFields, suffix) {
     return writableFields
     .map((field) => `$${field}${suffix}`)
     .join(', ');
 }
 
-export default curry(valueSubQuerier);
+export default curry(valueSubQuery);

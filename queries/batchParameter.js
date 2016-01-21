@@ -1,4 +1,5 @@
 import sanitizeParameter from './sanitizeParameter';
+import arrayToLitteral from '../utils/arrayToLitteral';
 
 export function addSuffix(object, suffix) {
     return Object.keys(object)
@@ -18,7 +19,7 @@ export function merge(first, second) {
 };
 
 export default function (fields) {
-    const sanitize = sanitizeParameter(fields);
+    const sanitize = sanitizeParameter(arrayToLitteral(fields, null));
 
     return function (entities) {
         return entities

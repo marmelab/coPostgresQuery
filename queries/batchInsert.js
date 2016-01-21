@@ -16,7 +16,7 @@ export default function (table, fields, returnFields = '*') {
             returnFields
         } = config;
 
-        const parameters = batchParameter(fields, entities);
+        const parameters = batchParameter(fields)(entities);
         const getValueSubQuery = valueSubQuery(fields);
 
         if (Array.isArray(returnFields)) {

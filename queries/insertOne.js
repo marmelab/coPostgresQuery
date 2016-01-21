@@ -17,10 +17,11 @@ export default function (table, fields, returningFields = ['*']) {
         } = config;
 
         const parameters = sanitizeParameter(fields, data);
-        const values = valueSubQuery(fields, '');
+        const keys = Object.keys(parameters);
+        const values = valueSubQuery(keys, '');
         const sql = (
 `INSERT INTO ${table}
-(${Object.keys(parameters).join(', ')})
+(${keys.join(', ')})
 VALUES(${values})
 RETURNING ${returningFields.join(', ')}`
         );

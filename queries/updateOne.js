@@ -6,7 +6,7 @@ import sanitizeParameter from './sanitizeParameter';
 export default function (table, updatableFields, idFields = ['id'], returningFields = ['*']) {
     let config = {
         table,
-        idFields: Array.isArray(idFields) ? idFields : [idFields],
+        idFields: [].concat(idFields),
         updatableFields,
         returningFields
     };
