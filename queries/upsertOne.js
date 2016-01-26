@@ -38,7 +38,8 @@ export default function (table, selectorFields, updatableFields, autoIncrementFi
 `INSERT INTO ${table} (${insertFields.join(', ')})
 VALUES (${valuesQuery})
 ON CONFLICT (${selectorFields.join(', ')}) DO UPDATE
-SET ${setQuery.join(', ')}`
+SET ${setQuery.join(', ')}
+RETURNING ${returningFields.join(', ')}`
         );
 
         return { sql, parameters };

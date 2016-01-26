@@ -15,6 +15,9 @@ export default function (table, fields, returnFields = '*') {
             fields,
             returnFields
         } = config;
+        if (!entities || entities.length === 0) {
+            throw new Error(`No data for batch inserting ${table} entities.`);
+        }
 
         const parameters = batchParameter(fields)(entities);
         const getValueSubQuery = valueSubQuery(fields);

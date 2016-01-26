@@ -1,14 +1,14 @@
 'use strict';
 
-import batchInsert from '../../base/batchInsert';
+import batchInsert from '../../queries/batchInsert';
 
 describe('batchInsert', function () {
 
     it('should throw an error if no entities given', function* () {
-        const batchInsertQuery = batchInsert('tag', ['name'])(db);
+        const batchInsertQuery = batchInsert('tag', ['name']);
         let error;
         try {
-            yield batchInsertQuery();
+            yield db.query(batchInsertQuery());
         } catch (e) {
             error = e;
         }
@@ -16,19 +16,26 @@ describe('batchInsert', function () {
         assert.equal(error.message, 'No data for batch inserting tag entities.');
     });
 
-    it('should return empty array if passed an empty array', function* () {
-        const batchInsertQuery = batchInsert('tag', ['name'])(db);
-        assert.deepEqual(yield batchInsertQuery([]), []);
+    it('should throw an error if passed an empty array', function* () {
+        const batchInsertQuery = batchInsert('tag', ['name']);
+        let error;
+        try {
+            yield db.query(batchInsertQuery([]));
+        } catch (e) {
+            error = e;
+        }
+
+        assert.equal(error.message, 'No data for batch inserting tag entities.');
     });
 
     it('should insert list of entity in a single request returning all field by default', function* () {
-        const batchInsertQuery = batchInsert('tag', ['name'])(db);
+        const batchInsertQuery = batchInsert('tag', ['name']);
         const tags = [
             { name: 'tag1' },
             { name: 'tag2' },
             { name: 'tag3' }
         ];
-        const result = yield batchInsertQuery(tags);
+        const result = yield db.query(batchInsertQuery(tags));
 
         assert.deepEqual(result.map((tag) => ({ name: tag.name })), tags);
 
@@ -37,13 +44,13 @@ describe('batchInsert', function () {
     });
 
     it('should insert list of entity in a single request returning only specified field if given', function* () {
-        const batchInsertQuery = batchInsert('tag', ['name'], ['id'])(db);
+        const batchInsertQuery = batchInsert('tag', ['name'], ['id']);
         const tags = [
             { name: 'tag1' },
             { name: 'tag2' },
             { name: 'tag3' }
         ];
-        const result = yield batchInsertQuery(tags);
+        const result = yield db.query(batchInsertQuery(tags));
 
         assert.equal(result.length, tags.length);
 

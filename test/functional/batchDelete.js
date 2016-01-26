@@ -1,12 +1,10 @@
-'use strict';
-
-import batchDelete from '../../base/batchDelete';
+import batchDelete from '../../queries/batchDelete';
 
 describe('batchDelete', function () {
-    var ids, tags, batchDeleteQuery;
+    let ids, tags, batchDeleteQuery;
 
-    before(function* () {
-        batchDeleteQuery = batchDelete('tag', ['id', 'name'], 'id')(db);
+    before(function () {
+        batchDeleteQuery = batchDelete('tag', ['id', 'name'], 'id');
     });
 
     beforeEach(function* () {
@@ -18,8 +16,8 @@ describe('batchDelete', function () {
         ids = tags.map(tag => tag.id);
     });
 
-    it('should remove entity and return them', function* () {
-        var result = yield batchDeleteQuery(ids.slice(1));
+    it('should remove entities', function* () {
+        var result = yield db.query(batchDeleteQuery(ids.slice(1)));
 
         assert.deepEqual(result, tags.slice(1));
 

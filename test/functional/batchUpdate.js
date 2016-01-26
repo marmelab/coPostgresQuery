@@ -1,12 +1,12 @@
 'use strict';
 
-import batchUpdate from '../../base/batchUpdate';
+import batchUpdate from '../../queries/batchUpdate';
 
 describe('batchUpdate', function () {
     let ids, batchUpdateQuery;
 
     before(function* () {
-        batchUpdateQuery = batchUpdate('tag', ['id', 'name'], ['id'])(db);
+        batchUpdateQuery = batchUpdate('tag', ['id', 'name'], ['id']);
     });
 
     beforeEach(function* () {
@@ -25,7 +25,7 @@ describe('batchUpdate', function () {
             { id: ids[1], name: 'newTag2' }
         ];
 
-        const result = yield batchUpdateQuery(newTags);
+        const result = yield db.query(batchUpdateQuery(newTags));
 
         assert.deepEqual(result, newTags);
 
@@ -39,11 +39,11 @@ describe('batchUpdate', function () {
     });
 
     it('should ignore unexisting entity', function* () {
-        const result = yield batchUpdateQuery([
+        const result = yield db.query(batchUpdateQuery([
             { id: ids[0], name: 'newTag1' },
             { id: ids[1], name: 'newTag2' },
             { id: 404, name: 'newTag' }
-        ]);
+        ]));
 
         assert.deepEqual(result, [
             { id: ids[0], name: 'newTag1' },
@@ -60,10 +60,10 @@ describe('batchUpdate', function () {
     });
 
     it('should update nothing on unexisting entity', function* () {
-        const result = yield batchUpdateQuery([
+        const result = yield db.query(batchUpdateQuery([
             { id: 4, name: 'newTag' },
             { id: 5, name: 'newTag' }
-        ]);
+        ]));
 
         assert.deepEqual(result, []);
 
