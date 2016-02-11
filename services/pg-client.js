@@ -1,43 +1,7 @@
 'use strict';
 
 import pg from 'pg-then';
-
-var tokenPattern = /\$[a-zA-Z]([a-zA-Z0-9_]*)\b/g;
-
-function numericFromNamed(sql, parameters = {}) {
-    var fillableTokens = Object.keys(parameters);
-    var matchedTokens = sql.match(tokenPattern);
-    if (!matchedTokens) {
-        return { sql, parameters: [] };
-    }
-    matchedTokens = matchedTokens
-    .map((token)=> token.substring(1)) // Remove leading dollar sign
-    .filter((value, index, self) => self.indexOf(value) === index);
-
-    var fillTokens = fillableTokens.filter((value) => matchedTokens.indexOf(value) > -1);
-    var fillValues = fillTokens.map(function (token) {
-        return parameters[token];
-    });
-
-    var unmatchedTokens = matchedTokens.filter((value) => fillableTokens.indexOf(value) < 0);
-
-    if (unmatchedTokens.length) {
-        var missing = unmatchedTokens.join(', ');
-        throw new Error(`Missing Parameters: ${missing}`);
-    }
-
-    var interpolatedSql = fillTokens.reduce(function (partiallyInterpolated, token, index) {
-        var replaceAllPattern = new RegExp(`\\$${fillTokens[index]}\\b`, 'g');
-        return partiallyInterpolated
-        .replace(replaceAllPattern, `$${index + 1}`); // PostGreSQL parameters are inexplicably 1-indexed.
-    }, sql);
-
-    var out = {};
-    out.sql = interpolatedSql;
-    out.parameters = fillValues;
-
-    return out;
-}
+import namedToNumericParameter from '../queries/namedToNumericParameter';
 
 export default function* pgClient(dsn) {
     var client = new pg.Client(dsn);
@@ -46,7 +10,7 @@ export default function* pgClient(dsn) {
         if (!sql) {
             throw new Error('sql cannot be null');
         }
-        const result = numericFromNamed(sql, parameters);
+        const result = namedToNumericParameter(sql, parameters);
         const parsedSql = result.sql;
         const parsedParameters = result.parameters;
 
