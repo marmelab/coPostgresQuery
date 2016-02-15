@@ -9,5 +9,3 @@ test:
 
 db:
   image: postgres:9.5
-  ports:
-    - 5432:5432

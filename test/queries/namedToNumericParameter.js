@@ -1,6 +1,6 @@
 import namedToNumericParameter from '../../queries/namedToNumericParameter';
 
-describe.only('namedToNumericParameter', function () {
+describe('namedToNumericParameter', function () {
     it('should replace named parameters by number one', function () {
         assert.deepEqual(namedToNumericParameter('$one, $two, $three', {
             one: 'first',
