@@ -31,7 +31,7 @@ export default function (table, fields, returnFields = '*') {
         .reduce((result, sql, index) => result.concat(`(${sql})`), [])
         .join(', ');
 
-        const sql = `INSERT INTO ${table}(${fields.join(', ')}) VALUES ${values} RETURNING ${returnFields}`;
+        const sql = `INSERT INTO ${table}(${fields.join(', ')}) VALUES ${values} RETURNING ${returnFields};`;
 
         return { sql, parameters };
     };

@@ -1,6 +1,7 @@
 'use strict';
 
 import pg from 'pg-then';
+import co from 'co';
 import namedToNumericParameter from '../queries/namedToNumericParameter';
 
 export default function* pgClient(dsn) {
@@ -15,6 +16,28 @@ export default function* pgClient(dsn) {
         const parsedParameters = result.parameters;
 
         return (yield client.query(parsedSql, parsedParameters)).rows;
+    };
+
+    const queries = function* ({ sql, parameters }) {
+        if (!sql) {
+            throw new Error('sql cannot be null');
+        }
+
+        yield begin();
+        const result = yield sql.split(';')
+        .reduce((prev, sql) => prev.then(function () {
+            return co(function* () {
+                return yield query({ sql, parameters });
+            });
+        }), Promise.resolve(null))
+        .catch(error => co(function* () {
+            yield rollback();
+            throw error;
+        }));
+
+        yield commit();
+
+        return result;
     };
 
     const queryOne = function* ({ sql, parameters }) {
@@ -45,6 +68,7 @@ export default function* pgClient(dsn) {
         ...client,
         done: client.end.bind(client),
         query,
+        queries,
         queryOne,
         id,
         begin,

@@ -2,11 +2,11 @@
 
 import batchUpdate from '../../queries/batchUpdate';
 
-describe('batchUpdate', function () {
+describe.only('batchUpdate', function () {
     let ids, batchUpdateQuery;
 
     before(function* () {
-        batchUpdateQuery = batchUpdate('tag', ['id', 'name'], ['id']);
+        batchUpdateQuery = batchUpdate('tag', 'temptag1', ['id', 'name'], ['id']);
     });
 
     beforeEach(function* () {
@@ -25,11 +25,11 @@ describe('batchUpdate', function () {
             { id: ids[1], name: 'newTag2' }
         ];
 
-        const result = yield db.query(batchUpdateQuery(newTags));
+        const result = yield db.queries(batchUpdateQuery(newTags));
 
         assert.deepEqual(result, newTags);
 
-        const updatedTags = yield db.query({ sql: 'SELECT * from tag ORDER BY id'});
+        const updatedTags = yield db.queries({ sql: 'SELECT * from tag ORDER BY id'});
 
         assert.deepEqual(updatedTags, [
             { id: ids[0], name: 'newTag1' },
@@ -39,7 +39,7 @@ describe('batchUpdate', function () {
     });
 
     it('should ignore unexisting entity', function* () {
-        const result = yield db.query(batchUpdateQuery([
+        const result = yield db.queries(batchUpdateQuery([
             { id: ids[0], name: 'newTag1' },
             { id: ids[1], name: 'newTag2' },
             { id: 404, name: 'newTag' }
@@ -50,7 +50,7 @@ describe('batchUpdate', function () {
             { id: ids[1], name: 'newTag2' }
         ]);
 
-        const updatedTags = yield db.query({ sql: 'SELECT * from tag ORDER BY id'});
+        const updatedTags = yield db.queries({ sql: 'SELECT * from tag ORDER BY id'});
 
         assert.deepEqual(updatedTags, [
             { id: ids[0], name: 'newTag1' },
@@ -60,14 +60,14 @@ describe('batchUpdate', function () {
     });
 
     it('should update nothing on unexisting entity', function* () {
-        const result = yield db.query(batchUpdateQuery([
+        const result = yield db.queries(batchUpdateQuery([
             { id: 4, name: 'newTag' },
             { id: 5, name: 'newTag' }
         ]));
 
         assert.deepEqual(result, []);
 
-        const updatedTags = yield db.query({ sql: 'SELECT * from tag ORDER BY id'});
+        const updatedTags = yield db.queries({ sql: 'SELECT * from tag ORDER BY id'});
 
         assert.deepEqual(updatedTags, [
             { id: ids[0], name: 'tag1' },
