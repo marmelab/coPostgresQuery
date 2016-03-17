@@ -1,5 +1,3 @@
-'use strict';
-
 export default function init(entry, options) {
     var handlers = [];
 

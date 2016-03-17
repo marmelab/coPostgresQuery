@@ -1,5 +1,3 @@
-'use strict';
-
 export default function fixtureLoaderFactory(db) {
 
     const addAuthor = function* ({ name = 'doe', firstname = 'john' }) {

@@ -1,5 +1,3 @@
-'use strict';
-
 import batchInsertQuerier from '../../queries/batchInsert';
 
 describe('QUERY batchInsert', function () {

@@ -1,5 +1,3 @@
-'use strict';
-
 module.exports = function (client, tableName, fields, idFieldName) {
     var queryAll = 'SELECT ' + fields.join(', ') + ' FROM ' + tableName;
     var queryById = queryAll + ' WHERE ' + idFieldName + ' = $id LIMIT 1';

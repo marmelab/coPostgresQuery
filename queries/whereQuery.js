@@ -1,5 +1,3 @@
-'use strict';
-
 import middleware from '../utils/middleware';
 
 export function getFieldPlaceHolder(field, value) {

@@ -1,5 +1,3 @@
-'use strict';
-
 export default function (tableName, exposedFields, searchableFields, sortableFields, idOptions, extraOptions) {
     idOptions = idOptions || {};
     var idFieldName = idOptions.name || 'id';

@@ -1,5 +1,3 @@
-'use strict';
-
 import insertOne from '../../queries/insertOne';
 
 describe('insertOne', function () {

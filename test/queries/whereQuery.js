@@ -1,5 +1,3 @@
-'use strict';
-
 import * as whereQueryGet from '../../queries/whereQuery';
 import whereQuery, { sortQueryType, getFieldType } from '../../queries/whereQuery';
 

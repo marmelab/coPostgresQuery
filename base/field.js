@@ -1,5 +1,3 @@
-'use strict';
-
 module.exports = {
     getFieldNames: function (fieldMap) {
         return Object.keys(fieldMap).reduce(function (fields, table) {

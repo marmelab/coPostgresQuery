@@ -1,5 +1,3 @@
-'use strict';
-
 import field from '../../base/field';
 
 describe('base/field', function () {

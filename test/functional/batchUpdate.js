@@ -1,5 +1,3 @@
-'use strict';
-
 import batchUpdate from '../../queries/batchUpdate';
 
 describe('batchUpdate', function () {

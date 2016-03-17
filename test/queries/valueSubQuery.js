@@ -1,5 +1,3 @@
-'use strict';
-
 import valueSubQuery from '../../queries/valueSubQuery';
 
 describe('valueSubQuery', function () {

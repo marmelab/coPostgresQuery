@@ -1,5 +1,3 @@
-'use strict';
-
 import selectPage from '../../queries/selectPage';
 
 describe('selectPage', function () {
