@@ -1,9 +1,6 @@
-'use strict';
-
 import pg from 'pg-then';
 import co from 'co';
 import namedToNumericParameter from '../queries/namedToNumericParameter';
-
 export default function* pgClient(dsn) {
     var client = new pg.Client(dsn);
 

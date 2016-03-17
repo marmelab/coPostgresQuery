@@ -2,7 +2,7 @@
 
 import batchUpdate from '../../queries/batchUpdate';
 
-describe.only('batchUpdate', function () {
+describe('batchUpdate', function () {
     let ids, batchUpdateQuery;
 
     before(function* () {
@@ -29,7 +29,7 @@ describe.only('batchUpdate', function () {
 
         assert.deepEqual(result, newTags);
 
-        const updatedTags = yield db.queries({ sql: 'SELECT * from tag ORDER BY id'});
+        const updatedTags = yield db.query({ sql: 'SELECT * from tag ORDER BY id'});
 
         assert.deepEqual(updatedTags, [
             { id: ids[0], name: 'newTag1' },
@@ -50,7 +50,7 @@ describe.only('batchUpdate', function () {
             { id: ids[1], name: 'newTag2' }
         ]);
 
-        const updatedTags = yield db.queries({ sql: 'SELECT * from tag ORDER BY id'});
+        const updatedTags = yield db.query({ sql: 'SELECT * from tag ORDER BY id'});
 
         assert.deepEqual(updatedTags, [
             { id: ids[0], name: 'newTag1' },
@@ -67,7 +67,7 @@ describe.only('batchUpdate', function () {
 
         assert.deepEqual(result, []);
 
-        const updatedTags = yield db.queries({ sql: 'SELECT * from tag ORDER BY id'});
+        const updatedTags = yield db.query({ sql: 'SELECT * from tag ORDER BY id'});
 
         assert.deepEqual(updatedTags, [
             { id: ids[0], name: 'tag1' },
