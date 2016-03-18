@@ -28,7 +28,7 @@ describe('QUERY deleteOne', function () {
         const deleteOneQuery = deleteOne()
         .table('table')
         .idFields([ 'id1', 'id2' ])
-        .returningFields(['fielda', 'fieldb']);
+        .returnFields(['fielda', 'fieldb']);
 
         assert.deepEqual(deleteOneQuery({ id1: 1, id2: 2 }), {
             sql: 'DELETE FROM table WHERE id1 = $id1 AND id2 = $id2 RETURNING fielda, fieldb',

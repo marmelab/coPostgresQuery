@@ -2,18 +2,18 @@ import configurable from '../utils/configurable';
 import valueSubQuery from './valueSubQuery';
 import sanitizeParameter from './sanitizeParameter';
 
-export default function (table, fields, returningFields = ['*']) {
+export default function (table, fields, returnFields = ['*']) {
     let config = {
         table,
         fields,
-        returningFields
+        returnFields
     };
 
     function insertOne(data) {
         const {
             table,
             fields,
-            returningFields
+            returnFields
         } = config;
 
         const parameters = sanitizeParameter(fields, data);
@@ -23,7 +23,7 @@ export default function (table, fields, returningFields = ['*']) {
 `INSERT INTO ${table}
 (${keys.join(', ')})
 VALUES(${values})
-RETURNING ${returningFields.join(', ')}`
+RETURNING ${returnFields.join(', ')}`
         );
 
         return {

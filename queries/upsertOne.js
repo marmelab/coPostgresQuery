@@ -1,7 +1,7 @@
 import configurable from '../utils/configurable';
 import sanitizeParameter from './sanitizeParameter';
 
-export default function (table, selectorFields, updatableFields, autoIncrementFields = [], returningFields = ['*']) {
+export default function (table, selectorFields, updatableFields, autoIncrementFields = [], returnFields = ['*']) {
     let fields = selectorFields.concat(updatableFields.filter((f) => selectorFields.indexOf(f) === -1));
     let config = {
         table,
@@ -10,7 +10,7 @@ export default function (table, selectorFields, updatableFields, autoIncrementFi
         selectorFields,
         updatableFields,
         autoIncrementFields,
-        returningFields
+        returnFields
     };
 
     function upsertOne(entity) {
@@ -21,7 +21,7 @@ export default function (table, selectorFields, updatableFields, autoIncrementFi
             selectorFields,
             updatableFields,
             autoIncrementFields,
-            returningFields
+            returnFields
         } = config;
         const setQuery = updatableFields.map(function (field) {
             return `${field} = $${field}`;
@@ -39,7 +39,7 @@ export default function (table, selectorFields, updatableFields, autoIncrementFi
 VALUES (${valuesQuery})
 ON CONFLICT (${selectorFields.join(', ')}) DO UPDATE
 SET ${setQuery.join(', ')}
-RETURNING ${returningFields.join(', ')}`
+RETURNING ${returnFields.join(', ')}`
         );
 
         return { sql, parameters };

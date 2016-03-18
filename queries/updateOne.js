@@ -3,12 +3,12 @@ import whereQuery from './whereQuery';
 import sanitizeIdentifier from './sanitizeIdentifier';
 import sanitizeParameter from './sanitizeParameter';
 
-export default function (table, updatableFields, idFields = ['id'], returningFields = ['*']) {
+export default function (table, updatableFields, idFields = ['id'], returnFields = ['*']) {
     let config = {
         table,
         idFields: [].concat(idFields),
         updatableFields,
-        returningFields
+        returnFields
     };
 
     function updateOne(id, data) {
@@ -16,7 +16,7 @@ export default function (table, updatableFields, idFields = ['id'], returningFie
             table,
             idFields,
             updatableFields,
-            returningFields
+            returnFields
         } = config;
 
         const identifiers = sanitizeIdentifier(idFields, id);
@@ -42,7 +42,7 @@ export default function (table, updatableFields, idFields = ['id'], returningFie
             throw new Error('no valid column to set');
         }
 
-        var sql = `UPDATE ${table} SET ${setQuery.join(', ')} ${where} RETURNING ${returningFields.join(', ')}`;
+        var sql = `UPDATE ${table} SET ${setQuery.join(', ')} ${where} RETURNING ${returnFields.join(', ')}`;
 
         return {
             sql,

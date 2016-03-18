@@ -2,13 +2,13 @@ import configurable from '../utils/configurable';
 import whereQuery from './whereQuery';
 import sanitizeParameter from './sanitizeParameter';
 
-export default function (table, fields, identifiers = 'id', extraOptions = {}) {
+export default function (table, fields, idFields = 'id', extraOptions = {}) {
 
     let config = {
         table,
         fields,
         searchableFields: fields,
-        identifiers: [].concat(identifiers),
+        idFields: [].concat(idFields),
         specificSorts: {},
         withQuery: table.indexOf('JOIN') !== -1 || extraOptions.withQuery
     };
@@ -18,13 +18,13 @@ export default function (table, fields, identifiers = 'id', extraOptions = {}) {
             table,
             fields,
             searchableFields,
-            identifiers,
+            idFields,
             specificSorts,
             withQuery
         } = config;
         let sql = `SELECT ${fields.join(', ')}, COUNT(*) OVER() as totalCount FROM ${table}`;
         if (withQuery) {// withQuery add a temporary result table that allow to filters on computed and joined field
-            sql = `WITH result AS (${sql}) SELECT *, COUNT(*) OVER() as totalCount FROM result`;
+            sql = `WITH result AS (${sql}) SELECT * FROM result`;
         }
 
         sql += whereQuery(filters, searchableFields);
@@ -32,7 +32,7 @@ export default function (table, fields, identifiers = 'id', extraOptions = {}) {
         const parameters = sanitizeParameter(fields, filters);
 
         // always sort by id to avoid randomness in case of identical sortField value
-        let sortQuery = [`${identifiers} ASC`];
+        let sortQuery = [`${idFields} ASC`];
         if (sort) {
             sort = sort.toLowerCase();
             if (specificSorts && specificSorts.hasOwnProperty(sort)) {

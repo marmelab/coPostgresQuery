@@ -38,7 +38,7 @@ describe('QUERY insertOne', function () {
         const insertOneQuery = insertOneQuerier()
         .table('other')
         .fields(['a', 'b'])
-        .returningFields(['a', 'c']);
+        .returnFields(['a', 'c']);
         assert.deepEqual(insertOneQuery({ a: 'a', b: 'b' }), {
             sql: 'INSERT INTO other\n(a, b)\nVALUES($a, $b)\nRETURNING a, c',
             parameters: {

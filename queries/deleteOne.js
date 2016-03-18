@@ -2,23 +2,23 @@ import configurable from '../utils/configurable';
 import sanitizeIdentifier from './sanitizeIdentifier';
 import whereQuery from './whereQuery';
 
-export default function (table, idFields, returningFields = ['*']) {
+export default function (table, idFields, returnFields = ['*']) {
     let config = {
         table,
         idFields,
-        returningFields
+        returnFields
     };
 
     function deleteOne(id) {
         const {
             table,
             idFields,
-            returningFields
+            returnFields
         } = config;
 
         const parameters = sanitizeIdentifier(idFields, id);
         const where = whereQuery(parameters, idFields);
-        const sql = `DELETE FROM ${table} ${where} RETURNING ${returningFields.join(', ')}`;
+        const sql = `DELETE FROM ${table} ${where} RETURNING ${returnFields.join(', ')}`;
 
         return {sql, parameters};
     };

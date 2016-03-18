@@ -1,16 +1,26 @@
-import selectOne from './selectOne';
-import selectPage from './selectPage';
-import deleteOne from './deleteOne';
-import updateOne from './updateOne';
-import insertOne from './insertOne';
 
-export default function (table, identifiers = ['id'], fields) {
+import { default as deleteOneQuerier } from '../queries/deleteOne';
+import { default as insertOneQuerier } from '../queries/insertOne';
+import { default as selectOneQuerier } from '../queries/selectOne';
+import { default as selectPageQuerier } from '../queries/selectPage';
+import { default as updateOneQuerier } from '../queries/updateOne';
 
-    return {
-        selectOne: selectOne(table, identifiers, fields),
-        selectPage: selectPage(table, fields),
-        deleteOne: deleteOne(table, identifiers, fields),
-        updateOne: updateOne(table, identifiers, fields),
-        insertOne: insertOne(table, fields)
+export default function (table, fields, idFields, returnFields = '*', configurators = []) {
+    const deleteOne = deleteOneQuerier(table, idFields);
+    const insertOne = insertOneQuerier(table, fields);
+    const selectOne = selectOneQuerier(table, idFields, returnFields);
+    const selectPage = selectPageQuerier(table, fields, idFields);
+    const updateOne = updateOneQuerier(table, fields, idFields);
+
+    const queries = {
+        deleteOne,
+        insertOne,
+        selectOne,
+        selectPage,
+        updateOne
     };
-}
+
+    [].concat(configurators).forEach(configure => configure(queries));
+
+    return queries;
+};

@@ -1,12 +1,12 @@
 import configurable from '../utils/configurable';
 import batchInsert from './batchInsert';
 
-export default function (table, temporaryTable, fields, identifiers, returningFields = fields) {
+export default function (table, temporaryTable, fields, identifiers, returnFields = fields) {
     let config = {
         table,
         fields,
         identifiers,
-        returningFields
+        returnFields
     };
 
     const tempBatchInsert = batchInsert(temporaryTable, fields);
@@ -16,7 +16,7 @@ export default function (table, temporaryTable, fields, identifiers, returningFi
             table,
             fields,
             identifiers,
-            returningFields
+            returnFields
         } = config;
         const setQuery = fields.map((field) => `${field} = ${temporaryTable}.${field}`);
 
@@ -29,7 +29,7 @@ UPDATE ${table}
 SET ${setQuery.join(', ')}
 FROM ${temporaryTable}
 WHERE ${whereQuery.join(', ')}
-RETURNING ${returningFields.map(field => `${table}.${field}`).join(', ')}`
+RETURNING ${[].concat(returnFields).map(field => `${table}.${field}`).join(', ')}`
         );
 
         return { sql, parameters: tempBatchInsert(entities).parameters };
