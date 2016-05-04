@@ -1,4 +1,4 @@
-import batchInsertQuerier from '../../queries/batchInsert';
+import batchInsertQuerier from '../../lib/queries/batchInsert';
 
 describe('QUERY batchInsert', function () {
     it('shoul generate sql and parameter for batchInserting given entities', function () {

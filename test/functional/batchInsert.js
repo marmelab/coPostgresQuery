@@ -1,4 +1,4 @@
-import batchInsert from '../../queries/batchInsert';
+import batchInsert from '../../lib/queries/batchInsert';
 
 describe('batchInsert', function () {
 

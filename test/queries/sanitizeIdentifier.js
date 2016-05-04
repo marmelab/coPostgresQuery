@@ -1,4 +1,4 @@
-import sanitizeIdentifier from '../../queries/sanitizeIdentifier';
+import sanitizeIdentifier from '../../lib/queries/sanitizeIdentifier';
 
 describe('sanitizeIdentifier', function () {
     it('should return identifier if it match identifierFields', function () {

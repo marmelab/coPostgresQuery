@@ -1,4 +1,4 @@
-import selectOne from '../../queries/selectOne';
+import selectOne from '../../lib/queries/selectOne';
 
 describe('functional selectOne', function () {
     let author;

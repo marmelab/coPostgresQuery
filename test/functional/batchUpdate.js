@@ -1,4 +1,4 @@
-import batchUpdate from '../../queries/batchUpdate';
+import batchUpdate from '../../lib/queries/batchUpdate';
 
 describe('batchUpdate', function () {
     let ids, batchUpdateQuery;

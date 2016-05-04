@@ -1,4 +1,4 @@
-import field from '../../base/field';
+import field from '../../lib/base/field';
 
 describe('base/field', function () {
     const fieldMap = {

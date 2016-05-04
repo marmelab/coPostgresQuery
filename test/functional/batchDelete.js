@@ -1,4 +1,4 @@
-import batchDelete from '../../queries/batchDelete';
+import batchDelete from '../../lib/queries/batchDelete';
 
 describe('batchDelete', function () {
     let ids, tags, batchDeleteQuery;

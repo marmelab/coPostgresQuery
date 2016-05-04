@@ -1,4 +1,4 @@
-import middleware from '../../utils/middleware';
+import middleware from '../../lib/utils/middleware';
 
 describe('middleware', function () {
     it('should execute used function f with options, and null', function () {

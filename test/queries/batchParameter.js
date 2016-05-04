@@ -1,4 +1,4 @@
-import batchParameter, { addSuffix, merge } from '../../queries/batchParameter';
+import batchParameter, { addSuffix, merge } from '../../lib/queries/batchParameter';
 
 describe('batchParameter', function () {
     it('addSuffix should add given suffix to all object attributes', function () {

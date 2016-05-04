@@ -1,5 +1,5 @@
-import * as whereQueryGet from '../../queries/whereQuery';
-import whereQuery, { sortQueryType, getFieldType } from '../../queries/whereQuery';
+import * as whereQueryGet from '../../lib/queries/whereQuery';
+import whereQuery, { sortQueryType, getFieldType } from '../../lib/queries/whereQuery';
 
 describe('whereQuery', function () {
 

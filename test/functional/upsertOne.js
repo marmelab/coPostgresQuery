@@ -1,6 +1,6 @@
 import moment from 'moment';
 
-import upsertOne from '../../queries/upsertOne';
+import upsertOne from '../../lib/queries/upsertOne';
 
 describe('execution', function () {
     let post, upsertOneQuery;

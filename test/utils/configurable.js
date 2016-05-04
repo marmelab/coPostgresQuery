@@ -1,4 +1,4 @@
-import configurable from '../../utils/configurable';
+import configurable from '../../lib/utils/configurable';
 
 describe('configurable', function () {
     it('should add property to funtion', function () {

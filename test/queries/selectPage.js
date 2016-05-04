@@ -1,4 +1,4 @@
-import selectPage from '../../queries/selectPage';
+import selectPage from '../../lib/queries/selectPage';
 
 describe('selectPage', function () {
 

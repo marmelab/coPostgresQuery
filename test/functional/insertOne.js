@@ -1,4 +1,4 @@
-import insertOne from '../../queries/insertOne';
+import insertOne from '../../lib/queries/insertOne';
 
 describe('insertOne', function () {
 

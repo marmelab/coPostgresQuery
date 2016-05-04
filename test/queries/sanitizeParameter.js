@@ -1,4 +1,4 @@
-import sanitizeParameter from '../../queries/sanitizeParameter';
+import sanitizeParameter from '../../lib/queries/sanitizeParameter';
 
 describe('sanitizeParameter', function () {
     it('should keep only attributes passed in first argument', function () {

@@ -1,4 +1,4 @@
-import updateOneQuerier from '../../queries/updateOne';
+import updateOneQuerier from '../../lib/queries/updateOne';
 
 describe('QUERY updateOne', function () {
     it('shoul generate sql and parameter for updating one entity', function () {

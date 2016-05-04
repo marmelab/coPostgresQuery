@@ -1,4 +1,4 @@
-import selectOneQuerier from '../../queries/selectOne';
+import selectOneQuerier from '../../lib/queries/selectOne';
 
 describe('QUERY selectOne', function () {
 

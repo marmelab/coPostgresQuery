@@ -1,4 +1,4 @@
-import deleteOne from '../../queries/deleteOne';
+import deleteOne from '../../lib/queries/deleteOne';
 
 describe('deleteOne', function () {
     let author;

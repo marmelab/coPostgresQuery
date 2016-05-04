@@ -1,4 +1,4 @@
-import upsertOneQuerier from '../../queries/upsertOne';
+import upsertOneQuerier from '../../lib/queries/upsertOne';
 
 describe('QUERY upsertOne', function () {
 

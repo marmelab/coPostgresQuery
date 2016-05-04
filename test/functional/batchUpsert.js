@@ -1,4 +1,4 @@
-import batchUpsert from '../../queries/batchUpsert';
+import batchUpsert from '../../lib/queries/batchUpsert';
 import moment from 'moment';
 
 describe('batchUpsert', function () {

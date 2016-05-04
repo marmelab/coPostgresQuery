@@ -1,4 +1,4 @@
-import queries from '../../queries';
+import queries from '../../lib/queries';
 
 describe('queries', function () {
     let configuredQueries;

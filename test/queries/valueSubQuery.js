@@ -1,4 +1,4 @@
-import valueSubQuery from '../../queries/valueSubQuery';
+import valueSubQuery from '../../lib/queries/valueSubQuery';
 
 describe('valueSubQuery', function () {
 

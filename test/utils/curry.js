@@ -1,4 +1,4 @@
-import curry from '../../utils/curry';
+import curry from '../../lib/utils/curry';
 
 describe('curry', function () {
     it('should return a function', function () {

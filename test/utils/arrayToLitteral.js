@@ -1,4 +1,4 @@
-import arrayToLitteral from '../../utils/arrayToLitteral';
+import arrayToLitteral from '../../lib/utils/arrayToLitteral';
 
 describe('arrayToLitteral', function () {
     it('should convert [keys] and [values] to literal', function () {

@@ -1,4 +1,4 @@
-import namedToNumericParameter from '../../queries/namedToNumericParameter';
+import namedToNumericParameter from '../../lib/queries/namedToNumericParameter';
 
 describe('namedToNumericParameter', function () {
     it('should replace named parameters by number one', function () {
