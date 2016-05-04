@@ -1,4 +1,4 @@
-import pgClient from '../lib/services/pg-client';
+import { pgClient } from '../lib';
 import { assert } from 'chai';
 import fixtureLoaderFactory from './utils/fixtureLoader';
 
