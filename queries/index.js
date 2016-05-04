@@ -1,4 +1,3 @@
-
 import { default as deleteOneQuerier } from '../queries/deleteOne';
 import { default as insertOneQuerier } from '../queries/insertOne';
 import { default as selectOneQuerier } from '../queries/selectOne';
