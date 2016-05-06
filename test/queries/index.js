@@ -17,7 +17,9 @@ describe('queries', function () {
             'insertOne',
             'selectOne',
             'selectPage',
-            'updateOne'
+            'updateOne',
+            'batchInsert',
+            'batchDelete'
         ]);
 
     });
@@ -56,6 +58,20 @@ describe('queries', function () {
         assert.deepEqual(updateOne.idFields(), idFields);
         assert.deepEqual(updateOne.updatableFields(), fields);
         assert.equal(updateOne.returnFields(), returnFields);
+    });
+
+    it('should configure batchInsert', function () {
+        const { batchInsert } = configuredQueries;
+        assert.equal(batchInsert.table(), table);
+        assert.deepEqual(batchInsert.fields(), fields);
+        assert.equal(batchInsert.returnFields(), returnFields);
+    });
+
+    it('should configure batchDelete', function () {
+        const { batchDelete } = configuredQueries;
+        assert.equal(batchDelete.table(), table);
+        assert.deepEqual(batchDelete.fields(), fields);
+        assert.equal(batchDelete.identifier(), idFields);
     });
 
     describe('configurator', function () {

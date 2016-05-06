@@ -4,7 +4,7 @@ describe('crud', function () {
     let queries;
 
     before(function () {
-        queries = crud('author', ['id', 'name', 'firstname'], ['id'])(db);
+        queries = crud('author', ['name', 'firstname'], ['id'], ['name', 'firstname'])(db);
     });
 
     it('should insert entity', function* () {
@@ -21,7 +21,8 @@ describe('crud', function () {
 
         const result = yield queries.selectOne({ id: author.id });
 
-        assert.deepEqual(result, [author]);
+        assert.equal(result[0].name, author.name);
+        assert.equal(result[0].firstname, author.firstname);
     });
 
     it('should delete entity', function* () {
@@ -60,7 +61,27 @@ describe('crud', function () {
         ].map(author => fixtureLoader.addAuthor(author));
 
         const result = yield queries.selectPage();
-        assert.deepEqual(result, authors.map(author => ({ ...author, totalcount: '2' })));
+        result.forEach((author, index) => {
+            assert.equal(author.name, authors[index].name);
+            assert.equal(author.firstname, authors[index].firstname);
+            assert.equal(author.totalcount, 2);
+        });
+    });
+
+    it('should batchInsert entities', function* () {
+        const authors = [
+            { firstname: 'john', name: 'doe' },
+            { firstname: 'jane', name: 'mae' }
+        ];
+        const result = yield queries.batchInsert(authors);
+
+        result.forEach((author, index) => {
+            assert.equal(author.name, authors[index].name);
+            assert.equal(author.firstname, authors[index].firstname);
+        });
+
+        var savedAuthors = yield db.query({ sql: 'SELECT name, firstname from author ORDER BY id' });
+        assert.deepEqual(result, savedAuthors);
     });
 
     afterEach(function* () {
