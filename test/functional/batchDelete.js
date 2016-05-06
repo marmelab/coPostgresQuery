@@ -1,10 +1,10 @@
-import batchDelete from '../../lib/queries/batchDelete';
+import { batchDelete } from '../../lib/';
 
 describe('batchDelete', function () {
     let ids, tags, batchDeleteQuery;
 
     before(function () {
-        batchDeleteQuery = batchDelete('tag', ['id', 'name'], 'id');
+        batchDeleteQuery = batchDelete('tag', ['id', 'name'], 'id')(db);
     });
 
     beforeEach(function* () {
@@ -17,7 +17,7 @@ describe('batchDelete', function () {
     });
 
     it('should remove entities', function* () {
-        var result = yield db.query(batchDeleteQuery(ids.slice(1)));
+        var result = yield batchDeleteQuery(ids.slice(1));
 
         assert.deepEqual(result, tags.slice(1));
 

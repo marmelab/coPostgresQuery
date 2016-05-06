@@ -9,11 +9,11 @@ describe('crud', function () {
 
     it('should insert entity', function* () {
         const result = yield queries.insertOne({ firstname: 'john', name: 'doe' });
-        assert.deepEqual(result[0].name, 'doe');
-        assert.deepEqual(result[0].firstname, 'john');
+        assert.deepEqual(result.name, 'doe');
+        assert.deepEqual(result.firstname, 'john');
 
         var savedAuthors = yield db.query({ sql: 'SELECT * from author ORDER BY id' });
-        assert.deepEqual(result, savedAuthors);
+        assert.deepEqual([result], savedAuthors);
     });
 
     it('should select one entity', function* () {
@@ -21,8 +21,8 @@ describe('crud', function () {
 
         const result = yield queries.selectOne({ id: author.id });
 
-        assert.equal(result[0].name, author.name);
-        assert.equal(result[0].firstname, author.firstname);
+        assert.equal(result.name, author.name);
+        assert.equal(result.firstname, author.firstname);
     });
 
     it('should delete entity', function* () {
@@ -30,7 +30,7 @@ describe('crud', function () {
 
         const result = yield queries.deleteOne({ id: author.id });
 
-        assert.deepEqual(result, [author]);
+        assert.deepEqual(result, author);
 
         assert.isUndefined(yield db.queryOne({ sql: 'SELECT * FROM author WHERE id = $id', parameters: { id: author.id } }));
     });
@@ -40,11 +40,11 @@ describe('crud', function () {
 
         const result = yield queries.updateOne({ id: author.id }, { name: 'mae', firstname: 'jane' });
 
-        assert.deepEqual(result, [{
+        assert.deepEqual(result, {
             ...author,
             name: 'mae',
             firstname: 'jane'
-        }]);
+        });
 
         var savedAuthors = yield db.query({ sql: 'SELECT * from author ORDER BY id' });
         assert.deepEqual(savedAuthors, [{

@@ -1,4 +1,4 @@
-import selectOne from '../../lib/queries/selectOne';
+import { selectOne } from '../../lib';
 
 describe('functional selectOne', function () {
     let author;
@@ -8,17 +8,17 @@ describe('functional selectOne', function () {
     });
 
     it('should select entity once executed', function* () {
-        const selectOneQuery = selectOne('author', [ 'id' ], ['id', 'name', 'firstname']);
+        const selectOneQuery = selectOne('author', [ 'id' ], ['id', 'name', 'firstname'])(db);
 
-        const result = yield db.query(selectOneQuery({ id: author.id }));
+        const result = yield selectOneQuery({ id: author.id });
 
-        assert.deepEqual(result, [author]);
+        assert.deepEqual(result, author);
     });
 
-    it('should return undefined if no autohr match once executed', function* () {
-        const selectOneQuery = selectOne('author', [ 'id' ], ['name', 'firstname']);
+    it('should return undefined if no author match once executed', function* () {
+        const selectOneQuery = selectOne('author', [ 'id' ], ['name', 'firstname'])(db);
 
-        const result = yield db.queryOne(selectOneQuery({ id: 404 }));
+        const result = yield selectOneQuery({ id: 404 });
 
         assert.deepEqual(result, undefined);
     });

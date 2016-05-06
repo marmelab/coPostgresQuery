@@ -1,4 +1,4 @@
-import batchUpsert from '../../lib/queries/batchUpsert';
+import { batchUpsert } from '../../lib';
 import moment from 'moment';
 
 describe('batchUpsert', function () {
@@ -8,7 +8,7 @@ describe('batchUpsert', function () {
     const twoMonthAgo = moment().subtract(2, 'month').endOf('month').startOf('day').toDate();
 
     before(function* () {
-        batchUpsertQuery = batchUpsert('post', ['author', 'date'], ['title']);
+        batchUpsertQuery = batchUpsert('post', ['author', 'date'], ['title'])(db);
     });
 
     beforeEach(function* () {
@@ -27,7 +27,7 @@ describe('batchUpsert', function () {
             { author: 'jane', date: lastMonth, title: '2 low' }
         ];
 
-        yield db.query(batchUpsertQuery(newPost));
+        yield batchUpsertQuery(newPost);
 
         var updatedPost = yield db.query({ sql: 'SELECT author, title, date from post ORDER BY id'});
 
@@ -46,7 +46,7 @@ describe('batchUpsert', function () {
             { author: 'jane', date: currentMonth, title: '7 samurai' }
         ];
 
-        yield db.query(batchUpsertQuery(newPost));
+        yield batchUpsertQuery(newPost);
 
         var updatedPost = yield db.query({ sql: 'SELECT author, title, date from post ORDER BY id'});
 
