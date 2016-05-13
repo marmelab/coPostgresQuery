@@ -5,7 +5,7 @@ describe('queries', function () {
     const table = 'table';
     const idFields = ['id1', 'id2'];
     const fields = ['field1', 'field2'];
-    const returnFields = '*';
+    const returnFields = ['*'];
 
     before(function () {
         configuredQueries = queries(table, fields, idFields, returnFields);
@@ -28,28 +28,28 @@ describe('queries', function () {
         const { deleteOne } = configuredQueries;
         assert.equal(deleteOne.table(), table);
         assert.deepEqual(deleteOne.idFields(), idFields);
-        assert.equal(deleteOne.returnFields(), returnFields);
+        assert.deepEqual(deleteOne.returnFields(), returnFields);
     });
 
     it('should configure insertOne', function () {
         const { insertOne } = configuredQueries;
         assert.equal(insertOne.table(), table);
         assert.deepEqual(insertOne.fields(), fields);
-        assert.equal(insertOne.returnFields(), returnFields);
+        assert.deepEqual(insertOne.returnFields(), returnFields);
     });
 
     it('should configure selectOne', function () {
         const { selectOne } = configuredQueries;
         assert.equal(selectOne.table(), table);
         assert.deepEqual(selectOne.idFields(), idFields);
-        assert.equal(selectOne.returnFields(), returnFields);
+        assert.deepEqual(selectOne.returnFields(), returnFields);
     });
 
     it('should configure selectPage', function () {
         const { selectPage } = configuredQueries;
         assert.equal(selectPage.table(), table);
         assert.deepEqual(selectPage.idFields(), idFields);
-        assert.deepEqual(selectPage.fields(), fields);
+        assert.deepEqual(selectPage.returnFields(), returnFields);
     });
 
     it('should configure updateOne', function () {
@@ -57,14 +57,14 @@ describe('queries', function () {
         assert.equal(updateOne.table(), table);
         assert.deepEqual(updateOne.idFields(), idFields);
         assert.deepEqual(updateOne.updatableFields(), fields);
-        assert.equal(updateOne.returnFields(), returnFields);
+        assert.deepEqual(updateOne.returnFields(), returnFields);
     });
 
     it('should configure batchInsert', function () {
         const { batchInsert } = configuredQueries;
         assert.equal(batchInsert.table(), table);
         assert.deepEqual(batchInsert.fields(), fields);
-        assert.equal(batchInsert.returnFields(), returnFields);
+        assert.deepEqual(batchInsert.returnFields(), returnFields);
     });
 
     it('should configure batchDelete', function () {
