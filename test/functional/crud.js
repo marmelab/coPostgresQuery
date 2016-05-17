@@ -41,7 +41,6 @@ describe('crud', function () {
         const result = yield queries.updateOne({ id: author.id }, { name: 'mae', firstname: 'jane' });
 
         assert.deepEqual(result, {
-            ...author,
             name: 'mae',
             firstname: 'jane'
         });
