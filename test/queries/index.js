@@ -19,7 +19,8 @@ describe('queries', function () {
             'selectPage',
             'updateOne',
             'batchInsert',
-            'batchDelete'
+            'batchDelete',
+            'countAll'
         ]);
 
     });

@@ -25,6 +25,14 @@ describe('crud', function () {
         assert.equal(result.firstname, author.firstname);
     });
 
+    it('should countAll entity', function* () {
+        yield fixtureLoader.addAuthor({});
+
+        const result = yield queries.countAll();
+
+        assert.deepEqual(result, { count: '1' });
+    });
+
     it('should delete entity', function* () {
         const author = yield fixtureLoader.addAuthor({});
 
