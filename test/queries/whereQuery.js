@@ -1,5 +1,5 @@
 import * as whereQueryGet from '../../lib/queries/whereQuery';
-import whereQuery, { sortQueryType, getFieldType } from '../../lib/queries/whereQuery';
+import whereQuery, { sortQueryType, getFieldType, getFieldPlaceHolder } from '../../lib/queries/whereQuery';
 
 describe('whereQuery', function () {
 
@@ -9,9 +9,26 @@ describe('whereQuery', function () {
             to_field2: new Date(500),
             from_field3: new Date(800),
             match: 6,
+            in_field: ['some value', 'other value'],
             field4: 'ignored'
-        }, ['field1', 'field2', 'field3']),
-        'WHERE (field1::text ILIKE %$match% OR field2::text ILIKE %$match% OR field3::text ILIKE %$match%) AND field3::timestamp >= $from_field3::timestamp AND field2::timestamp <= $to_field2::timestamp AND field1 = $field1');
+        }, ['field1', 'field2', 'field3', 'in_field']),
+        'WHERE (field1::text ILIKE %$match% OR field2::text ILIKE %$match% OR field3::text ILIKE %$match% OR in_field::text ILIKE %$match%) AND field3::timestamp >= $from_field3::timestamp AND field2::timestamp <= $to_field2::timestamp AND field1 = $field1 AND in_field IN ($in_field1, $in_field2)');
+    });
+
+    describe('getFieldPlaceHolder', function () {
+
+        it('should return value if value is IS_NULL or IS_NOT_NULL', function () {
+            assert.equal(getFieldPlaceHolder('fieldName', 'IS_NULL'), 'IS_NULL');
+            assert.equal(getFieldPlaceHolder('fieldName', 'IS_NOT_NULL'), 'IS_NOT_NULL');
+        });
+
+        it('should return IN query if value is an array', function () {
+            assert.equal(getFieldPlaceHolder('fieldName', ['some value', 'other value']), 'IN ($fieldName1, $fieldName2)');
+        });
+
+        it('should return $field otherwise', function () {
+            assert.equal(getFieldPlaceHolder('fieldName', 'some value'), '= $fieldName');
+        });
     });
 
     describe('getFieldType', function () {
