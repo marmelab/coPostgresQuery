@@ -25,6 +25,19 @@ describe('crud', function () {
         assert.equal(result.firstname, author.firstname);
     });
 
+    it('should select page of entity', function* () {
+        const john = yield fixtureLoader.addAuthor({ name: 'doe', firstname: 'john' });
+        const jane = yield fixtureLoader.addAuthor({ name: 'day', firstname: 'jane' });
+
+        const results = yield queries.selectPage();
+
+        assert.equal(results.length, 2);
+        assert.equal(results[0].name, john.name);
+        assert.equal(results[0].firstname, john.firstname);
+        assert.equal(results[1].name, jane.name);
+        assert.equal(results[1].firstname, jane.firstname);
+    });
+
     it('should countAll entity', function* () {
         yield fixtureLoader.addAuthor({});
 
