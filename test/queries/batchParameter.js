@@ -19,9 +19,9 @@ describe('batchParameter', function () {
             { a: 11, b: 12, c: 13, d: 'ignored' },
             { a: 21, b: 22 }
         ]), {
-            a0: 1, b0: 2, c0: 3,
-            a1: 11, b1: 12, c1: 13,
-            a2: 21, b2: 22, c2: null
+            a1: 1, b1: 2, c1: 3,
+            a2: 11, b2: 12, c2: 13,
+            a3: 21, b3: 22, c3: null
         });
     });
 });

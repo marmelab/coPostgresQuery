@@ -12,7 +12,7 @@ describe('crud', function () {
         assert.deepEqual(result.name, 'doe');
         assert.deepEqual(result.firstname, 'john');
 
-        var savedAuthors = yield db.query({ sql: 'SELECT * from author ORDER BY id' });
+        var savedAuthors = yield db.query({ sql: 'SELECT name, firstname from author ORDER BY id' });
         assert.deepEqual([result], savedAuthors);
     });
 
