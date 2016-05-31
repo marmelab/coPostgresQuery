@@ -38,7 +38,7 @@ RETURNING *`
         });
     });
 
-    it.only('should not try to update field not passed in entity', function () {
+    it('should not try to update field not passed in entity', function () {
         const upsertOneQuery = upsertOneQuerier('table', [ 'id' ], ['fielda', 'fieldb']);
         assert.deepEqual(upsertOneQuery({ fielda: 'value', id: 1 }), {
             sql: (

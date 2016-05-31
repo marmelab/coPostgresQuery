@@ -35,4 +35,11 @@ describe('sanitizeParameter', function () {
 
         assert.deepEqual(sanitizeParameter(fields, object), {});
     });
+
+    it('should accept null parameter', function () {
+        const fields = ['name', 'firstname'];
+        const object = { name: 'doe', firstname: null};
+
+        assert.deepEqual(sanitizeParameter(fields, object), { name: 'doe', firstname: null });
+    });
 });

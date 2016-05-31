@@ -35,4 +35,15 @@ describe('namedToNumericParameter', function () {
             parameters: ['first', 'second']
         });
     });
+
+    it('should accept null value in parameter', function () {
+        assert.deepEqual(namedToNumericParameter('$one, $two, $three', {
+            one: 'first',
+            two: null,
+            three: 'third'
+        }), {
+            sql: '$1, $2, $3',
+            parameters: ['first', null, 'third']
+        });
+    });
 });
