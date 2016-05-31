@@ -72,6 +72,16 @@ describe('execution', function () {
         ]);
     });
 
+    it('should update nothing when selector match but no update value are provided', function* () {
+        const updatedPost = { author: 'john', date: currentMonth };
+        const result = yield upsertOneQuery(updatedPost);
+        assert.deepEqual(result, post);
+
+        const updsertedPosts = (yield db.query({ sql: 'SELECT * from post ORDER BY id'}));
+
+        assert.deepEqual(updsertedPosts, [post]);
+    });
+
     afterEach(function* () {
         yield db.query({ sql: 'TRUNCATE post CASCADE'});
     });
