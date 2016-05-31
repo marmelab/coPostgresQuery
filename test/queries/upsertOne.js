@@ -37,4 +37,21 @@ RETURNING *`
             }
         });
     });
+
+    it.only('should not try to update field not passed in entity', function () {
+        const upsertOneQuery = upsertOneQuerier('table', [ 'id' ], ['fielda', 'fieldb']);
+        assert.deepEqual(upsertOneQuery({ fielda: 'value', id: 1 }), {
+            sql: (
+`INSERT INTO table (id, fielda)
+VALUES ($id, $fielda)
+ON CONFLICT (id) DO UPDATE
+SET fielda = $fielda
+RETURNING *`
+            ),
+            parameters: {
+                id: 1,
+                fielda: 'value'
+            }
+        });
+    });
 });
