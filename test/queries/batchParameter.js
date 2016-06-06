@@ -1,16 +1,8 @@
-import batchParameter, { addSuffix, merge } from '../../lib/queries/batchParameter';
+import batchParameter, { addSuffix } from '../../lib/queries/batchParameter';
 
 describe('batchParameter', function () {
     it('addSuffix should add given suffix to all object attributes', function () {
         assert.deepEqual(addSuffix({a: 1, b: 2, c: 3}, 56), {a56: 1, b56: 2, c56: 3});
-    });
-
-    it('merge, should fuse two given object together', function () {
-        assert.deepEqual(merge({a: 1, b: 2}, {c: 3}), {a: 1, b: 2, c: 3 });
-    });
-
-    it('merge, should override first object attribute with the second one, if they overlap', function () {
-        assert.deepEqual(merge({a: 1, b: 2}, { b: 'override', c: 3}), {a: 1, b: 'override', c: 3 });
     });
 
     it('should return batchParameter', function () {
