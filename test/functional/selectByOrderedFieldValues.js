@@ -1,6 +1,6 @@
-import { selectByFieldValues } from '../../lib';
+import { selectByOrderedFieldValues } from '../../lib';
 
-describe('functional selectBy', function () {
+describe('functional selectByOrderedFieldValues', function () {
     let authors;
 
     before(function* () {
@@ -13,7 +13,7 @@ describe('functional selectBy', function () {
     });
 
     it('should select entity by id once executed and keep order', function* () {
-        const selectByIdsQuery = selectByFieldValues('author', 'id', ['id', 'name', 'firstname'])(db);
+        const selectByIdsQuery = selectByOrderedFieldValues('author', 'id', ['id', 'name', 'firstname'])(db);
 
         const result1 = yield selectByIdsQuery([authors[0].id, authors[1].id]);
         assert.deepEqual(result1, [authors[0], authors[1]]);
@@ -23,7 +23,7 @@ describe('functional selectBy', function () {
     });
 
     it('should select entity by name (same value for several entry) once executed and keep order', function* () {
-        const selectByIdsQuery = selectByFieldValues('author', 'name', ['id', 'name', 'firstname'])(db);
+        const selectByIdsQuery = selectByOrderedFieldValues('author', 'name', ['id', 'name', 'firstname'])(db);
 
         const result1 = yield selectByIdsQuery([authors[0].name, authors[2].name]);
         assert.deepEqual(result1, [authors[0], authors[1], authors[2]]);
