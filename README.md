@@ -2,7 +2,7 @@
 utility to generate and execute postgresql queries with ease.
 
 ##pgClient
-Allow to cennect to postgres and execute query
+Allow to connect to postgres and execute query
 ```js
 import { pgCLient } from 'coPostgresQueries';
 const db = new pgClient(dsn);
