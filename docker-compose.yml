@@ -3,13 +3,9 @@ test:
   volumes:
     - .:/app
   working_dir: /app
-  command: make test
+  command: node_modules/mocha/bin/mocha --harmony test/setup.js test/**/*.js
   links:
     - db
 
 db:
-  image: postgres:9.4
-  volumes:
-    - .:/app
-  ports:
-    - 5432:5432
+  image: postgres:9.5
