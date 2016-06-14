@@ -8,11 +8,11 @@ describe('whereQuery', function () {
             field1: 1,
             to_field2: new Date(500),
             from_field3: new Date(800),
-            match: 6,
+            match: '%6%',
             in_field: ['some value', 'other value'],
             field4: 'ignored'
         }, ['field1', 'field2', 'field3', 'in_field']),
-        'WHERE (field1::text ILIKE %$match% OR field2::text ILIKE %$match% OR field3::text ILIKE %$match% OR in_field::text ILIKE %$match%) AND field3::timestamp >= $from_field3::timestamp AND field2::timestamp <= $to_field2::timestamp AND field1 = $field1 AND in_field IN ($in_field1, $in_field2)');
+        'WHERE (field1::text ILIKE $match OR field2::text ILIKE $match OR field3::text ILIKE $match OR in_field::text ILIKE $match) AND field3::timestamp >= $from_field3::timestamp AND field2::timestamp <= $to_field2::timestamp AND field1 = $field1 AND in_field IN ($in_field1, $in_field2)');
     });
 
     describe('getFieldPlaceHolder', function () {
@@ -98,13 +98,13 @@ describe('whereQuery', function () {
         it('should return query and parameter to match a given value if match filter is given', function () {
             const whereParts = whereQueryGet.getMatch({ match: 'needle' }, ['field1', 'field2', 'field3']);
 
-            assert.deepEqual(whereParts, [ '(field1::text ILIKE %$match% OR field2::text ILIKE %$match% OR field3::text ILIKE %$match%)' ]);
+            assert.deepEqual(whereParts, [ '(field1::text ILIKE $match OR field2::text ILIKE $match OR field3::text ILIKE $match)' ]);
         });
 
         it('should augment passed result if any', function () {
             const whereParts = whereQueryGet.getMatch({ match: 'needle' }, ['field1', 'field2'], ['field1 = $field1']);
 
-            assert.deepEqual(whereParts, [ 'field1 = $field1', '(field1::text ILIKE %$match% OR field2::text ILIKE %$match%)' ]);
+            assert.deepEqual(whereParts, [ 'field1 = $field1', '(field1::text ILIKE $match OR field2::text ILIKE $match)' ]);
         });
 
         it('should return passed result if there is no searchableFields', function () {

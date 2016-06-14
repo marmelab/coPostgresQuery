@@ -47,6 +47,6 @@ describe('sanitizeParameter', function () {
         const fields = ['name'];
         const object = { match: 'doe'};
 
-        assert.deepEqual(sanitizeParameter(fields, object), { match: 'doe' });
+        assert.deepEqual(sanitizeParameter(fields, object), { match: '%doe%' });
     });
 });
