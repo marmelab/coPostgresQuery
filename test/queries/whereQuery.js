@@ -9,10 +9,11 @@ describe('whereQuery', function () {
             to_field2: new Date(500),
             from_field3: new Date(800),
             match: '%6%',
-            in_field: ['some value', 'other value'],
-            field4: 'ignored'
-        }, ['field1', 'field2', 'field3', 'in_field']),
-        'WHERE (field1::text ILIKE $match OR field2::text ILIKE $match OR field3::text ILIKE $match OR in_field::text ILIKE $match) AND field3::timestamp >= $from_field3::timestamp AND field2::timestamp <= $to_field2::timestamp AND field1 = $field1 AND in_field IN ($in_field1, $in_field2)');
+            field4: ['some value', 'other value'],
+            like_field5: 'contain',
+            field6: 'ignored'
+        }, ['field1', 'field2', 'field3', 'field4', 'field5']),
+        'WHERE (field1::text ILIKE $match OR field2::text ILIKE $match OR field3::text ILIKE $match OR field4::text ILIKE $match OR field5::text ILIKE $match) AND field3::timestamp >= $from_field3::timestamp AND field2::timestamp <= $to_field2::timestamp AND field5::text ILIKE $like_field5 AND field1 = $field1 AND field4 IN ($field41, $field42)');
     });
 
     describe('getFieldPlaceHolder', function () {
@@ -72,9 +73,10 @@ describe('whereQuery', function () {
                 field1: 1,
                 to_field2: 2,
                 from_field3: 3,
-                match: 4,
-                field4: 5
-            }, ['field1', 'field2', 'field3']), {
+                like_field4: 4,
+                match: 5,
+                field5: 6
+            }, ['field1', 'field2', 'field3', 'field4']), {
                 query: {
                     field1: 1
                 },
@@ -84,11 +86,14 @@ describe('whereQuery', function () {
                 from: {
                     from_field3: 3
                 },
+                like: {
+                    like_field4: 4
+                },
                 match: {
-                    match: 4
+                    match: 5
                 },
                 discarded: {
-                    field4: 5
+                    field5: 6
                 }
             });
         });
@@ -157,6 +162,20 @@ describe('whereQuery', function () {
             const whereParts = whereQueryGet.getTo({ to_date: 'date' }, ['field', 'date'], ['field1 = $field1']);
 
             assert.deepEqual(whereParts, [ 'field1 = $field1', 'date::timestamp <= $to_date::timestamp' ]);
+        });
+    });
+
+    describe('getLike', function () {
+        it('should return query and parameter to test field like value if given field starting with like_', function () {
+            const whereParts = whereQueryGet.getLike({ like_field: 'pattern' }, ['field']);
+
+            assert.deepEqual(whereParts, [ 'field::text ILIKE $like_field' ]);
+        });
+
+        it('should augment passed result if any', function () {
+            const whereParts = whereQueryGet.getLike({ like_field: 'pattern' }, ['field'], ['field1 = $field1']);
+
+            assert.deepEqual(whereParts, [ 'field1 = $field1', 'field::text ILIKE $like_field' ]);
         });
     });
 
