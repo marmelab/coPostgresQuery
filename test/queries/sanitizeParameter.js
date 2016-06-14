@@ -42,4 +42,11 @@ describe('sanitizeParameter', function () {
 
         assert.deepEqual(sanitizeParameter(fields, object), { name: 'doe', firstname: null });
     });
+
+    it('should add match parameter if there is at least one field', function () {
+        const fields = ['name'];
+        const object = { match: 'doe'};
+
+        assert.deepEqual(sanitizeParameter(fields, object), { match: 'doe' });
+    });
 });
