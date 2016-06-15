@@ -26,7 +26,7 @@ describe.only('sanitizeParameter', function () {
         const fields = ['name', 'firstname', 'mail'];
         const object = { like_name: 'do', firstname: 'john', mail: 'john.doe@mail.com' };
 
-        assert.deepEqual(sanitizeParameter(fields, object), { like_name: 'do', firstname: 'john', mail: 'john.doe@mail.com' });
+        assert.deepEqual(sanitizeParameter(fields, object), { like_name: '%do%', firstname: 'john', mail: 'john.doe@mail.com' });
     });
 
     it('should not include attributes not in object if there is no default for them', function () {
