@@ -179,12 +179,24 @@ Allow to create a query to update one entity or create it if it does not already
 
 ###batchUpsert(table, selectorFields, updatableFields, returnFields)(db)(entities)
 Allow to create a query to update a batch entity creating those that does not already exists.
-####parameters
+####configuration
  - table: the name of the table in which to upsert
  - selectorFields: the field used to select one entity checking if it exists
  - updatableFields: the field that can be updated
  - returnFields: the field to return in the result
  - fields: all the fields accepted by the query, default to selectorFields + updatableFields (no reason to change that)
+####parameters
+- entities: array of entities to upsert
+
+###selectByFieldValues(table, selectorField, returnFields)(db)(values)
+Allow to create a query to select an entity with selectorField IN values and keep the ORDER of values.
+####configurations
+ - table: the name of the table in which to upsert
+ - selectorField: the field used to select entity
+ - returnFields: the field to return in the result
+####parameters
+ - values: array of values to retrieve. The array order will determine the result order.
+ Careful, if several entity share the same value, their order is unpredictable.
 
 ###crud(table, fields, idFields, returnFields, configurators )(db)
 generate configured queries for insertOne, batchInsert, selectOne, selectPage, updateOne, deleteOne and batchDelete.
