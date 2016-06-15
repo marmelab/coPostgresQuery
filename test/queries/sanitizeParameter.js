@@ -1,11 +1,32 @@
 import sanitizeParameter from '../../lib/queries/sanitizeParameter';
 
-describe('sanitizeParameter', function () {
+describe.only('sanitizeParameter', function () {
     it('should keep only attributes passed in first argument', function () {
         const fields = ['name', 'firstname', 'mail'];
-        const object = { name: 'doe', firstname: 'john', mail: 'john.doe@mail.com', password: 'secret'};
+        const object = { name: 'doe', firstname: 'john', mail: 'john.doe@mail.com', password: 'secret', like_password: '*', from_date: '2016-01-01', to_date: '2020-12-12' };
 
-        assert.deepEqual(sanitizeParameter(fields, object), { name: 'doe', firstname: 'john', mail: 'john.doe@mail.com'});
+        assert.deepEqual(sanitizeParameter(fields, object), { name: 'doe', firstname: 'john', mail: 'john.doe@mail.com' });
+    });
+
+    it('should keep from_ attributes matching one first argument', function () {
+        const fields = ['name', 'firstname', 'mail', 'date'];
+        const object = { name: 'doe', firstname: 'john', mail: 'john.doe@mail.com', from_date: '2012-12-12' };
+
+        assert.deepEqual(sanitizeParameter(fields, object), { name: 'doe', firstname: 'john', mail: 'john.doe@mail.com', from_date: '2012-12-12' });
+    });
+
+    it('should keep to_ attributes matching one first argument', function () {
+        const fields = ['name', 'firstname', 'mail', 'date'];
+        const object = { name: 'doe', firstname: 'john', mail: 'john.doe@mail.com', to_date: '2020-12-12'};
+
+        assert.deepEqual(sanitizeParameter(fields, object), { name: 'doe', firstname: 'john', mail: 'john.doe@mail.com', to_date: '2020-12-12' });
+    });
+
+    it('should keep like_ attributes matching one first argument', function () {
+        const fields = ['name', 'firstname', 'mail'];
+        const object = { like_name: 'do', firstname: 'john', mail: 'john.doe@mail.com' };
+
+        assert.deepEqual(sanitizeParameter(fields, object), { like_name: 'do', firstname: 'john', mail: 'john.doe@mail.com' });
     });
 
     it('should not include attributes not in object if there is no default for them', function () {
