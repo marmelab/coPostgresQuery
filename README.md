@@ -189,7 +189,7 @@ Allow to create a query to update a batch entity creating those that does not al
 - entities: array of entities to upsert
 
 ###selectByFieldValues(table, selectorField, returnFields)(db)(values)
-Allow to create a query to select ann entity with selectorField IN values and keep the ORDER of values.
+Allow to create a query to select an entity with selectorField IN values and keep the ORDER of values.
 ####configurations
  - table: the name of the table in which to upsert
  - selectorField: the field used to select entity
