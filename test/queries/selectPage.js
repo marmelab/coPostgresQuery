@@ -9,6 +9,13 @@ describe('selectPage', function () {
         assert.deepEqual(parameters, {});
     });
 
+    it('should add a group by clause if at least on groupByFields is given', function* () {
+        const { sql, parameters } = selectPage('table', ['id'], ['field1', 'field2']).groupByFields(['field1', 'field2'])();
+
+        assert.equal(sql, 'SELECT field1, field2, COUNT(*) OVER() as totalCount FROM table  GROUP BY field1, field2 ORDER BY id ASC');
+        assert.deepEqual(parameters, {});
+    });
+
     it('should use a "WITH result AS" query if querying on a joined table', function* () {
         const { sql, parameters } = selectPage('table1 JOIN table2 ON table1.table2_id table2.id', ['id'], ['field1', 'field2'])();
 
