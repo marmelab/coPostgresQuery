@@ -116,6 +116,12 @@ allow to create a query to select one entity.
     }
     ```
     will order level field with all master first, then expert and finally novice
+- groupByFields
+    allow to add a GROUP BY clause to the query on the given fields
+- withQuery
+    specify that we want to encompass the query in `WITH RESULT AS <query> SELECT * FROM result`
+    This add a temporary result table that allow to sort on computed and joined field.
+    if the table configuration contain a JOIN clause, this will be automatically set to true.
 ####parameters
 - limit:
     number of result to be returned
