@@ -1,6 +1,6 @@
 import sanitizeParameter from '../../lib/queries/sanitizeParameter';
 
-describe.only('sanitizeParameter', function () {
+describe('sanitizeParameter', function () {
     it('should keep only attributes passed in first argument', function () {
         const fields = ['name', 'firstname', 'mail'];
         const object = { name: 'doe', firstname: 'john', mail: 'john.doe@mail.com', password: 'secret', like_password: '*', from_date: '2016-01-01', to_date: '2020-12-12' };
@@ -34,6 +34,13 @@ describe.only('sanitizeParameter', function () {
         const object = { name: 'doe', firstname: 'john'};
 
         assert.deepEqual(sanitizeParameter(fields, object), { name: 'doe', firstname: 'john' });
+    });
+
+    it('should replace "." by "__"', function () {
+        const fields = ['user.name', 'user.firstname'];
+        const object = { 'user.name': 'doe', 'user.firstname': 'john'};
+
+        assert.deepEqual(sanitizeParameter(fields, object), { user__name: 'doe', user__firstname: 'john' });
     });
 
     it('should return an empty object if fields is empty', function () {

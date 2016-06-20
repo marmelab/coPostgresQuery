@@ -11,9 +11,11 @@ describe('whereQuery', function () {
             match: '%6%',
             field4: ['some value', 'other value'],
             like_field5: 'contain',
-            field6: 'ignored'
-        }, ['field1', 'field2', 'field3', 'field4', 'field5']),
-        'WHERE (field1::text ILIKE $match OR field2::text ILIKE $match OR field3::text ILIKE $match OR field4::text ILIKE $match OR field5::text ILIKE $match) AND field3::timestamp >= $from_field3::timestamp AND field2::timestamp <= $to_field2::timestamp AND field5::text ILIKE $like_field5 AND field1 = $field1 AND field4 IN ($field41, $field42)');
+            'table.field6': 'complex',
+            field7: 'ignored'
+        }, ['field1', 'field2', 'field3', 'field4', 'field5', 'table.field6']),
+        'WHERE (field1::text ILIKE $match OR field2::text ILIKE $match OR field3::text ILIKE $match OR field4::text ILIKE $match OR field5::text ILIKE $match OR table.field6::text ILIKE $match) AND field3::timestamp >= $from_field3::timestamp AND field2::timestamp <= $to_field2::timestamp AND field5::text ILIKE $like_field5 AND field1 = $field1 AND field4 IN ($field41, $field42) AND table.field6 = $table__field6');
+
     });
 
     describe('getFieldPlaceHolder', function () {
@@ -187,6 +189,16 @@ describe('whereQuery', function () {
                 'field1 = $field1',
                 'field2 = $field2',
                 'field3 = $field3'
+            ]);
+        });
+
+        it('should return replace "." in field name by "__" for parameter name', function () {
+            const whereParts = whereQueryGet.getQuery({ 'table.field1': 1, 'table.field2': 2, 'table.field3': 3 }, ['table.field1', 'table.field2', 'table.field3']);
+
+            assert.deepEqual(whereParts, [
+                'table.field1 = $table__field1',
+                'table.field2 = $table__field2',
+                'table.field3 = $table__field3'
             ]);
         });
 
