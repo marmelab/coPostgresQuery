@@ -1,6 +1,6 @@
 import { updateOne } from '../../lib';
 
-describe('updateOne', function () {
+describe('updateOne', () => {
     let author;
     before(function* () {
         author = yield fixtureLoader.addAuthor({ name: 'john', firstname: 'doe' });
@@ -11,11 +11,11 @@ describe('updateOne', function () {
         const result = yield updateOneQuery({ name: author.name }, { firstname: 'jane' });
         assert.deepEqual(result.firstname, 'jane');
 
-        var savedTags = yield db.query({ sql: 'SELECT * from author ORDER BY id' });
+        const savedTags = yield db.query({ sql: 'SELECT * from author ORDER BY id' });
         assert.deepEqual([result], savedTags);
     });
 
     afterEach(function* () {
-        yield db.query({sql: 'TRUNCATE tag CASCADE'});
+        yield db.query({ sql: 'TRUNCATE tag CASCADE' });
     });
 });

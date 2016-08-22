@@ -1,6 +1,6 @@
 import { selectOne } from '../../lib';
 
-describe('functional selectOne', function () {
+describe('functional selectOne', () => {
     let author;
 
     before(function* () {
@@ -8,7 +8,11 @@ describe('functional selectOne', function () {
     });
 
     it('should select entity once executed', function* () {
-        const selectOneQuery = selectOne('author', [ 'id' ], ['id', 'name', 'firstname'])(db);
+        const selectOneQuery = selectOne('author', ['id'], [
+            'id',
+            'name',
+            'firstname',
+        ])(db);
 
         const result = yield selectOneQuery({ id: author.id });
 
@@ -16,7 +20,10 @@ describe('functional selectOne', function () {
     });
 
     it('should return undefined if no author match once executed', function* () {
-        const selectOneQuery = selectOne('author', [ 'id' ], ['name', 'firstname'])(db);
+        const selectOneQuery = selectOne('author', ['id'], [
+            'name',
+            'firstname',
+        ])(db);
 
         const result = yield selectOneQuery({ id: 404 });
 
@@ -24,6 +31,6 @@ describe('functional selectOne', function () {
     });
 
     after(function* () {
-        yield db.query({sql: 'TRUNCATE author CASCADE'});
+        yield db.query({ sql: 'TRUNCATE author CASCADE' });
     });
 });

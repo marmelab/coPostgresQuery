@@ -1,17 +1,17 @@
 import queries from '../../lib/queries';
 
-describe('queries', function () {
+describe('queries', () => {
     let configuredQueries;
     const table = 'table';
     const idFields = ['id1', 'id2'];
     const fields = ['field1', 'field2'];
     const returnFields = ['*'];
 
-    before(function () {
+    before(() => {
         configuredQueries = queries(table, fields, idFields, returnFields);
     });
 
-    it('should initialize all queries with given parameters', function () {
+    it('should initialize all queries with given parameters', () => {
         assert.deepEqual(Object.keys(configuredQueries), [
             'deleteOne',
             'insertOne',
@@ -20,40 +20,39 @@ describe('queries', function () {
             'updateOne',
             'batchInsert',
             'batchDelete',
-            'countAll'
+            'countAll',
         ]);
-
     });
 
-    it('should configure deleteOne', function () {
+    it('should configure deleteOne', () => {
         const { deleteOne } = configuredQueries;
         assert.equal(deleteOne.table(), table);
         assert.deepEqual(deleteOne.idFields(), idFields);
         assert.deepEqual(deleteOne.returnFields(), returnFields);
     });
 
-    it('should configure insertOne', function () {
+    it('should configure insertOne', () => {
         const { insertOne } = configuredQueries;
         assert.equal(insertOne.table(), table);
         assert.deepEqual(insertOne.fields(), fields);
         assert.deepEqual(insertOne.returnFields(), returnFields);
     });
 
-    it('should configure selectOne', function () {
+    it('should configure selectOne', () => {
         const { selectOne } = configuredQueries;
         assert.equal(selectOne.table(), table);
         assert.deepEqual(selectOne.idFields(), idFields);
         assert.deepEqual(selectOne.returnFields(), returnFields);
     });
 
-    it('should configure selectPage', function () {
+    it('should configure selectPage', () => {
         const { selectPage } = configuredQueries;
         assert.equal(selectPage.table(), table);
         assert.deepEqual(selectPage.idFields(), idFields);
         assert.deepEqual(selectPage.returnFields(), returnFields);
     });
 
-    it('should configure updateOne', function () {
+    it('should configure updateOne', () => {
         const { updateOne } = configuredQueries;
         assert.equal(updateOne.table(), table);
         assert.deepEqual(updateOne.idFields(), idFields);
@@ -61,29 +60,33 @@ describe('queries', function () {
         assert.deepEqual(updateOne.returnFields(), returnFields);
     });
 
-    it('should configure batchInsert', function () {
+    it('should configure batchInsert', () => {
         const { batchInsert } = configuredQueries;
         assert.equal(batchInsert.table(), table);
         assert.deepEqual(batchInsert.fields(), fields);
         assert.deepEqual(batchInsert.returnFields(), returnFields);
     });
 
-    it('should configure batchDelete', function () {
+    it('should configure batchDelete', () => {
         const { batchDelete } = configuredQueries;
         assert.equal(batchDelete.table(), table);
         assert.deepEqual(batchDelete.fields(), fields);
         assert.equal(batchDelete.identifier(), idFields);
     });
 
-    describe('configurator', function () {
-        it('should should receive queries object', function () {
+    describe('configurator', () => {
+        it('should should receive queries object', () => {
             let configuredQueriesInConfigurator;
-            const result = queries(table, fields, idFields, returnFields, [(q) => configuredQueriesInConfigurator = q]);
+            const result = queries(table, fields, idFields, returnFields, [
+                (q) => { configuredQueriesInConfigurator = q; },
+            ]);
             assert.deepEqual(result, configuredQueriesInConfigurator);
         });
 
-        it('should configure targeted query', function () {
-            const result = queries(table, fields, idFields, returnFields, [({ selectPage }) => selectPage.table('other-table')]);
+        it('should configure targeted query', () => {
+            const result = queries(table, fields, idFields, returnFields, [
+                ({ selectPage }) => selectPage.table('other-table'),
+            ]);
             assert.equal(result.selectPage.table(), 'other-table');
         });
     });
