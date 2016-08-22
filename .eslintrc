@@ -1,9 +1,11 @@
 {
-    "extends": "airbnb",
+    "parser": "babel-eslint",
     "env": {
         "mocha": true,
+        "node": true,
     },
+    "extends": "airbnb",
     "rules": {
-        "indent": [2, 4],
+        "indent": [2, 4]
     },
 }
