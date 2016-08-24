@@ -1,9 +1,8 @@
 import upsertOneQuerier from '../../lib/queries/upsertOne';
 
-describe('QUERY upsertOne', function () {
-
-    it('should generate sql and parameter for upserting one entity', function () {
-        const upsertOneQuery = upsertOneQuerier('table', [ 'id1', 'id2' ], ['fielda', 'fieldb']);
+describe('QUERY upsertOne', () => {
+    it('should generate sql and parameter for upserting one entity', () => {
+        const upsertOneQuery = upsertOneQuerier('table', ['id1', 'id2'], ['fielda', 'fieldb']);
         assert.deepEqual(upsertOneQuery({ id1: 1, id2: 2, fielda: 'a', fieldb: 'b' }), {
             sql: (
 `INSERT INTO table (id1, id2, fielda, fieldb)
@@ -16,13 +15,15 @@ RETURNING *`
                 id1: 1,
                 id2: 2,
                 fielda: 'a',
-                fieldb: 'b'
-            }
+                fieldb: 'b',
+            },
         });
     });
 
-    it('should generate sql and parameter for upserting one entity using same order for (field...) and VALUES(field...)', function () {
-        const upsertOneQuery = upsertOneQuerier('table', [ 'id' ], ['field']);
+    it(
+    'should generate query for upserting using same order for (field...) and VALUES(field...)',
+    () => {
+        const upsertOneQuery = upsertOneQuerier('table', ['id'], ['field']);
         assert.deepEqual(upsertOneQuery({ field: 'value', id: 1 }), {
             sql: (
 `INSERT INTO table (id, field)
@@ -33,13 +34,13 @@ RETURNING *`
             ),
             parameters: {
                 id: 1,
-                field: 'value'
-            }
+                field: 'value',
+            },
         });
     });
 
-    it('should not try to update field not passed in entity', function () {
-        const upsertOneQuery = upsertOneQuerier('table', [ 'id' ], ['fielda', 'fieldb']);
+    it('should not try to update field not passed in entity', () => {
+        const upsertOneQuery = upsertOneQuerier('table', ['id'], ['fielda', 'fieldb']);
         assert.deepEqual(upsertOneQuery({ fielda: 'value', id: 1 }), {
             sql: (
 `INSERT INTO table (id, fielda)
@@ -50,12 +51,12 @@ RETURNING *`
             ),
             parameters: {
                 id: 1,
-                fielda: 'value'
-            }
+                fielda: 'value',
+            },
         });
     });
 
-    it('should DO NOTHING on conflict when no value provided to updatable field', function () {
+    it('should DO NOTHING on conflict when no value provided to updatable field', () => {
         const upsertOneQuery = upsertOneQuerier('table', ['id'], ['field']);
         assert.deepEqual(upsertOneQuery({ id: 1 }), {
             sql: (
@@ -66,12 +67,12 @@ DO NOTHING
 RETURNING *`
             ),
             parameters: {
-                id: 1
-            }
+                id: 1,
+            },
         });
     });
 
-    it('should accept to have no updatableFields', function () {
+    it('should accept to have no updatableFields', () => {
         const upsertOneQuery = upsertOneQuerier('table', ['id'], []);
         assert.deepEqual(upsertOneQuery({ id: 1 }), {
             sql: (
@@ -82,8 +83,8 @@ DO NOTHING
 RETURNING *`
             ),
             parameters: {
-                id: 1
-            }
+                id: 1,
+            },
         });
     });
 });
