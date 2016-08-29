@@ -1,7 +1,7 @@
 import middleware from '../../lib/utils/middleware';
 
-describe('middleware', function () {
-    it('should execute used function f with options, and null', function () {
+describe('middleware', () => {
+    it('should execute used function f with options, and null', () => {
         let receivedArgs;
         const f = function (...args) {
             receivedArgs = args;
@@ -16,8 +16,9 @@ describe('middleware', function () {
         assert.equal(result, 'fResult');
     });
 
-    it('should execute used function in order, passing result of the previous one to the next', function () {
-        let firstArguments, nextArguments;
+    it('should execute used function in order, passing result of the previous one to the next', () => {
+        let firstArguments;
+        let nextArguments;
         const first = function (...args) {
             firstArguments = args;
             return 'firstResult';
@@ -38,8 +39,9 @@ describe('middleware', function () {
         assert.equal(result, 'nextResult');
     });
 
-    it('should apply used functon to targeted entry key', function () {
-        let targetPileArguments, targetFaceArguments;
+    it('should apply used functon to targeted entry key', () => {
+        let targetPileArguments;
+        let targetFaceArguments;
         const targetPile = function (...args) {
             targetPileArguments = args;
             return 'targetPileResult';
@@ -48,7 +50,7 @@ describe('middleware', function () {
             targetFaceArguments = args;
             return 'targetFaceResult';
         };
-        const result = middleware({ pile: 'tic', face: 'tac'}, 'options')
+        const result = middleware({ pile: 'tic', face: 'tac' }, 'options')
         .use(targetPile, 'pile')
         .use(targetFace, 'face')
         .execute('empty result');

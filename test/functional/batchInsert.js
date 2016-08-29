@@ -1,9 +1,9 @@
 import { batchInsert } from '../../lib';
 
-describe('batchInsert', function () {
+describe('batchInsert', () => {
     let batchInsertQuery;
 
-    beforeEach(function () {
+    beforeEach(() => {
         batchInsertQuery = batchInsert('tag', ['name'])(db);
     });
 
@@ -29,26 +29,28 @@ describe('batchInsert', function () {
         assert.equal(error.message, 'No data for batch inserting tag entities.');
     });
 
-    it('should insert list of entity in a single request returning all field by default', function* () {
+    it('should insert list of entity in a single request returning all field by default',
+    function* () {
         const tags = [
             { name: 'tag1' },
             { name: 'tag2' },
-            { name: 'tag3' }
+            { name: 'tag3' },
         ];
         const result = yield batchInsertQuery(tags);
 
         assert.deepEqual(result.map((tag) => ({ name: tag.name })), tags);
 
-        var savedTags = yield db.query({ sql: 'SELECT * from tag ORDER BY id' });
+        const savedTags = yield db.query({ sql: 'SELECT * from tag ORDER BY id' });
         assert.deepEqual(result, savedTags);
     });
 
-    it('should insert list of entity in a single request returning only specified field if given', function* () {
+    it('should insert list of entity in a single request returning only specified field if given',
+    function* () {
         batchInsertQuery = batchInsert('tag', ['name'], ['id'])(db);
         const tags = [
             { name: 'tag1' },
             { name: 'tag2' },
-            { name: 'tag3' }
+            { name: 'tag3' },
         ];
         const result = yield batchInsertQuery(tags);
 
@@ -61,6 +63,6 @@ describe('batchInsert', function () {
     });
 
     afterEach(function* () {
-        yield db.query({sql: 'TRUNCATE tag CASCADE'});
+        yield db.query({ sql: 'TRUNCATE tag CASCADE' });
     });
 });

@@ -1,9 +1,9 @@
 import { crud } from '../../lib';
 
-describe('crud', function () {
+describe('crud', () => {
     let queries;
 
-    before(function () {
+    before(() => {
         queries = crud('author', ['name', 'firstname'], ['id'], ['name', 'firstname'])(db);
     });
 
@@ -12,7 +12,9 @@ describe('crud', function () {
         assert.deepEqual(result.name, 'doe');
         assert.deepEqual(result.firstname, 'john');
 
-        var savedAuthors = yield db.query({ sql: 'SELECT name, firstname from author ORDER BY id' });
+        const savedAuthors = yield db.query({
+            sql: 'SELECT name, firstname from author ORDER BY id',
+        });
         assert.deepEqual([result], savedAuthors);
     });
 
@@ -53,31 +55,37 @@ describe('crud', function () {
 
         assert.deepEqual(result, author);
 
-        assert.isUndefined(yield db.queryOne({ sql: 'SELECT * FROM author WHERE id = $id', parameters: { id: author.id } }));
+        assert.isUndefined(yield db.queryOne({
+            sql: 'SELECT * FROM author WHERE id = $id',
+            parameters: { id: author.id },
+        }));
     });
 
     it('should update entity', function* () {
         const author = yield fixtureLoader.addAuthor({});
 
-        const result = yield queries.updateOne({ id: author.id }, { name: 'mae', firstname: 'jane' });
+        const result = yield queries.updateOne({ id: author.id }, {
+            name: 'mae',
+            firstname: 'jane',
+        });
 
         assert.deepEqual(result, {
             name: 'mae',
-            firstname: 'jane'
+            firstname: 'jane',
         });
 
-        var savedAuthors = yield db.query({ sql: 'SELECT * from author ORDER BY id' });
+        const savedAuthors = yield db.query({ sql: 'SELECT * from author ORDER BY id' });
         assert.deepEqual(savedAuthors, [{
             ...author,
             name: 'mae',
-            firstname: 'jane'
+            firstname: 'jane',
         }]);
     });
 
     it('should select page of entity', function* () {
         const authors = yield [
             { firstname: 'john', name: 'doe' },
-            { firstname: 'jane', name: 'mae' }
+            { firstname: 'jane', name: 'mae' },
         ].map(author => fixtureLoader.addAuthor(author));
 
         const result = yield queries.selectPage();
@@ -91,7 +99,7 @@ describe('crud', function () {
     it('should batchInsert entities', function* () {
         const authors = [
             { firstname: 'john', name: 'doe' },
-            { firstname: 'jane', name: 'mae' }
+            { firstname: 'jane', name: 'mae' },
         ];
         const result = yield queries.batchInsert(authors);
 
@@ -100,12 +108,13 @@ describe('crud', function () {
             assert.equal(author.firstname, authors[index].firstname);
         });
 
-        var savedAuthors = yield db.query({ sql: 'SELECT name, firstname from author ORDER BY id' });
+        const savedAuthors = yield db.query({
+            sql: 'SELECT name, firstname from author ORDER BY id',
+        });
         assert.deepEqual(result, savedAuthors);
     });
 
     afterEach(function* () {
-        yield db.query({sql: 'TRUNCATE author CASCADE'});
+        yield db.query({ sql: 'TRUNCATE author CASCADE' });
     });
-
 });

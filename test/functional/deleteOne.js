@@ -1,10 +1,11 @@
 import { deleteOne } from '../../lib';
 
-describe('deleteOne', function () {
-    let author, deleteOneQuery;
+describe('deleteOne', () => {
+    let author;
+    let deleteOneQuery;
 
-    before(function () {
-        deleteOneQuery = deleteOne('author', [ 'id' ])(db);
+    before(() => {
+        deleteOneQuery = deleteOne('author', ['id'])(db);
     });
 
     beforeEach(function* () {
@@ -16,7 +17,10 @@ describe('deleteOne', function () {
 
         assert.deepEqual(result, author);
 
-        assert.isUndefined(yield db.queryOne({ sql: 'SELECT * FROM author WHERE id = $id', parameters: { id: author.id } }));
+        assert.isUndefined(yield db.queryOne({
+            sql: 'SELECT * FROM author WHERE id = $id',
+            parameters: { id: author.id },
+        }));
     });
 
     it('should return undefined if no author match once executed', function* () {
@@ -26,6 +30,6 @@ describe('deleteOne', function () {
     });
 
     afterEach(function* () {
-        yield db.query({sql: 'TRUNCATE author CASCADE'});
+        yield db.query({ sql: 'TRUNCATE author CASCADE' });
     });
 });

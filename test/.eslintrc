@@ -9,5 +9,8 @@
         "db": false,
         "assert": false,
         "fixtureLoader": false
-    }
+    },
+    "rules": {
+        "func-names": 0
+    },
 }
