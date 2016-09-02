@@ -4,7 +4,7 @@ describe('batchUpdate', () => {
     let ids;
     let batchUpdateQuery;
 
-    before(function* () {
+    before(() => {
         batchUpdateQuery = batchUpdate('tag', 'temptag1', ['id', 'name'], ['id']);
     });
 

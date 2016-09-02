@@ -5,7 +5,11 @@ import fixtureLoaderFactory from './utils/fixtureLoader';
 before(function* () {
     global.assert = assert;
 
-    global.db = yield pgClient('postgres://postgres@db:5432/postgres');
+    global.db = yield pgClient({
+        user: 'postgres',
+        database: 'postgres',
+        host: 'db',
+    });
     yield global.db.query({ sql: 'DROP TABLE IF EXISTS tag;' });
     yield global.db.query({ sql: `CREATE TABLE IF NOT EXISTS tag (
         id              serial primary key,

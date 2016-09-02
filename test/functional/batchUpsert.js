@@ -12,7 +12,7 @@ describe('batchUpsert', () => {
     .startOf('day')
     .toDate();
 
-    before(function* () {
+    before(() => {
         batchUpsertQuery = batchUpsert('post', ['author', 'date'], ['title'])(db);
     });
 
@@ -34,7 +34,7 @@ describe('batchUpsert', () => {
         yield batchUpsertQuery(newPost);
 
         const updatedPost = yield db.query({
-            sql: 'SELECT author, title, date from post ORDER BY id',
+            sql: 'SELECT author, title, date from post ORDER BY date DESC, id',
         });
 
         assert.deepEqual(updatedPost, [
