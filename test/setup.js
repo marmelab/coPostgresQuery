@@ -5,7 +5,7 @@ import fixtureLoaderFactory from './utils/fixtureLoader';
 before(function* () {
     global.assert = assert;
 
-    global.db = yield pgClient({
+    global.db = pgClient({
         user: 'postgres',
         database: 'postgres',
         host: 'db',

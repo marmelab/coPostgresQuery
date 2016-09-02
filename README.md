@@ -6,17 +6,17 @@ utility to generate and execute postgresql queries with ease.
 `npm install --save co-postgres-queries`
 
 ##pgClient
-Allow to connect to postgres and execute query
+Allow to connect to postgresql and execute query
 
-With generators
+Connecting to postgresql:
 ```js
 import { pgClient } from 'co-postgres-queries';
 
-const db = yield pgClient(clientOptions, poolingOptions);
+const db = pgClient(clientOptions, poolingOptions);
 ```
 
 Client options:
-The option for the client to connect to the postgres database
+The option for the client to connect to the postgresql database
 ```js
 {
     user,
@@ -36,15 +36,15 @@ The options to configure the polling behavior.
 }
 ```
 
+Executing queries with obtained db object:
+
+With generators
 ```js
 yield db.query({ sql, parameters });
 ```
 
 With async/await
 ```js
-import { pgClient } from 'co-postgres-queries';
-
-const db = await pgClient(dsn);
 await db.query({ sql, parameters });
 ```
 return db object
