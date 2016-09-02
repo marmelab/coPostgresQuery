@@ -12,7 +12,31 @@ With generators
 ```js
 import { pgClient } from 'co-postgres-queries';
 
-const db = yield pgClient(dsn);
+const db = yield pgClient(clientOptions, poolingOptions);
+```
+
+Client options:
+The option for the client to connect to the postgres database
+```js
+{
+    user,
+    password,
+    database,
+    host,
+    port
+}
+```
+
+Pooling options
+The options to configure the polling behavior.
+```js
+{
+    max, // Max number of client to create (default to 10)
+    idleTimeoutMillis // how long a client is allowed to remain idle before being closed (default to 30 000 ms)
+}
+```
+
+```js
 yield db.query({ sql, parameters });
 ```
 
