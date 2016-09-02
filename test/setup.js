@@ -9,6 +9,9 @@ before(function* () {
         user: 'postgres',
         database: 'postgres',
         host: 'db',
+    }, {
+        max: 1,
+        idleTimeoutMillis: 30000,
     });
     yield global.db.query({ sql: 'DROP TABLE IF EXISTS tag;' });
     yield global.db.query({ sql: `CREATE TABLE IF NOT EXISTS tag (
