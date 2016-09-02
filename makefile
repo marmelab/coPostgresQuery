@@ -16,5 +16,7 @@ build:
 test:
 	@docker-compose run test
 
+install:
+	docker-compose run --rm npm install
 npm:
 	docker-compose run --rm npm $(COMMAND_ARGS)

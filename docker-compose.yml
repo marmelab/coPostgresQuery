@@ -1,5 +1,5 @@
 node:
-  image: node:4.1.2
+  image: mhart/alpine-node:6.5.0
   volumes:
     - .:/app
   working_dir: /app
