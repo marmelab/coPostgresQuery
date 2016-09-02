@@ -4,8 +4,9 @@
   "description": "",
   "main": "build/index.js",
   "scripts": {
+    "prepublish": "make build",
     "test": "node_modules/mocha/bin/mocha --harmony test/*.js test/**/*.js",
-    "build": "babel lib -d build"
+    "build": "make build"
   },
   "author": "",
   "license": "MIT",
