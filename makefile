@@ -1,4 +1,4 @@
-.PHONY: default install run test
+.PHONY: default install run test build
 
 # If the first argument is one of the supported commands...
 SUPPORTED_COMMANDS := npm
@@ -10,8 +10,14 @@ ifneq "$(SUPPORTS_MAKE_ARGS)" ""
     $(eval $(COMMAND_ARGS):;@:)
 endif
 
+build:
+	docker-compose run node node_modules/babel-cli/bin/babel.js lib -d build --blacklist regenerator
+
 test:
 	@docker-compose run test
+
+install:
+	docker-compose run --rm npm install
 
 npm:
 	docker-compose run --rm npm $(COMMAND_ARGS)

@@ -12,7 +12,7 @@ describe('batchUpsert', () => {
     .startOf('day')
     .toDate();
 
-    before(function* () {
+    before(() => {
         batchUpsertQuery = batchUpsert('post', ['author', 'date'], ['title'])(db);
     });
 
