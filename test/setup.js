@@ -6,7 +6,7 @@ import fixtureLoaderFactory from './utils/fixtureLoader';
 before(function* () {
     global.assert = assert;
 
-    global.pgPool = PgPool({
+    global.pgPool = new PgPool({
         user: 'postgres',
         database: 'postgres',
         host: 'db',

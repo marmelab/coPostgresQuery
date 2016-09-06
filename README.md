@@ -5,70 +5,99 @@ utility to generate and execute postgresql queries with ease.
 
 `npm install --save co-postgres-queries`
 
-##pgClient
+##PgPool
+Extend [node-pg-pool](https://github.com/brianc/node-pg-pool)
 Allow to connect to postgresql and execute query
 
-Connecting to postgresql:
+###Creating a pool:
 ```js
-import { pgClient } from 'co-postgres-queries';
-
-const db = pgClient(clientOptions, poolingOptions);
-```
-
-Client options:
-The option for the client to connect to the postgresql database
-```js
-{
+import { PgPool } from 'co-postgres-queries';
+const clientOptions = {
     user,
     password,
     database,
     host,
     port
-}
-```
-
-Pooling options
-The options to configure the polling behavior.
-```js
-{
+};
+const poolingOptions = {
     max, // Max number of client to create (default to 10)
     idleTimeoutMillis // how long a client is allowed to remain idle before being closed (default to 30 000 ms)
 }
+const pool = new PgPool(clientOptions, poolingOptions);
 ```
 
-Executing queries with obtained db object:
-
-With generators
+###Getting client with promise
 ```js
-yield db.query({ sql, parameters });
+const = new pgPool();
+pool.connect().then((client) => {
+    // use the client
+});
+
+// async/await
+(async () => {
+    const = new pgPool();
+    const client = await pool.connect();
+})();
+
+// co
+co(function* () {
+    const = new pgPool();
+    const client = yield pool.connect();
+});
 ```
 
-With async/await
+### client.query
 ```js
-await db.query({ sql, parameters });
-```
-return db object
-###db.query
-execute given query in the form of:
-```js
-{
-    sql: 'SELECT * FROM user where username=$username;',
-    parameters: {
-        username: 'john'
-    }
-}
-```
-it use named parameter
-It always return an array
+// query use named parameter
+client.query({
+    sql: 'SELECT $name::text as name',
+    parameters: { name: 'world' }
+}) // query return a promise
+.then((result) => {
+    // result contain directly the row
+    console.log(`Hello ${result[0].name}`);
+});
 
-###db.queryOne
+// It work with asyn/await
+(async() => {
+    const pool = new PgPool();
+    const result = await pool.query({
+        sql: 'SELECT $name::text as name',
+        parameters: { name: 'world' }
+    });
+
+    console.log(`Hello ${result[0].name}`);
+})()
+// Or with co
+co(function* () {
+    const pool = new PgPool();
+    const result = yield pool.query({
+        sql: 'SELECT $name::text as name',
+        parameters: { name: 'world' }
+    });
+
+    console.log(`Hello ${result[0].name}`);
+});
+```
+
+### pool.query
+You can also execute a query directly from the pool.
+A client will then get automatically retrieved, and released once the query is done.
+Transaction are not possible this way since the client would change on each query.
+
+###client.queryOne
 same as query but return only the first result or null
+
+###client.release
+Return the client to the pool, to be used again.
+Do not forget to call this when you are done.
+
+### client.end
+Close the client. It will not return to the pool.
 
 ###db.begin, db.commit, db.savepoint, db.rollback
 Allow to manage transaction
-
-###db.done
-return current connection to the pool, or close it if passed an argument.
+You must retrieve a client with `pool.connect()` to use those.
 
 ##queries
 Each queries take the form:
