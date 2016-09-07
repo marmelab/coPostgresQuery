@@ -14,6 +14,7 @@ build:
 	docker-compose run node node_modules/babel-cli/bin/babel.js lib -d build --blacklist regenerator
 
 test:
+	@docker-compose up -d db
 	@docker-compose run test
 
 install:

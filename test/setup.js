@@ -1,18 +1,22 @@
-import { pgClient } from '../lib';
 import { assert } from 'chai';
+
+import { PgPool } from '../lib';
 import fixtureLoaderFactory from './utils/fixtureLoader';
 
 before(function* () {
     global.assert = assert;
 
-    global.db = pgClient({
+    global.pgPool = new PgPool({
         user: 'postgres',
         database: 'postgres',
         host: 'db',
     }, {
-        max: 1,
+        max: 30,
         idleTimeoutMillis: 30000,
     });
+
+    global.db = yield global.pgPool.connect();
+
     yield global.db.query({ sql: 'DROP TABLE IF EXISTS tag;' });
     yield global.db.query({ sql: `CREATE TABLE IF NOT EXISTS tag (
         id              serial primary key,
@@ -36,6 +40,15 @@ before(function* () {
     global.fixtureLoader = fixtureLoaderFactory(global.db);
 });
 
+beforeEach(function* () {
+    global.db = yield global.pgPool.connect();
+});
+
+afterEach(() => {
+    global.db.release();
+});
+
 after(() => {
-    global.db.done();
+    global.db.end();
+    global.pgPool.end();
 });
