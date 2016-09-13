@@ -17,7 +17,7 @@ const clientOptions = {
     password,
     database,
     host,
-    port
+    port,
 };
 const poolingOptions = {
     max, // Max number of client to create (default to 10)
@@ -28,20 +28,20 @@ const pool = new PgPool(clientOptions, poolingOptions);
 
 ###Getting client with promise
 ```js
-const = new pgPool();
+const pool = new PgPool();
 pool.connect().then((client) => {
     // use the client
 });
 
 // async/await
 (async () => {
-    const = new pgPool();
+    const pool = new PgPool();
     const client = await pool.connect();
 })();
 
 // co
 co(function* () {
-    const = new pgPool();
+    const pool = new PgPool();
     const client = yield pool.connect();
 });
 ```
@@ -117,10 +117,12 @@ On the third call it take the query parameters.
 
 ###insertOne(table, fields, returnFields)(db)(entity)
 allow to create a query to insert one given entity.
+
 ####Configuration
 - table: the table name
 - fields: list of fields to insert
 - returnFields: list of fields exposed in the result of the query
+
 ####parameters
 A literal object in the form of:
 ```js
@@ -132,10 +134,12 @@ A literal object in the form of:
 
 ###batchInsert(table, fields, returnFields)(db)(entities)
 allow to create a query to insert an array of entities.
+
 ####Configuration
 - table: the table name
 - fields: list of fields to insert
 - returnFields: list of fields exposed in the result of the query
+
 ####parameters
 An array of literal object in the form of:
 ```js
@@ -149,10 +153,12 @@ An array of literal object in the form of:
 
 ###selectOne(table, idFields, returnFields)(db)(entity)
 allow to create a query to select one entity.
+
 ####Configuration
 - table: the table name
 - idFields: list of key fields used to select the entity
 - returnFields: list of fields retrieved by the query
+
 ####parameters
 A literal in the form of:
 ```js
@@ -166,6 +172,7 @@ key not in idFields will be ignored
 
 ###selectPage(table, idFields, returnFields)(db)(limit, offset, filters, sort, sortDir)
 allow to create a query to select one entity.
+
 ####Configuration
 - table:
     the table name, accept JOIN statement
@@ -190,6 +197,7 @@ allow to create a query to select one entity.
     specify that we want to encompass the query in `WITH RESULT AS <query> SELECT * FROM result`
     This add a temporary result table that allow to sort on computed and joined field.
     if the table configuration contain a JOIN clause, this will be automatically set to true.
+
 ####parameters
 - limit:
     number of result to be returned
@@ -211,35 +219,42 @@ allow to create a query to select one entity.
 
 ###updateOne(table, updatableFields, idFields, returnFields)(db)(ids, data)
 allow to create a query to update one entity.
+
 ####Configuration
  - table: the table name
  - updatableFields: the fields that can be updated
  - idFields: the fields used to select the target entity
  - returnFields: the fields to be returned in the result
+ 
 ####parameters
  - ids: the ids values accept either a single value for a single id, or a literal for several id:`{ id1: value, id2: otherValue }`
  - data: a literal specifying the field to update
 
 ###deleteOne(table, idFields, returnFields)(db)(ids)
 allow to create a query to delete one entity.
+
 ####Configuration
 - table: the table name
 - idFields: list of key fields used to select the entity
 - returnFields: list of fields retrieved by the query
+
 ####parameters
  - ids: either a literal with all ids value, or a single value if there is only one id
 
 ###batchDelete(table, fields, identifier)(db)(ids)
 Allow to create a query to delete several entity at once
+
 ####configuration
  - table: the table name
  - fields: list of fields to insert
  - identifier: the field used to select the entity to delete
+ 
 ####parameters
  - ids: list of ids of the entity to delete
 
 ###upsertOne(table, selectorFields, updatableFields, autoIncrementFields, returnFields)(db)(entity)
 Allow to create a query to update one entity or create it if it does not already exists.
+
 ####configuration
  - table: the name of the table
  - selectorFields: the field used to select one entity checking if it exists
@@ -248,22 +263,26 @@ Allow to create a query to update one entity or create it if it does not already
  - returnFields: the field to return in the result
  - fields: all the fields accepted by the query, default to selectorFields + updatableFields (no reason to change that)
  - insertFields: all the fields minus the autoIncrementFields (no reason to change that)
+
 ####parameters
  - entity: the entity to upsert
 
 ###batchUpsert(table, selectorFields, updatableFields, returnFields)(db)(entities)
 Allow to create a query to update a batch entity creating those that does not already exists.
+
 ####configuration
  - table: the name of the table in which to upsert
  - selectorFields: the field used to select one entity checking if it exists
  - updatableFields: the field that can be updated
  - returnFields: the field to return in the result
  - fields: all the fields accepted by the query, default to selectorFields + updatableFields (no reason to change that)
+ 
 ####parameters
 - entities: array of entities to upsert
 
 ###selectByFieldValues(table, selectorField, returnFields)(db)(values)
 Allow to create a query to select an entity with selectorField IN values and keep the ORDER of values.
+
 ####configurations
  - table: the name of the table in which to upsert
  - selectorField: the field used to select entity
