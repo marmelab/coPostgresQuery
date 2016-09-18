@@ -1,10 +1,10 @@
 import moment from 'moment';
 
-import { factories } from '../../lib';
+import { upsertOneQuery } from '../../lib';
 
 describe('upsertOne', () => {
     let post;
-    let upsertOneQuery;
+    let upsertOne;
     const currentMonth = moment().endOf('month').startOf('day')
     .toDate();
     const lastMonth = moment().subtract(1, 'month').endOf('month')
@@ -12,7 +12,7 @@ describe('upsertOne', () => {
     .toDate();
 
     before(() => {
-        upsertOneQuery = db.link(factories.upsertOne('post', ['author', 'date'], ['author', 'date', 'title']));
+        upsertOne = db.link(upsertOneQuery('post', ['author', 'date'], ['author', 'date', 'title']));
     });
 
     beforeEach(function* () {
@@ -21,7 +21,7 @@ describe('upsertOne', () => {
 
     it('should create unexisting entities', function* () {
         const newPost = { author: 'jane', date: lastMonth, title: 'title2' };
-        yield upsertOneQuery(newPost);
+        yield upsertOne(newPost);
 
         const updsertedPosts = (yield db.query({ sql: 'SELECT * from post ORDER BY id' }));
         const lastId = (yield db.query({ sql: 'SELECT id FROM post ORDER BY id DESC LIMIT 1' }))
@@ -38,7 +38,7 @@ describe('upsertOne', () => {
 
     it('should create entities when not all selector match', function* () {
         const newPost = { author: 'john', date: lastMonth, title: 'john last month' };
-        const result = yield upsertOneQuery(newPost);
+        const result = yield upsertOne(newPost);
 
         const updsertedPosts = (yield db.query({ sql: 'SELECT * from post ORDER BY id' }));
         const lastId = (yield db.query({ sql: 'SELECT id FROM post ORDER BY id DESC LIMIT 1' }))
@@ -60,7 +60,7 @@ describe('upsertOne', () => {
 
     it('should update existing entities (both selector values match)', function* () {
         const updatedPost = { author: 'john', date: currentMonth, title: 'updated title' };
-        const result = yield upsertOneQuery(updatedPost);
+        const result = yield upsertOne(updatedPost);
         assert.deepEqual(result, {
             id: post.id,
             ...updatedPost,
@@ -78,7 +78,7 @@ describe('upsertOne', () => {
 
     it('should update nothing when selector match but no update value are provided', function* () {
         const updatedPost = { author: 'john', date: currentMonth };
-        const result = yield upsertOneQuery(updatedPost);
+        const result = yield upsertOne(updatedPost);
         assert.deepEqual(result, post);
 
         const updsertedPosts = (yield db.query({ sql: 'SELECT * from post ORDER BY id' }));

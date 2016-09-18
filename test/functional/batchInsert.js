@@ -1,16 +1,16 @@
-import { factories } from '../../lib';
+import { batchInsertQuery } from '../../lib';
 
 describe('batchInsert', () => {
-    let batchInsertQuery;
+    let batchInsert;
 
     beforeEach(() => {
-        batchInsertQuery = db.link(factories.batchInsert('tag', ['name']));
+        batchInsert = db.link(batchInsertQuery('tag', ['name']));
     });
 
     it('should throw an error if no entities given', function* () {
         let error;
         try {
-            yield batchInsertQuery();
+            yield batchInsert();
         } catch (e) {
             error = e;
         }
@@ -21,7 +21,7 @@ describe('batchInsert', () => {
     it('should throw an error if passed an empty array', function* () {
         let error;
         try {
-            yield batchInsertQuery([]);
+            yield batchInsert([]);
         } catch (e) {
             error = e;
         }
@@ -36,7 +36,7 @@ describe('batchInsert', () => {
             { name: 'tag2' },
             { name: 'tag3' },
         ];
-        const result = yield batchInsertQuery(tags);
+        const result = yield batchInsert(tags);
 
         assert.deepEqual(result.map((tag) => ({ name: tag.name })), tags);
 
@@ -46,13 +46,13 @@ describe('batchInsert', () => {
 
     it('should insert list of entity in a single request returning only specified field if given',
     function* () {
-        batchInsertQuery = db.link(factories.batchInsert('tag', ['name'], ['id']));
+        batchInsert = db.link(batchInsertQuery('tag', ['name'], ['id']));
         const tags = [
             { name: 'tag1' },
             { name: 'tag2' },
             { name: 'tag3' },
         ];
-        const result = yield batchInsertQuery(tags);
+        const result = yield batchInsert(tags);
 
         assert.equal(result.length, tags.length);
 

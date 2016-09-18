@@ -1,12 +1,12 @@
-import { factories } from '../../lib/';
+import { batchDeleteQuery } from '../../lib/';
 
 describe('batchDelete', () => {
     let ids;
     let tags;
-    let batchDeleteQuery;
+    let batchDelete;
 
     before(() => {
-        batchDeleteQuery = db.link(factories.batchDelete('tag', ['id', 'name'], 'id'));
+        batchDelete = db.link(batchDeleteQuery('tag', ['id', 'name'], 'id'));
     });
 
     beforeEach(function* () {
@@ -19,7 +19,7 @@ describe('batchDelete', () => {
     });
 
     it('should remove entities', function* () {
-        const result = yield batchDeleteQuery(ids.slice(1));
+        const result = yield batchDelete(ids.slice(1));
 
         assert.deepEqual(result, tags.slice(1));
 
