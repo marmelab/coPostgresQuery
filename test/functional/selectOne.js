@@ -1,4 +1,4 @@
-import { selectOne } from '../../lib';
+import { factories } from '../../lib';
 
 describe('functional selectOne', () => {
     let author;
@@ -8,11 +8,11 @@ describe('functional selectOne', () => {
     });
 
     it('should select entity once executed', function* () {
-        const selectOneQuery = selectOne('author', ['id'], [
+        const selectOneQuery = db.link(factories.selectOne('author', ['id'], [
             'id',
             'name',
             'firstname',
-        ])(db);
+        ]));
 
         const result = yield selectOneQuery({ id: author.id });
 
@@ -20,10 +20,10 @@ describe('functional selectOne', () => {
     });
 
     it('should return undefined if no author match once executed', function* () {
-        const selectOneQuery = selectOne('author', ['id'], [
+        const selectOneQuery = db.link(factories.selectOne('author', ['id'], [
             'name',
             'firstname',
-        ])(db);
+        ]));
 
         const result = yield selectOneQuery({ id: 404 });
 

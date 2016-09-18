@@ -1,8 +1,8 @@
 import moment from 'moment';
 
-import { upsertOne } from '../../lib';
+import { factories } from '../../lib';
 
-describe('execution', () => {
+describe('upsertOne', () => {
     let post;
     let upsertOneQuery;
     const currentMonth = moment().endOf('month').startOf('day')
@@ -12,7 +12,7 @@ describe('execution', () => {
     .toDate();
 
     before(() => {
-        upsertOneQuery = upsertOne('post', ['author', 'date'], ['author', 'date', 'title'])(db);
+        upsertOneQuery = db.link(factories.upsertOne('post', ['author', 'date'], ['author', 'date', 'title']));
     });
 
     beforeEach(function* () {

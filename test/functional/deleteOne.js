@@ -1,11 +1,11 @@
-import { deleteOne } from '../../lib';
+import { factories } from '../../lib';
 
 describe('deleteOne', () => {
     let author;
     let deleteOneQuery;
 
     before(() => {
-        deleteOneQuery = deleteOne('author', ['id'])(db);
+        deleteOneQuery = db.link(factories.deleteOne('author', ['id']));
     });
 
     beforeEach(function* () {

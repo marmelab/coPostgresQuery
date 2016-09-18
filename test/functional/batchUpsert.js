@@ -1,5 +1,6 @@
-import { batchUpsert } from '../../lib';
 import moment from 'moment';
+
+import { factories } from '../../lib';
 
 describe('batchUpsert', () => {
     let batchUpsertQuery;
@@ -13,7 +14,7 @@ describe('batchUpsert', () => {
     .toDate();
 
     before(() => {
-        batchUpsertQuery = batchUpsert('post', ['author', 'date'], ['title'])(db);
+        batchUpsertQuery = db.link(factories.batchUpsert('post', ['author', 'date'], ['title']));
     });
 
     beforeEach(function* () {

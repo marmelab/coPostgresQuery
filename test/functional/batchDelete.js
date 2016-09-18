@@ -1,4 +1,4 @@
-import { batchDelete } from '../../lib/';
+import { factories } from '../../lib/';
 
 describe('batchDelete', () => {
     let ids;
@@ -6,7 +6,7 @@ describe('batchDelete', () => {
     let batchDeleteQuery;
 
     before(() => {
-        batchDeleteQuery = batchDelete('tag', ['id', 'name'], 'id')(db);
+        batchDeleteQuery = db.link(factories.batchDelete('tag', ['id', 'name'], 'id'));
     });
 
     beforeEach(function* () {

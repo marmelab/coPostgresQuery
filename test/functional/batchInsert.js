@@ -1,10 +1,10 @@
-import { batchInsert } from '../../lib';
+import { factories } from '../../lib';
 
 describe('batchInsert', () => {
     let batchInsertQuery;
 
     beforeEach(() => {
-        batchInsertQuery = batchInsert('tag', ['name'])(db);
+        batchInsertQuery = db.link(factories.batchInsert('tag', ['name']));
     });
 
     it('should throw an error if no entities given', function* () {
@@ -46,7 +46,7 @@ describe('batchInsert', () => {
 
     it('should insert list of entity in a single request returning only specified field if given',
     function* () {
-        batchInsertQuery = batchInsert('tag', ['name'], ['id'])(db);
+        batchInsertQuery = db.link(factories.batchInsert('tag', ['name'], ['id']));
         const tags = [
             { name: 'tag1' },
             { name: 'tag2' },

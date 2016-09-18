@@ -4,7 +4,7 @@ describe('crud', () => {
     let queries;
 
     before(() => {
-        queries = crud('author', ['name', 'firstname'], ['id'], ['name', 'firstname'])(db);
+        queries = db.link(crud('author', ['name', 'firstname'], ['id'], ['name', 'firstname']));
     });
 
     it('should insert entity', function* () {

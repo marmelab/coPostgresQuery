@@ -1,4 +1,4 @@
-import { updateOne } from '../../lib';
+import { factories } from '../../lib';
 
 describe('updateOne', () => {
     let author;
@@ -7,7 +7,7 @@ describe('updateOne', () => {
     });
 
     it('should update entity returning all field by default', function* () {
-        const updateOneQuery = updateOne('author', ['name', 'firstname'], ['name'])(db);
+        const updateOneQuery = db.link(factories.updateOne('author', ['name', 'firstname'], ['name']));
         const result = yield updateOneQuery({ name: author.name }, { firstname: 'jane' });
         assert.deepEqual(result.firstname, 'jane');
 

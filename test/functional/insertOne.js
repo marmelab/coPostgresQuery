@@ -1,8 +1,8 @@
-import { insertOne } from '../../lib';
+import { factories } from '../../lib';
 
 describe('insertOne', () => {
     it('should insert entity returning all field by default', function* () {
-        const insertOneQuery = insertOne('tag', ['name'])(db);
+        const insertOneQuery = db.link(factories.insertOne('tag', ['name']));
         const result = yield insertOneQuery({ name: 'tag1' });
         assert.deepEqual(result.name, 'tag1');
 
@@ -12,7 +12,7 @@ describe('insertOne', () => {
 
     it('should insert list of entity in a single request returning only specified field if given',
     function* () {
-        const insertOneQuery = insertOne('tag', ['name'], ['id'])(db);
+        const insertOneQuery = db.link(factories.insertOne('tag', ['name'], ['id']));
 
         const result = yield insertOneQuery({ name: 'tag1' });
 
