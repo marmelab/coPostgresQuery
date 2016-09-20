@@ -5,117 +5,43 @@ utility to generate and execute postgresql queries with ease.
 
 `npm install --save co-postgres-queries`
 
-##PgPool
-Extend [node-pg-pool](https://github.com/brianc/node-pg-pool)
-Allow to connect to postgresql and execute query
 
-###Creating a pool:
+##Introduction
+The library can be divided in two part:
+The query helper (insertOne, selectOne, etc..) that allow to generate sql, and the corresponding parameter.
+And PgPool, that allow to connect to the postgres database and execute query.
+
+
+##query helper
+Each query helper take the form:
 ```js
-import { PgPool } from 'co-postgres-queries';
-const clientOptions = {
-    user,
-    password,
-    database,
-    host,
-    port,
-};
-const poolingOptions = {
-    max, // Max number of client to create (default to 10)
-    idleTimeoutMillis // how long a client is allowed to remain idle before being closed (default to 30 000 ms)
-}
-const pool = new PgPool(clientOptions, poolingOptions);
-```
-
-###Getting client with promise
-```js
-const pool = new PgPool();
-pool.connect().then((client) => {
-    // use the client
-});
-
-// async/await
-(async () => {
-    const pool = new PgPool();
-    const client = await pool.connect();
-})();
-
-// co
-co(function* () {
-    const pool = new PgPool();
-    const client = yield pool.connect();
-});
-```
-
-### client.query
-```js
-// query use named parameter
-client.query({
-    sql: 'SELECT $name::text as name',
-    parameters: { name: 'world' }
-}) // query return a promise
-.then((result) => {
-    // result contain directly the row
-    console.log(`Hello ${result[0].name}`);
-});
-
-// It work with asyn/await
-(async() => {
-    const pool = new PgPool();
-    const result = await pool.query({
-        sql: 'SELECT $name::text as name',
-        parameters: { name: 'world' }
-    });
-
-    console.log(`Hello ${result[0].name}`);
-})()
-// Or with co
-co(function* () {
-    const pool = new PgPool();
-    const result = yield pool.query({
-        sql: 'SELECT $name::text as name',
-        parameters: { name: 'world' }
-    });
-
-    console.log(`Hello ${result[0].name}`);
-});
-```
-
-### pool.query
-You can also execute a query directly from the pool.
-A client will then get automatically retrieved, and released once the query is done.
-Transaction are not possible this way since the client would change on each query.
-
-###client.queryOne
-same as query but return only the first result or null
-
-###client.release
-Return the client to the pool, to be used again.
-Do not forget to call this when you are done.
-
-### client.end
-Close the client. It will not return to the pool.
-
-###db.begin, db.commit, db.savepoint, db.rollback
-Allow to manage transaction
-You must retrieve a client with `pool.connect()` to use those.
-
-##queries
-Each queries take the form:
-```js
-query(...config)(db)(...parameters);
+query(...config)(...parameters);
 ```
 On the first call it receive it's configuration, eg, the table name, field name, etc...
 At this step, the returned function is also configurable.
 For example:
 ```js
-const insertOneQuery = insertOne('user', ['name', 'firstname'], ['id', 'name', 'firstname']);
+const insertOneQuery = insertOneQuery('user', ['name', 'firstname'], ['id', 'name', 'firstname']);
 // is the same as
-const insertOneQuery = insertOne().table('user').fields(['name', 'firstname']).returnFields(['id', 'name', 'firstname']);
+const insertOneQuery = insertOneQuery()
+.table('user')
+.fields(['name', 'firstname'])
+.returnFields(['id', 'name', 'firstname']);
 ```
-On the second call, it take a dbConnection `const db = new pgCLient(dsn);`, this allow configure the query once for multiple connection.
-On the third call it take the query parameters.
+On the second call it take the query parameters and return an object on the form `{ sql, parameters }`.
+With the sql containing named parameter, and parameters having been sanitized based on the configuration.
+For example:
+```js
+insertOneQuery({ name: 'doe', firstname: 'john', other: 'data' });
+// would return
+{
+    sql: 'INSERT INTO user (name, firstname)VALUES($name, $firstname) RETURNING id, name, firstname',
+    parameters: { name: 'doe', firstname: 'john' }
+}
+```
+The result can then be directly passed to client.query to be executed.
 
-###insertOne(table, fields, returnFields)(db)(entity)
+###insertOne(table, fields, returnFields)(entity)
 allow to create a query to insert one given entity.
 
 ####Configuration
@@ -225,7 +151,7 @@ allow to create a query to update one entity.
  - updatableFields: the fields that can be updated
  - idFields: the fields used to select the target entity
  - returnFields: the fields to be returned in the result
- 
+
 ####parameters
  - ids: the ids values accept either a single value for a single id, or a literal for several id:`{ id1: value, id2: otherValue }`
  - data: a literal specifying the field to update
@@ -248,7 +174,7 @@ Allow to create a query to delete several entity at once
  - table: the table name
  - fields: list of fields to insert
  - identifier: the field used to select the entity to delete
- 
+
 ####parameters
  - ids: list of ids of the entity to delete
 
@@ -276,7 +202,7 @@ Allow to create a query to update a batch entity creating those that does not al
  - updatableFields: the field that can be updated
  - returnFields: the field to return in the result
  - fields: all the fields accepted by the query, default to selectorFields + updatableFields (no reason to change that)
- 
+
 ####parameters
 - entities: array of entities to upsert
 
@@ -306,3 +232,115 @@ crud('user', ['name', 'firstname'], ['id'], ['*'], [(queries) => queries.selectP
     .returnFields([ 'user.name', 'user.firstname', 'town.name' ])
 ]);
 ```
+
+##PgPool
+Extend [node-pg-pool](https://github.com/brianc/node-pg-pool)
+Allow to connect to postgresql and execute query
+
+###Creating a pool:
+```js
+import { PgPool } from 'co-postgres-queries';
+const clientOptions = {
+    user,
+    password,
+    database,
+    host,
+    port
+};
+const poolingOptions = {
+    max, // Max number of client to create (default to 10)
+    idleTimeoutMillis // how long a client is allowed to remain idle before being closed (default to 30 000 ms)
+}
+const pool = new PgPool(clientOptions, poolingOptions);
+```
+
+###Getting client with promise
+```js
+const pool = new pgPool();
+pool.connect().then((client) => {
+    // use the client
+});
+
+// async/await
+(async () => {
+    const pool = new pgPool();
+    const client = await pool.connect();
+})();
+
+// co
+co(function* () {
+    const pool = new pgPool();
+    const client = yield pool.connect();
+});
+```
+
+### client.query
+```js
+// query use named parameter
+client.query({
+    sql: 'SELECT $name::text as name',
+    parameters: { name: 'world' }
+}) // query return a promise
+.then((result) => {
+    // result contain directly the row
+    console.log(`Hello ${result[0].name}`);
+});
+
+// It work with asyn/await
+(async() => {
+    const pool = new PgPool();
+    const result = await pool.query({
+        sql: 'SELECT $name::text as name',
+        parameters: { name: 'world' }
+    });
+
+    console.log(`Hello ${result[0].name}`);
+})()
+// Or with co
+co(function* () {
+    const pool = new PgPool();
+    const result = yield pool.query({
+        sql: 'SELECT $name::text as name',
+        parameters: { name: 'world' }
+    });
+
+    console.log(`Hello ${result[0].name}`);
+});
+```
+
+### pool.query
+You can also execute a query directly from the pool.
+A client will then get automatically retrieved, and released once the query is done.
+Transaction are not possible this way since the client would change on each query.
+
+###client.queryOne
+same as query but return only the first result or null
+
+### client.link
+Take a query or a literal of query and return a function that take the query parameter and execute it
+
+```js
+const query = insertOneQuery('table', ['col1', 'col2']);
+
+const insertOne = client.link(query);
+
+yield insertOne({ col1: 'val1', col2: 'val2' });
+
+// or
+const queries = crudQueries(table, ['col1', 'col2'], ['col1']);
+
+const crud = client.link(queries);
+
+yield crud.insertOne({ col1: 'val1', col2: 'val2' });
+```
+
+###client.release
+Return the client to the pool, to be used again.
+Do not forget to call this when you are done.
+
+### client.end
+Close the client. It will not return to the pool.
+
+###db.begin, db.commit, db.savepoint, db.rollback
+Allow to manage transaction
+You must retrieve a client with `pool.connect()` to use those.
