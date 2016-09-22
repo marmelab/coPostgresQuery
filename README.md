@@ -9,7 +9,7 @@ utility to generate and execute postgresql queries with ease.
 ##Introduction
 The library can be divided in two part:
 The query helper (insertOne, selectOne, etc..) that allow to generate sql, and the corresponding parameter.
-And PgPool, that allow to connect to the postgres database and execute query.
+And PgPool, that allows to connect to the postgres database and execute query.
 
 
 ##query helper
