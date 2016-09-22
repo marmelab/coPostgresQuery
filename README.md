@@ -12,8 +12,8 @@ The query helper (insertOne, selectOne, etc..) that allow to generate sql, and t
 And PgPool, that allows to connect to the postgres database and execute query.
 
 
-## Query Helper
-Each query helper take the form:
+##query helper
+Each query helper takes the form:
 ```js
 query(...config)(...parameters);
 ```
