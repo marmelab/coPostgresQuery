@@ -7,17 +7,17 @@ utility to generate and execute postgresql queries with ease.
 
 
 ##Introduction
-The library can be divided in two part:
-The query helper (insertOne, selectOne, etc..) that allow to generate sql, and the corresponding parameter.
-And PgPool, that allows to connect to the postgres database and execute query.
+The library can be divided in two parts:
+ - The query helpers (insertOne, selectOne, etc..) that allows to generate sql, and the corresponding parameters.
+ - PgPool, that allows to connect to the postgres database and execute query.
 
 
-##query helper
+##Query helper
 Each query helper takes the form:
 ```js
 query(...config)(...parameters);
 ```
-On the first call it receive it's configuration, eg, the table name, field name, etc...
+On the first call it receives its configuration, eg, the table name, field name, etc...
 At this step, the returned function is also configurable.
 For example:
 ```js
@@ -28,7 +28,7 @@ const insertOneQuery = insertOneQuery()
 .fields(['name', 'firstname'])
 .returnFields(['id', 'name', 'firstname']);
 ```
-On the second call it take the query parameters and return an object on the form `{ sql, parameters }`.
+On the second call it takes the query parameters and returns an object on the form `{ sql, parameters }`.
 With the sql containing named parameter, and parameters having been sanitized based on the configuration.
 For example:
 ```js
@@ -49,7 +49,7 @@ allow to create a query to insert one given entity.
 - fields: list of fields to insert
 - returnFields: list of fields exposed in the result of the query
 
-####parameters
+####Parameters
 A literal object in the form of:
 ```js
 {
@@ -66,7 +66,7 @@ allow to create a query to insert an array of entities.
 - fields: list of fields to insert
 - returnFields: list of fields exposed in the result of the query
 
-####parameters
+####Parameters
 An array of literal object in the form of:
 ```js
 [
@@ -85,7 +85,7 @@ allow to create a query to select one entity.
 - idFields: list of key fields used to select the entity
 - returnFields: list of fields retrieved by the query
 
-####parameters
+####Parameters
 A literal in the form of:
 ```js
 {
@@ -124,7 +124,7 @@ allow to create a query to select one entity.
     This add a temporary result table that allow to sort on computed and joined field.
     if the table configuration contain a JOIN clause, this will be automatically set to true.
 
-####parameters
+####Parameters
 - limit:
     number of result to be returned
 - offset
@@ -152,7 +152,7 @@ allow to create a query to update one entity.
  - idFields: the fields used to select the target entity
  - returnFields: the fields to be returned in the result
 
-####parameters
+####Parameters
  - ids: the ids values accept either a single value for a single id, or a literal for several id:`{ id1: value, id2: otherValue }`
  - data: a literal specifying the field to update
 
@@ -164,7 +164,7 @@ allow to create a query to delete one entity.
 - idFields: list of key fields used to select the entity
 - returnFields: list of fields retrieved by the query
 
-####parameters
+####Parameters
  - ids: either a literal with all ids value, or a single value if there is only one id
 
 ###batchDelete(table, fields, identifier)(db)(ids)
@@ -175,7 +175,7 @@ Allow to create a query to delete several entity at once
  - fields: list of fields to insert
  - identifier: the field used to select the entity to delete
 
-####parameters
+####Parameters
  - ids: list of ids of the entity to delete
 
 ###upsertOne(table, selectorFields, updatableFields, autoIncrementFields, returnFields)(db)(entity)
@@ -190,7 +190,7 @@ Allow to create a query to update one entity or create it if it does not already
  - fields: all the fields accepted by the query, default to selectorFields + updatableFields (no reason to change that)
  - insertFields: all the fields minus the autoIncrementFields (no reason to change that)
 
-####parameters
+####Parameters
  - entity: the entity to upsert
 
 ###batchUpsert(table, selectorFields, updatableFields, returnFields)(db)(entities)
@@ -203,7 +203,7 @@ Allow to create a query to update a batch entity creating those that does not al
  - returnFields: the field to return in the result
  - fields: all the fields accepted by the query, default to selectorFields + updatableFields (no reason to change that)
 
-####parameters
+####Parameters
 - entities: array of entities to upsert
 
 ###selectByFieldValues(table, selectorField, returnFields)(db)(values)
@@ -213,7 +213,7 @@ Allow to create a query to select an entity with selectorField IN values and kee
  - table: the name of the table in which to upsert
  - selectorField: the field used to select entity
  - returnFields: the field to return in the result
-####parameters
+####Parameters
  - values: array of values to retrieve. The array order will determine the result order.
  Careful, if several entity share the same value, their order is unpredictable.
 
@@ -236,6 +236,12 @@ crud('user', ['name', 'firstname'], ['id'], ['*'], [(queries) => queries.selectP
 ##PgPool
 Extend [node-pg-pool](https://github.com/brianc/node-pg-pool)
 Allow to connect to postgresql and execute query
+It add:
+ - Support for named parameter.
+ - query: Now return the list of results.
+ - Added queryOne: Same as query but return only one result, instead of an array.
+ - Helper method ([begin, savepoint, rollback, commit][###client.begin, client.commit, client.savepoint, client.rollback]) to handle transactions on the client.
+ - Helper method ([link][### client.link]) to link a query helper to the client or pool.
 
 ###Creating a pool:
 ```js
@@ -248,8 +254,8 @@ const clientOptions = {
     port
 };
 const poolingOptions = {
-    max, // Max number of client to create (default to 10)
-    idleTimeoutMillis // how long a client is allowed to remain idle before being closed (default to 30 000 ms)
+    max, // Max number of clients to create (defaults to 10)
+    idleTimeoutMillis // how long a client is allowed to remain idle before being closed (defaults to 30 000 ms)
 }
 const pool = new PgPool(clientOptions, poolingOptions);
 ```
@@ -311,13 +317,13 @@ co(function* () {
 ### pool.query
 You can also execute a query directly from the pool.
 A client will then get automatically retrieved, and released once the query is done.
-Transaction are not possible this way since the client would change on each query.
+Transactions are not possible this way since the client would change on each query.
 
 ###client.queryOne
-same as query but return only the first result or null
+Same as query but returns only the first result or null
 
 ### client.link
-Take a query or a literal of query and return a function that take the query parameter and execute it
+Take a query or a literal of query and returns a function that takes the query parameter and executes it
 
 ```js
 const query = insertOneQuery('table', ['col1', 'col2']);
@@ -341,6 +347,6 @@ Do not forget to call this when you are done.
 ### client.end
 Close the client. It will not return to the pool.
 
-###db.begin, db.commit, db.savepoint, db.rollback
+###client.begin, client.commit, client.savepoint, client.rollback
 Allow to manage transaction
 You must retrieve a client with `pool.connect()` to use those.
