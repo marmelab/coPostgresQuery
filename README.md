@@ -236,7 +236,7 @@ crud('user', ['name', 'firstname'], ['id'], ['*'], [(queries) => queries.selectP
 ##PgPool
 Extend [node-pg-pool](https://github.com/brianc/node-pg-pool)
 Allow to connect to postgresql and execute query
-It add:
+It adds:
  - Support for named parameter.
  - query: Now return the list of results.
  - Added queryOne: Same as query but return only one result, instead of an array.
