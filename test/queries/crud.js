@@ -1,18 +1,18 @@
-import queries from '../../lib/queries';
+import crudQueries from '../../lib/queries/crud';
 
-describe('queries', () => {
-    let configuredQueries;
+describe('crud', () => {
+    let crud;
     const table = 'table';
     const idFields = ['id1', 'id2'];
     const fields = ['field1', 'field2'];
     const returnFields = ['*'];
 
     before(() => {
-        configuredQueries = queries(table, fields, idFields, returnFields);
+        crud = crudQueries(table, fields, idFields, returnFields);
     });
 
     it('should initialize all queries with given parameters', () => {
-        assert.deepEqual(Object.keys(configuredQueries), [
+        assert.deepEqual(Object.keys(crud), [
             'deleteOne',
             'insertOne',
             'selectOne',
@@ -25,35 +25,35 @@ describe('queries', () => {
     });
 
     it('should configure deleteOne', () => {
-        const { deleteOne } = configuredQueries;
+        const { deleteOne } = crud;
         assert.equal(deleteOne.table(), table);
         assert.deepEqual(deleteOne.idFields(), idFields);
         assert.deepEqual(deleteOne.returnFields(), returnFields);
     });
 
     it('should configure insertOne', () => {
-        const { insertOne } = configuredQueries;
+        const { insertOne } = crud;
         assert.equal(insertOne.table(), table);
         assert.deepEqual(insertOne.fields(), fields);
         assert.deepEqual(insertOne.returnFields(), returnFields);
     });
 
     it('should configure selectOne', () => {
-        const { selectOne } = configuredQueries;
+        const { selectOne } = crud;
         assert.equal(selectOne.table(), table);
         assert.deepEqual(selectOne.idFields(), idFields);
         assert.deepEqual(selectOne.returnFields(), returnFields);
     });
 
     it('should configure selectPage', () => {
-        const { selectPage } = configuredQueries;
+        const { selectPage } = crud;
         assert.equal(selectPage.table(), table);
         assert.deepEqual(selectPage.idFields(), idFields);
         assert.deepEqual(selectPage.returnFields(), returnFields);
     });
 
     it('should configure updateOne', () => {
-        const { updateOne } = configuredQueries;
+        const { updateOne } = crud;
         assert.equal(updateOne.table(), table);
         assert.deepEqual(updateOne.idFields(), idFields);
         assert.deepEqual(updateOne.updatableFields(), fields);
@@ -61,33 +61,16 @@ describe('queries', () => {
     });
 
     it('should configure batchInsert', () => {
-        const { batchInsert } = configuredQueries;
+        const { batchInsert } = crud;
         assert.equal(batchInsert.table(), table);
         assert.deepEqual(batchInsert.fields(), fields);
         assert.deepEqual(batchInsert.returnFields(), returnFields);
     });
 
     it('should configure batchDelete', () => {
-        const { batchDelete } = configuredQueries;
+        const { batchDelete } = crud;
         assert.equal(batchDelete.table(), table);
         assert.deepEqual(batchDelete.fields(), fields);
         assert.equal(batchDelete.identifier(), idFields);
-    });
-
-    describe('configurator', () => {
-        it('should should receive queries object', () => {
-            let configuredQueriesInConfigurator;
-            const result = queries(table, fields, idFields, returnFields, [
-                (q) => { configuredQueriesInConfigurator = q; },
-            ]);
-            assert.deepEqual(result, configuredQueriesInConfigurator);
-        });
-
-        it('should configure targeted query', () => {
-            const result = queries(table, fields, idFields, returnFields, [
-                ({ selectPage }) => selectPage.table('other-table'),
-            ]);
-            assert.equal(result.selectPage.table(), 'other-table');
-        });
     });
 });

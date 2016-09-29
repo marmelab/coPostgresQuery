@@ -1,11 +1,11 @@
-import { deleteOne } from '../../lib';
+import { deleteOneQuery } from '../../lib';
 
 describe('deleteOne', () => {
     let author;
-    let deleteOneQuery;
+    let deleteOne;
 
     before(() => {
-        deleteOneQuery = deleteOne('author', ['id'])(db);
+        deleteOne = db.link(deleteOneQuery('author', ['id']));
     });
 
     beforeEach(function* () {
@@ -13,7 +13,7 @@ describe('deleteOne', () => {
     });
 
     it('should delete entity once executed', function* () {
-        const result = yield deleteOneQuery({ id: author.id });
+        const result = yield deleteOne({ id: author.id });
 
         assert.deepEqual(result, author);
 
@@ -24,7 +24,7 @@ describe('deleteOne', () => {
     });
 
     it('should return undefined if no author match once executed', function* () {
-        const result = yield deleteOneQuery({ id: 404 });
+        const result = yield deleteOne({ id: 404 });
 
         assert.isUndefined(result);
     });

@@ -1,4 +1,4 @@
-import { updateOne } from '../../lib';
+import { updateOneQuery } from '../../lib';
 
 describe('updateOne', () => {
     let author;
@@ -7,8 +7,8 @@ describe('updateOne', () => {
     });
 
     it('should update entity returning all field by default', function* () {
-        const updateOneQuery = updateOne('author', ['name', 'firstname'], ['name'])(db);
-        const result = yield updateOneQuery({ name: author.name }, { firstname: 'jane' });
+        const updateOne = db.link(updateOneQuery('author', ['name', 'firstname'], ['name']));
+        const result = yield updateOne({ name: author.name }, { firstname: 'jane' });
         assert.deepEqual(result.firstname, 'jane');
 
         const savedTags = yield db.query({ sql: 'SELECT * from author ORDER BY id' });
