@@ -21,9 +21,9 @@ On the first call it receives its configuration, eg, the table name, field name,
 At this step, the returned function is also configurable.
 For example:
 ```js
-const insertOneQuery = insertOneQuery('user', ['name', 'firstname'], ['id', 'name', 'firstname']);
+const insertOne = insertOneQuery('user', ['name', 'firstname'], ['id', 'name', 'firstname']);
 // is the same as
-const insertOneQuery = insertOneQuery()
+const insertOne = insertOneQuery()
 .table('user')
 .fields(['name', 'firstname'])
 .returnFields(['id', 'name', 'firstname']);
