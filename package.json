@@ -31,5 +31,9 @@
   "dependencies": {
     "configurable.js": "0.1.1",
     "pg": "6.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/marmelab/coPostgresQuery.git"
   }
 }
