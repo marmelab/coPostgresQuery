@@ -92,7 +92,6 @@ describe('crud', () => {
         result.forEach((author, index) => {
             assert.equal(author.name, authors[index].name);
             assert.equal(author.firstname, authors[index].firstname);
-            assert.equal(author.totalcount, 2);
         });
     });
 

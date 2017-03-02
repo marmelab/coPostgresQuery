@@ -15,6 +15,7 @@ build:
 
 test:
 	@docker-compose up -d db
+	@sleep 3s # Let the DB start
 	@docker-compose run test
 
 install:
