@@ -146,6 +146,12 @@ allow to create a query to select one entity.
 ###updateOne(table, updatableFields, idFields, returnFields)(db)(ids, data)
 allow to create a query to update one entity.
 
+**Tip:** You can allow to edit primary keys, with this little trick:
+
+```js
+query.updateOne.allowPrimaryKeyUpdate(true);
+```
+
 ####Configuration
  - table: the table name
  - updatableFields: the fields that can be updated
