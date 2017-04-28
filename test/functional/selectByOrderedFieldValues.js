@@ -13,11 +13,15 @@ describe('functional selectByOrderedFieldValues', () => {
     });
 
     it('should select entity by id once executed and keep order', function* () {
-        const selectByIds = db.link(selectByOrderedFieldValuesQuery('author', 'id', [
-            'id',
-            'name',
-            'firstname',
-        ]));
+        const selectByIds = db.link(selectByOrderedFieldValuesQuery({
+            table: 'author',
+            selectorField: 'id',
+            returnFields: [
+                'id',
+                'name',
+                'firstname',
+            ],
+        }));
 
         const result1 = yield selectByIds([authors[0].id, authors[1].id]);
         assert.deepEqual(result1, [authors[0], authors[1]]);
@@ -28,11 +32,15 @@ describe('functional selectByOrderedFieldValues', () => {
 
     it('should select entity by name (same value for several entry) once executed and keep order',
     function* () {
-        const selectByIds = db.link(selectByOrderedFieldValuesQuery('author', 'name', [
-            'id',
-            'name',
-            'firstname',
-        ]));
+        const selectByIds = db.link(selectByOrderedFieldValuesQuery({
+            table: 'author',
+            selectorField: 'name',
+            returnFields: [
+                'id',
+                'name',
+                'firstname',
+            ],
+        }));
 
         const result1 = yield selectByIds([authors[0].name, authors[2].name]);
         assert.deepEqual(result1, [authors[0], authors[1], authors[2]]);
