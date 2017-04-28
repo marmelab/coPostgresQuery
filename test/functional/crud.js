@@ -60,9 +60,10 @@ describe('crud', () => {
 
         assert.deepEqual(result, author);
 
-        assert.isUndefined(yield db.queryOne({
+        assert.isUndefined(yield db.query({
             sql: 'SELECT * FROM author WHERE id = $id',
             parameters: { id: author.id },
+            returnOne: true,
         }));
     });
 
