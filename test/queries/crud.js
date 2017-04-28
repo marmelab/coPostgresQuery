@@ -71,6 +71,6 @@ describe('crud', () => {
         const { batchDelete } = crud;
         assert.equal(batchDelete.table(), table);
         assert.deepEqual(batchDelete.fields(), fields);
-        assert.equal(batchDelete.identifier(), idFields);
+        assert.equal(batchDelete.idFields(), idFields);
     });
 });

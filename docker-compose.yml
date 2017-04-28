@@ -19,7 +19,7 @@ test:
   volumes:
     - .:/app
   working_dir: /app
-  command: node_modules/mocha/bin/mocha --harmony test/setup.js test/**/*.js
+  command: node_modules/mocha/bin/mocha --harmony test/setup.js test/**/*.js ./lib/**/*.spec.js
   links:
     - db
 

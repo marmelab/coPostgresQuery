@@ -6,7 +6,11 @@ describe('batchDelete', () => {
     let batchDelete;
 
     before(() => {
-        batchDelete = db.link(batchDeleteQuery('tag', ['id', 'name'], 'id'));
+        batchDelete = db.link(batchDeleteQuery({
+            table: 'tag',
+            fields: ['id', 'name'],
+            idFields: 'id',
+        }));
     });
 
     beforeEach(function* () {
