@@ -12,7 +12,11 @@ describe('upsertOne', () => {
     .toDate();
 
     before(() => {
-        upsertOne = db.link(upsertOneQuery('post', ['author', 'date'], ['author', 'date', 'title']));
+        upsertOne = db.link(upsertOneQuery({
+            table: 'post',
+            idFields: ['author', 'date'],
+            updatableFields: ['author', 'date', 'title'],
+        }));
     });
 
     beforeEach(function* () {
