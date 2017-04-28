@@ -7,7 +7,11 @@ describe('updateOne', () => {
     });
 
     it('should update entity returning all field by default', function* () {
-        const updateOne = db.link(updateOneQuery('author', ['name', 'firstname'], ['name']));
+        const updateOne = db.link(updateOneQuery({
+            table: 'author',
+            updatableFields: ['name', 'firstname'],
+            idFields: ['name'],
+        }));
         const result = yield updateOne({ name: author.name }, { firstname: 'jane' });
         assert.deepEqual(result.firstname, 'jane');
 
