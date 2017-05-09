@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 
-import { PgPool } from '../lib';
+import PgPool from '../lib';
 import fixtureLoaderFactory from './utils/fixtureLoader';
 
 before(function* () {
