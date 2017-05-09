@@ -10,30 +10,40 @@ utility to generate and execute postgresql queries with ease.
 ## Introduction
 
 The library can be divided in two parts:
- - The query helpers (insertOne, selectOne, etc..) that allows to generate sql, and the corresponding parameters.
- - PgPool, that allows to connect to the postgres database and execute query.
+
+- The query helpers (insertOne, selectOne, etc..) that allow to generate sql, and the corresponding parameters.
+- PgPool, that allows to connect to the postgres database and execute query.
 
 
 ## Query helper
 
 Each query helper takes the form:
+
 ```js
-query(...config)(...parameters);
+query(config)(...parameters);
 ```
+
 On the first call it receives its configuration, eg, the table name, field name, etc...
 At this step, the returned function is also configurable.
 For example:
+
 ```js
-const insertOne = insertOneQuery('user', ['name', 'firstname'], ['id', 'name', 'firstname']);
+const insertOne = insertOneQuery({
+    table: 'user',
+    fields: ['name', 'firstname'],
+    returnFields: ['id', 'name', 'firstname'],
+});
 // is the same as
 const insertOne = insertOneQuery()
-.table('user')
-.fields(['name', 'firstname'])
-.returnFields(['id', 'name', 'firstname']);
+    .table('user')
+    .fields(['name', 'firstname'])
+    .returnFields(['id', 'name', 'firstname']);
 ```
-On the second call it takes the query parameters and returns an object on the form `{ sql, parameters }`.
-With the sql containing named parameter, and parameters having been sanitized based on the configuration.
+
+On the second call it takes the query parameters and returns an object of the form `{ sql, parameters }`,
+with the sql containing named parameter, and parameters having been sanitized based on the configuration.
 For example:
+
 ```js
 insertOneQuery({ name: 'doe', firstname: 'john', other: 'data' });
 // would return
@@ -42,11 +52,16 @@ insertOneQuery({ name: 'doe', firstname: 'john', other: 'data' });
     parameters: { name: 'doe', firstname: 'john' }
 }
 ```
-The result can then be directly passed to client.query to be executed.
 
-### insertOne(table, fields, returnFields)(entity)
+The result can then be directly passed to `client.query` to be executed.
 
-allow to create a query to insert one given entity.
+### insertOne
+
+```js
+insertOne({ table, fields, returnFields })(db)(entity)
+```
+
+Returns a query to insert one given entity.
 
 #### Configuration
 
@@ -57,6 +72,7 @@ allow to create a query to insert one given entity.
 #### Parameters
 
 A literal object in the form of:
+
 ```js
 {
     fieldName: value,
@@ -76,7 +92,8 @@ allow to create a query to insert an array of entities.
 
 #### Parameters
 
-An array of literal object in the form of:
+An array of literal objects in the form of:
+
 ```js
 [
     {
@@ -86,9 +103,13 @@ An array of literal object in the form of:
 ]
 ```
 
-### selectOne(table, idFields, returnFields)(db)(entity)
+### selectOne
 
-allow to create a query to select one entity.
+```js
+selectOne({ table, idFields, returnFields })(db)(entity)
+```
+
+Creates a query to select one entity.
 
 #### Configuration
 
@@ -99,6 +120,7 @@ allow to create a query to select one entity.
 #### Parameters
 
 A literal in the form of:
+
 ```js
 {
     id1: value,
@@ -106,22 +128,35 @@ A literal in the form of:
     ...
 }
 ```
-key not in idFields will be ignored
 
-### selectPage(table, idFields, returnFields)(db)(limit, offset, filters, sort, sortDir)
+Any key not present in idFields will be ignored.
 
-allow to create a query to select one entity.
+### selectPage
+
+```js
+selectPage({
+    table,
+    idFields,
+    returnFields,
+    searchableFields,
+    specificSort,
+    groupByFields,
+    withQuery,
+})(db)(limit, offset, filters, sort, sortDir);
+```
+
+Creates a query to select one entity.
 
 #### Configuration
 
 - table:
-    the table name, accept JOIN statement
+    the table name, accept JOIN statements
 - idFields:
     list of key fields used to select the entity
-- returnFields:     
+- returnFields:
     list of fields retrieved by the query
 - searchableFields:
-    list field that can be searched (usable in filter parameter) default to return fields
+    list of fields that can be searched (usable in filter parameter). Defaults to return fields
 - specificSort:
     allow to specify sort order for a given field. Useful when we want to order string other than by alphabetical order.
     example:
@@ -141,11 +176,11 @@ allow to create a query to select one entity.
 #### Parameters
 
 - limit:
-    number of result to be returned
-- offset
-    - number of result to be ignored
+    number of results to be returned
+- offset:
+    number of results to be ignored
 - filters
-    - literal specifying wanted value for given field
+    literal specifying wanted value for given field
     example:
     ```js
     {
@@ -155,34 +190,43 @@ allow to create a query to select one entity.
     will return only entity for which entity.field equal 'value'
 - sort:
     Specify the field by which to filter the result (Additionally the result will always get sorted by the entity identifiers to avoid random order)
-- sortDir
-    Specify the sort direction either 'ASC' or 'DESC'
+- sortDir:
+    Specify the sort direction, either 'ASC' or 'DESC'
 
-### updateOne(table, updatableFields, idFields, returnFields)(db)(ids, data)
-
-allow to create a query to update one entity.
-
-**Tip:** You can allow to edit primary keys, with this little trick:
+### updateOne
 
 ```js
-query.updateOne.allowPrimaryKeyUpdate(true);
+updateOne({
+    table,
+    updatableFields,
+    idFields,
+    returnFields,
+    allowPrimaryKeyUpdate,
+})(db)(ids, data);
 ```
+
+Creates a query to update one entity.
 
 #### Configuration
 
- - table: the table name
- - updatableFields: the fields that can be updated
- - idFields: the fields used to select the target entity
- - returnFields: the fields to be returned in the result
+- table: the table name
+- updatableFields: the fields that can be updated
+- idFields: the fields used to select the target entity
+- returnFields: the fields to be returned in the result
+- allowPrimaryKeyUpdate: if true allows to update primary keys value
 
 #### Parameters
 
- - ids: the ids values accept either a single value for a single id, or a literal for several id:`{ id1: value, id2: otherValue }`
- - data: a literal specifying the field to update
+- ids: either a single value for a single id, or a literal for several id:`{ id1: value, id2: otherValue }`
+- data: a literal specifying the field to update
 
-### deleteOne(table, idFields, returnFields)(db)(ids)
+### deleteOne
 
-allow to create a query to delete one entity.
+```js
+deleteOne({ table, idFields, returnFields })(db)(ids);
+```
+
+Creates a query to delete one entity.
 
 #### Configuration
 
@@ -192,7 +236,7 @@ allow to create a query to delete one entity.
 
 #### Parameters
 
- - ids: either a literal with all ids value, or a single value if there is only one id
+- ids: either a single value for a single id, or a literal for several id:`{ id1: value, id2: otherValue }`
 
 ### batchDelete(table, fields, identifier)(db)(ids)
 
@@ -200,74 +244,103 @@ Allow to create a query to delete several entity at once
 
 #### Configuration
 
- - table: the table name
- - fields: list of fields to insert
- - identifier: the field used to select the entity to delete
+- table: the table name
+- fields: list of fields to insert
+- identifier: the field used to select the entity to delete
 
 #### Parameters
 
- - ids: list of ids of the entity to delete
+- ids: list of ids of the entity to delete
 
-### upsertOne(table, selectorFields, updatableFields, autoIncrementFields, returnFields)(db)(entity)
+### upsertOne
 
-Allow to create a query to update one entity or create it if it does not already exists.
+```js
+upsertOne({
+    table,
+    idFields,
+    updatableFields,
+    returnFields,
+})(db)(entity)
+```
+
+Creates a query to update one entity or create it if it does not already exists.
 
 #### Configuration
 
- - table: the name of the table
- - selectorFields: the field used to select one entity checking if it exists
- - updatableFields: the field that can be updated
- - autoIncrementFields: the auto increment field that should not get updated
- - returnFields: the field to return in the result
- - fields: all the fields accepted by the query, default to selectorFields + updatableFields (no reason to change that)
- - insertFields: all the fields minus the autoIncrementFields (no reason to change that)
+- table: the name of the table
+- idFields: the field used to select one entity checking if it exists
+- updatableFields: the field that can be updated
+- autoIncrementFields: the auto increment field that should not get updated
+- returnFields: the field to return in the result
+- fields: all the fields accepted by the query, default to selectorFields + updatableFields (no reason to change that)
+- insertFields: all the fields minus the autoIncrementFields (no reason to change that)
 
 #### Parameters
 
- - entity: the entity to upsert
+- entity: the entity to upsert
 
-### batchUpsert(table, selectorFields, updatableFields, returnFields)(db)(entities)
+### batchUpsert
 
-Allow to create a query to update a batch entity creating those that does not already exists.
+```js
+batchUpsert({
+    table,
+    idFields,
+    updatableFields,
+    returnFields,
+})(db)(entities)
+```
+
+Creates a query to update a batch entity creating those that does not already exists.
 
 #### Configuration
 
- - table: the name of the table in which to upsert
- - selectorFields: the field used to select one entity checking if it exists
- - updatableFields: the field that can be updated
- - returnFields: the field to return in the result
- - fields: all the fields accepted by the query, default to selectorFields + updatableFields (no reason to change that)
+- table: the name of the table in which to upsert
+- selectorFields: the fields used to select entity and determine if it must be updated or created.
+- updatableFields: the field that can be updated
+- returnFields: the field to return in the result
+- fields: all the fields accepted by the query, default to selectorFields + updatableFields (no reason to change that)
 
 #### Parameters
 
 - entities: array of entities to upsert
 
-### selectByFieldValues(table, selectorField, returnFields)(db)(values)
+### selectByOrderedFieldValues(table, selectorField, returnFields)(db)(values)
 
-Allow to create a query to select an entity with selectorField IN values and keep the ORDER of values.
+Creates a query to select an entity with selectorField IN values and keep the ORDER of values.
 
 #### Configuration
 
- - table: the name of the table in which to upsert
- - selectorField: the field used to select entity
- - returnFields: the field to return in the result
- 
+- table: the name of the table in which to upsert
+- selectorField: the field used to select entity
+- returnFields: the field to return in the result
+
 #### Parameters
 
- - values: array of values to retrieve. The array order will determine the result order.
- Careful, if several entity share the same value, their order is unpredictable.
+- values: array of values to retrieve. The array order will determine the result order.
 
-### crud(table, fields, idFields, returnFields, configurators )(db)
+Careful, if several entity share the same value, their order is unpredictable.
 
-generate configured queries for insertOne, batchInsert, selectOne, selectPage, updateOne, deleteOne and batchDelete.
+### crud
+
+```js
+crud({
+    table,
+    fields,
+    idField,
+    returnFields,
+})(db)
+```
+
+Creates configured queries for insertOne, batchInsert, selectOne, selectPage, updateOne, deleteOne and batchDelete.
 
 #### Configuration
 
- - table: the name of the table.
- - fields: the list of the fields.
- - idFields: the list of the primarykeys.
- - returnFields: the list of fields we want returned as result.
- - configurators: a list of function that will get executed with the result of the queries, allowing to configure them more precisely.
+- table: the name of the table.
+- fields: the list of the fields.
+- idField: the field where we want to search the values
+- returnFields: the list of fields we want returned as result.
+- configurators: a list of functions that will get executed with the result of the queries, allowing to configure them more precisely.
+
 ```js
 crud('user', ['name', 'firstname'], ['id'], ['*'], [(queries) => queries.selectPage
     .table('user JOIN town ON user.town = town.id')
@@ -280,11 +353,12 @@ crud('user', ['name', 'firstname'], ['id'], ['*'], [(queries) => queries.selectP
 Extend [node-pg-pool](https://github.com/brianc/node-pg-pool)
 Allow to connect to postgresql and execute query
 It adds:
- - Support for named parameter.
- - query: Now return the list of results.
- - Added queryOne: Same as query but return only one result, instead of an array.
- - Helper method ([begin, savepoint, rollback, commit][###client.begin, client.commit, client.savepoint, client.rollback]) to handle transactions on the client.
- - Helper method ([link][### client.link]) to link a query helper to the client or pool.
+
+- Support for named parameters.
+- query: Now return the list of results.
+- Added queryOne: Same as query but return only one result instead of an array.
+- Helper method ([begin, savepoint, rollback, commit][###client.begin, client.commit, client.savepoint, client.rollback]) to handle transactions on the client.
+- Helper method ([link][### client.link]) to link a query helper to the client or pool.
 
 ### Creating a pool
 

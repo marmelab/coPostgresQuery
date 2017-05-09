@@ -14,7 +14,11 @@ describe('batchUpsert', () => {
     .toDate();
 
     before(() => {
-        batchUpsert = db.link(batchUpsertQuery('post', ['author', 'date'], ['title']));
+        batchUpsert = db.link(batchUpsertQuery({
+            table: 'post',
+            selectorFields: ['author', 'date'],
+            updatableFields: ['title'],
+        }));
     });
 
     beforeEach(function* () {

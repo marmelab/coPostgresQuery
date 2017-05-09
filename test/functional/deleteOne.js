@@ -5,7 +5,7 @@ describe('deleteOne', () => {
     let deleteOne;
 
     before(() => {
-        deleteOne = db.link(deleteOneQuery('author', ['id']));
+        deleteOne = db.link(deleteOneQuery({ table: 'author', idFields: ['id'] }));
     });
 
     beforeEach(function* () {

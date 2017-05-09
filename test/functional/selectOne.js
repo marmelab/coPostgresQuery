@@ -8,11 +8,15 @@ describe('functional selectOne', () => {
     });
 
     it('should select entity once executed', function* () {
-        const selectOne = db.link(selectOneQuery('author', ['id'], [
-            'id',
-            'name',
-            'firstname',
-        ]));
+        const selectOne = db.link(selectOneQuery({
+            table: 'author',
+            idFields: ['id'],
+            returnFields: [
+                'id',
+                'name',
+                'firstname',
+            ],
+        }));
 
         const result = yield selectOne({ id: author.id });
 
@@ -20,10 +24,14 @@ describe('functional selectOne', () => {
     });
 
     it('should return undefined if no author match once executed', function* () {
-        const selectOne = db.link(selectOneQuery('author', ['id'], [
-            'name',
-            'firstname',
-        ]));
+        const selectOne = db.link(selectOneQuery({
+            table: 'author',
+            idFields: ['id'],
+            returnFields: [
+                'name',
+                'firstname',
+            ],
+        }));
 
         const result = yield selectOne({ id: 404 });
 
