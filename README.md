@@ -108,7 +108,7 @@ Creates a query to select one entity.
 #### Configuration
 
 - table: the table name
-- idFields: list of key fields used to select the entity
+- idFields: list of key fields used to select the entity, default to `id`
 - returnFields: list of fields retrieved by the query
 
 #### Parameters
@@ -146,7 +146,7 @@ Creates a query to select one entity.
 - table:
     the table name, accept JOIN statements
 - idFields:
-    list of key fields used to select the entity
+    list of key fields used to select the entity, default to `id`
 - returnFields:
     list of fields retrieved by the query
 - searchableFields:
@@ -205,7 +205,7 @@ Creates a query to update one entity.
 
 - table: the table name
 - updatableFields: the fields that can be updated
-- idFields: the fields used to select the target entity
+- idFields: the fields used to select the target entity, default to `id`
 - returnFields: the fields to be returned in the result
 - allowPrimaryKeyUpdate: if true allows to update primary keys value
 
@@ -225,7 +225,7 @@ Creates a query to delete one entity.
 #### Configuration
 
 - table: the table name
-- idFields: list of key fields used to select the entity
+- idFields: list of key fields used to select the entity, default to `id`
 - returnFields: list of fields retrieved by the query
 
 #### Parameters
@@ -262,7 +262,7 @@ Creates a query to update one entity or create it if it does not already exists.
 #### Configuration
 
 - table: the name of the table
-- idFields: the field used to select one entity checking if it exists
+- idFields: the field used to select one entity checking if it exists, default to `id`
 - updatableFields: the field that can be updated
 - autoIncrementFields: the auto increment field that should not get updated
 - returnFields: the field to return in the result
