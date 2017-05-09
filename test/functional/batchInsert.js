@@ -7,26 +7,16 @@ describe('batchInsert', () => {
         batchInsert = db.link(batchInsertQuery({ table: 'tag', fields: ['name'] }));
     });
 
-    it('should throw an error if no entities given', function* () {
-        let error;
-        try {
-            yield batchInsert();
-        } catch (e) {
-            error = e;
-        }
+    it('should do nothing if no entities given', function* () {
+        const result = yield batchInsert();
 
-        assert.equal(error.message, 'No data for batch inserting tag entities.');
+        assert.deepEqual(result, []);
     });
 
-    it('should throw an error if passed an empty array', function* () {
-        let error;
-        try {
-            yield batchInsert([]);
-        } catch (e) {
-            error = e;
-        }
+    it('should do nothing if passed an empty array', function* () {
+        const result = yield batchInsert([]);
 
-        assert.equal(error.message, 'No data for batch inserting tag entities.');
+        assert.deepEqual(result, []);
     });
 
     it('should insert list of entity in a single request returning all field by default',
@@ -41,6 +31,7 @@ describe('batchInsert', () => {
         assert.deepEqual(result.map((tag) => ({ name: tag.name })), tags);
 
         const savedTags = yield db.query({ sql: 'SELECT * from tag ORDER BY id' });
+
         assert.deepEqual(result, savedTags);
     });
 
