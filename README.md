@@ -24,7 +24,6 @@ query(config)(...parameters);
 ```
 
 On the first call it receives its configuration, eg, the table name, field name, etc...
-At this step, the returned function is also configurable.
 For example:
 
 ```js
@@ -33,11 +32,6 @@ const insertOne = insertOneQuery({
     fields: ['name', 'firstname'],
     returnFields: ['id', 'name', 'firstname'],
 });
-// is the same as
-const insertOne = insertOneQuery()
-    .table('user')
-    .fields(['name', 'firstname'])
-    .returnFields(['id', 'name', 'firstname']);
 ```
 
 On the second call it takes the query parameters and returns an object of the form `{ sql, parameters }`,
@@ -139,7 +133,7 @@ selectPage({
     idFields,
     returnFields,
     searchableFields,
-    specificSort,
+    specificSorts,
     groupByFields,
     withQuery,
 })(db)(limit, offset, filters, sort, sortDir);
@@ -157,7 +151,7 @@ Creates a query to select one entity.
     list of fields retrieved by the query
 - searchableFields:
     list of fields that can be searched (usable in filter parameter). Defaults to return fields
-- specificSort:
+- specificSorts:
     allow to specify sort order for a given field. Useful when we want to order string other than by alphabetical order.
     example:
     ```js
@@ -339,14 +333,22 @@ Creates configured queries for insertOne, batchInsert, selectOne, selectPage, up
 - fields: the list of the fields.
 - idField: the field where we want to search the values
 - returnFields: the list of fields we want returned as result.
-- configurators: a list of functions that will get executed with the result of the queries, allowing to configure them more precisely.
-
-```js
-crud('user', ['name', 'firstname'], ['id'], ['*'], [(queries) => queries.selectPage
-    .table('user JOIN town ON user.town = town.id')
-    .returnFields([ 'user.name', 'user.firstname', 'town.name' ])
-]);
-```
+- updatableFields: the fields that can be updated
+- searchableFields: the fields that can be searched (usable in filter parameter). Defaults to return fields
+- specificSorts:
+    allow to specify sort order for a given field. Useful when we want to order string other than by alphabetical order.
+    example:
+    ```js
+    {
+        level: ['master', 'expert', 'novice']
+    }
+    ```
+    will order level field with all master first, then expert and finally novice
+- groupByFields: allow to add a GROUP BY clause to the query on the given fields
+- withQuery:
+    specify that we want to encompass the query in `WITH RESULT AS <query> SELECT * FROM result`
+    This add a temporary result table that allow to sort on computed and joined field.
+    if the table configuration contain a JOIN clause, this will be automatically set to true.
 
 ## PgPool
 
@@ -401,11 +403,16 @@ co(function* () {
 
 ### client.query
 
+Executes a query, it takes an object with :
+    sql: the sql to execute
+    parameters: the parameters to inject in the sql (it use named parameters)
+    returnOne: Optional, if set to true, returns only the first result instead of an array.
+
 ```js
 // query use named parameter
 client.query({
     sql: 'SELECT $name::text as name',
-    parameters: { name: 'world' }
+    parameters: { name: 'world' },
 }) // query return a promise
 .then((result) => {
     // result contain directly the row
@@ -439,10 +446,6 @@ co(function* () {
 You can also execute a query directly from the pool.
 A client will then get automatically retrieved, and released once the query is done.
 Transactions are not possible this way since the client would change on each query.
-
-### client.queryOne
-
-Same as query but returns only the first result or null
 
 ### client.link
 

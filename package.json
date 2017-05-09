@@ -29,7 +29,6 @@
     "moment": "2.10.6"
   },
   "dependencies": {
-    "configurable.js": "1.0.0",
     "pg": "6.1.0"
   },
   "repository": {

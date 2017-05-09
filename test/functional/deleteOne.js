@@ -14,12 +14,12 @@ describe('deleteOne', () => {
 
     it('should delete entity once executed', function* () {
         const result = yield deleteOne({ id: author.id });
-
         assert.deepEqual(result, author);
 
-        assert.isUndefined(yield db.queryOne({
+        assert.isUndefined(yield db.query({
             sql: 'SELECT * FROM author WHERE id = $id',
             parameters: { id: author.id },
+            returnOne: true,
         }));
     });
 
