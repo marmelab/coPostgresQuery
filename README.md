@@ -333,11 +333,22 @@ Creates configured queries for insertOne, batchInsert, selectOne, selectPage, up
 - fields: the list of the fields.
 - idField: the field where we want to search the values
 - returnFields: the list of fields we want returned as result.
-- updatableFields: the field that can be updated
-- searchableFields: see selectPage
-- specificSorts: see selectPage
-- groupByFields: see selectPage
-- withQuery: see selectPage
+- updatableFields: the fields that can be updated
+- searchableFields: the fields that can be searched (usable in filter parameter). Defaults to return fields
+- specificSorts:
+    allow to specify sort order for a given field. Useful when we want to order string other than by alphabetical order.
+    example:
+    ```js
+    {
+        level: ['master', 'expert', 'novice']
+    }
+    ```
+    will order level field with all master first, then expert and finally novice
+- groupByFields: allow to add a GROUP BY clause to the query on the given fields
+- withQuery:
+    specify that we want to encompass the query in `WITH RESULT AS <query> SELECT * FROM result`
+    This add a temporary result table that allow to sort on computed and joined field.
+    if the table configuration contain a JOIN clause, this will be automatically set to true.
 
 ## PgPool
 
@@ -392,10 +403,10 @@ co(function* () {
 
 ### client.query
 
-Execute a query, it take an object with :
+Executes a query, it takes an object with :
     sql: the sql to execute
-    parameters: the parameters to inject in the sql (it use named parameter)
-    returnOne: Optional, if set to true, we return only the first result instead on an array.
+    parameters: the parameters to inject in the sql (it use named parameters)
+    returnOne: Optional, if set to true, returns only the first result instead of an array.
 
 ```js
 // query use named parameter
