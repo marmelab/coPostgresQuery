@@ -433,7 +433,7 @@ co(function* () {
 });
 ```
 
-`client.query` can also be called with a named parameter signature:
+`client.query` can also be called with an object literal:
 
 ```js
 pool.query({
