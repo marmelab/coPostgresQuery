@@ -365,7 +365,7 @@ It adds:
 ### Creating a pool
 
 ```js
-import { PgPool } from 'co-postgres-queries';
+import PgPool from 'co-postgres-queries';
 const clientOptions = {
     user,
     password,
@@ -403,41 +403,42 @@ co(function* () {
 
 ### client.query
 
-Executes a query, it takes an object with :
-    sql: the sql to execute
-    parameters: the parameters to inject in the sql (it use named parameters)
-    returnOne: Optional, if set to true, returns only the first result instead of an array.
+Executes a query, it takes three parameters:
+
+- sql: the sql to execute
+- parameters: the parameters to inject in the sql (it use named parameters)
+- returnOne: Optional, if set to true, returns only the first result instead of an array.
 
 ```js
 // query use named parameter
-client.query({
-    sql: 'SELECT $name::text as name',
-    parameters: { name: 'world' },
-}) // query return a promise
+client.query('SELECT $name::text as name', { name: 'world' }) // query return a promise
 .then((result) => {
     // result contain directly the row
     console.log(`Hello ${result[0].name}`);
 });
 
-// It work with asyn/await
+// It work with async/await
 (async() => {
     const pool = new PgPool();
-    const result = await pool.query({
-        sql: 'SELECT $name::text as name',
-        parameters: { name: 'world' }
-    });
+    const result = await pool.query('SELECT $name::text as name', { name: 'world' });
 
     console.log(`Hello ${result[0].name}`);
 })()
 // Or with co
 co(function* () {
     const pool = new PgPool();
-    const result = yield pool.query({
-        sql: 'SELECT $name::text as name',
-        parameters: { name: 'world' }
-    });
+    const result = yield pool.query('SELECT $name::text as name', { name: 'world' });
 
     console.log(`Hello ${result[0].name}`);
+});
+```
+
+`client.query` can also be called with an object literal:
+
+```js
+pool.query({
+    sql: 'SELECT $name::text as name',
+    parameters: { name: 'world' },
 });
 ```
 
