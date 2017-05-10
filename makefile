@@ -11,7 +11,7 @@ ifneq "$(SUPPORTS_MAKE_ARGS)" ""
 endif
 
 build:
-	docker-compose run node node_modules/babel-cli/bin/babel.js lib -d build --blacklist regenerator --ignore *.spec.js
+	docker-compose run node node_modules/babel-cli/bin/babel.js lib -d build --ignore *.spec.js
 	cp package.json ./build/package.json
 	cp README.md ./build/README.md
 

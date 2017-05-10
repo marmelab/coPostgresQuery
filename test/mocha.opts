@@ -3,4 +3,4 @@
 --timeout 5000
 --require co-mocha
 --require babel-polyfill
---compilers js:babel-register --blacklist regenerator
+--compilers js:babel-register
