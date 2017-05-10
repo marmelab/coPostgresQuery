@@ -108,7 +108,7 @@ Creates a query to select one entity.
 #### Configuration
 
 - table: the table name
-- idFields: list of key fields used to select the entity, default to `id`
+- idFields: list of key fields used to select the entity (default: `id`)
 - returnFields: list of fields retrieved by the query
 
 #### Parameters
@@ -146,7 +146,7 @@ Creates a query to select one entity.
 - table:
     the table name, accept JOIN statements
 - idFields:
-    list of key fields used to select the entity, default to `id`
+    list of key fields used to select the entity (default: `id`)
 - returnFields:
     list of fields retrieved by the query
 - searchableFields:
@@ -205,7 +205,7 @@ Creates a query to update one entity.
 
 - table: the table name
 - updatableFields: the fields that can be updated
-- idFields: the fields used to select the target entity, default to `id`
+- idFields: the fields used to select the target entity (default: `id`)
 - returnFields: the fields to be returned in the result
 - allowPrimaryKeyUpdate: if true allows to update primary keys value
 
@@ -225,7 +225,7 @@ Creates a query to delete one entity.
 #### Configuration
 
 - table: the table name
-- idFields: list of key fields used to select the entity, default to `id`
+- idFields: list of key fields used to select the entity (default: `id`)
 - returnFields: list of fields retrieved by the query
 
 #### Parameters
@@ -262,7 +262,7 @@ Creates a query to update one entity or create it if it does not already exists.
 #### Configuration
 
 - table: the name of the table
-- idFields: the field used to select one entity checking if it exists, default to `id`
+- idFields: the field used to select one entity checking if it exists (default: `id`)
 - updatableFields: the field that can be updated
 - autoIncrementFields: the auto increment field that should not get updated
 - returnFields: the field to return in the result
@@ -331,7 +331,7 @@ Creates configured queries for insertOne, batchInsert, selectOne, selectPage, up
 
 - table: the name of the table.
 - fields: the list of the fields.
-- idField: the field where we want to search the values
+- idField: the field where we want to search the values (default: `id`)
 - returnFields: the list of fields we want returned as result.
 - updatableFields: the fields that can be updated
 - searchableFields: the fields that can be searched (usable in filter parameter). Defaults to return fields
