@@ -479,3 +479,59 @@ Close the client. It will not return to the pool.
 
 Allow to manage transaction
 You must retrieve a client with `pool.connect()` to use those.
+
+### client.saga
+
+Take a generator yielding object queries (`{ sql, parameters }`), and return an async function that run the generator executing the yielded query.
+
+```js
+const getUserAndDoSomethig = client.saga(function* (id) {
+    const user = yield {
+        sql: 'SELECT * FROM user WHERE $id=id',
+        parameters: { id },
+        returnOne: true,
+    };
+    ...
+});
+
+getUserAndDoSomething(5).then(...);
+```
+
+The yielded query object will be internally passed to `client.query` then the result will be passed back to the generator.
+If an error occur during the query, it will be thrown back into the generator where it can be catched.
+
+```js
+const executeQUery = client.saga(function* (id) {
+    try {
+        const user = yield {
+            sql: 'bad query',
+        };
+        ...
+    } catch (error) {
+        // handle the error
+    }
+});
+```
+
+And of course since the queries functions return query object, they can be yielded.
+
+```js
+const selectOneUserById = selectOne({ table: 'user' });
+
+const getUserAndDoSomethig = client.saga(function* (id) {
+    const user = yield selectOneByUserId({ id });
+    ...
+});
+```
+
+Since the generator yield plain object, they can be easily tested without needing any mock:
+
+```js
+const iterator = someQueryGenerator();
+const { value: { sql, parameters } } = iterator.next();
+// we recuperate the generated sql and parameters.
+
+iterator.next(queryResult); // we can pass what we want as result
+
+iterator.throw(queryError); // or we can resume by throwing error
+```
