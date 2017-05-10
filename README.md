@@ -498,7 +498,7 @@ getUserAndDoSomething(5).then(...);
 ```
 
 The yielded query object will be internally passed to `client.query` then the result will be passed back to the generator.
-If an error occur during the query, it will be thrown back into the generator where it can be catched.
+If an error occurs during the query, it will be thrown back into the generator where it can be catched.
 
 ```js
 const executeQUery = client.saga(function* (id) {
@@ -513,7 +513,7 @@ const executeQUery = client.saga(function* (id) {
 });
 ```
 
-And of course since the queries functions return query object, they can be yielded.
+Since the queries functions return query object, they can be yielded.
 
 ```js
 const selectOneUserById = selectOne({ table: 'user' });
@@ -548,12 +548,12 @@ const getUserAndCommands = client.saga(function* (id) {
 });
 ```
 
-Since the generator yield plain object, they can be easily tested without needing any mock:
+Since the generator yield plain objects, they can be easily tested without needing any mocks:
 
 ```js
 const iterator = someQueryGenerator();
 const { value: { sql, parameters } } = iterator.next();
-// we recuperate the generated sql and parameters.
+// we get the generated sql and parameters.
 
 iterator.next(queryResult); // we can pass what we want as result
 
