@@ -524,6 +524,30 @@ const getUserAndDoSomethig = client.saga(function* (id) {
 });
 ```
 
+You can also yield an array of query to be run in parallel:
+
+```js
+const getUserAndCommands = client.saga(function* (id) {
+    const [user, commands] = yield [
+        selectOneByUserId({ id }),
+        selectCommandsByUserId({ id }),
+    ];
+    ...
+});
+```
+
+Or even a literal:
+
+```js
+const getUserAndCommands = client.saga(function* (id) {
+    const { user, commands } = yield {
+        user: selectOneByUserId({ id }),
+        commands: selectCommandsByUserId({ id }),
+    };
+    ...
+});
+```
+
 Since the generator yield plain object, they can be easily tested without needing any mock:
 
 ```js
