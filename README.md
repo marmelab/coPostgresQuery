@@ -136,7 +136,7 @@ selectPage({
     specificSorts,
     groupByFields,
     withQuery,
-})(db)(limit, offset, filters, sort, sortDir);
+})(db)({ limit, offset, filters, sort, sortDir });
 ```
 
 Creates a query to select one entity.
