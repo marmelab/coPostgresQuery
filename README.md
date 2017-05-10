@@ -27,6 +27,7 @@ On the first call it receives its configuration, eg, the table name, field name,
 For example:
 
 ```js
+import insertOneQuery  from 'co-postgres-queries/queries/insertOne';
 const insertOne = insertOneQuery({
     table: 'user',
     fields: ['name', 'firstname'],
@@ -52,6 +53,7 @@ The result can then be directly passed to `client.query` to be executed.
 ### insertOne
 
 ```js
+import insertOne  from 'co-postgres-queries/queries/insertOne';
 insertOne({ table, fields, returnFields })(db)(entity)
 ```
 
@@ -100,6 +102,7 @@ An array of literal objects in the form of:
 ### selectOne
 
 ```js
+import selectOne  from 'co-postgres-queries/queries/selectOne';
 selectOne({ table, idFields, returnFields })(db)(entity)
 ```
 
@@ -128,6 +131,7 @@ Any key not present in idFields will be ignored.
 ### selectPage
 
 ```js
+import selectPage  from 'co-postgres-queries/queries/selectPage';
 selectPage({
     table,
     idFields,
@@ -190,6 +194,7 @@ Creates a query to select one entity.
 ### updateOne
 
 ```js
+import updateOne  from 'co-postgres-queries/queries/updateOne';
 updateOne({
     table,
     updatableFields,
@@ -217,6 +222,7 @@ Creates a query to update one entity.
 ### deleteOne
 
 ```js
+import deleteOne  from 'co-postgres-queries/queries/deleteOne';
 deleteOne({ table, idFields, returnFields })(db)(ids);
 ```
 
@@ -249,6 +255,7 @@ Allow to create a query to delete several entity at once
 ### upsertOne
 
 ```js
+import upsertOne  from 'co-postgres-queries/queries/upsertOne';
 upsertOne({
     table,
     idFields,
@@ -276,6 +283,7 @@ Creates a query to update one entity or create it if it does not already exists.
 ### batchUpsert
 
 ```js
+import batchUpsert  from 'co-postgres-queries/queries/batchUpsert';
 batchUpsert({
     table,
     idFields,
@@ -317,6 +325,7 @@ Careful, if several entity share the same value, their order is unpredictable.
 ### crud
 
 ```js
+import crud  from 'co-postgres-queries/queries/crud';
 crud({
     table,
     fields,
