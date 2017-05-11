@@ -330,6 +330,7 @@ You must retrieve a client with `pool.connect()` to use those.
 #### begin
 
 ```js
+import begin from 'co-postgres-queries/queries/begin';
 begin()();
 // { sql: 'BEGIN' }
 ```
@@ -339,6 +340,7 @@ create a query to start a transaction
 #### commit
 
 ```js
+import commit from 'co-postgres-queries/queries/commit';
 commit()();
 // { sql: 'COMMIT' }
 ```
@@ -348,7 +350,8 @@ create a query to commit a transaction
 #### savepoint
 
 ```js
-savePoint(name);
+import savepoint from 'co-postgres-queries/queries/savepoint';
+savepoint(name);
 // { sql: 'SAVEPOINT name' }
 ```
 
@@ -357,6 +360,7 @@ create a query to add a save point during transsaction
 #### rollback
 
 ```js
+import rollback from 'co-postgres-queries/queries/rollback';
 rollback();
 // { sql: 'ROLLBACK' }
 // or
