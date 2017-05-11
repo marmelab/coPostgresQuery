@@ -1,10 +1,6 @@
-import batchParameter, { addSuffix } from '../../lib/queries/batchParameter';
+import batchParameter from '../../lib/queries/batchParameter';
 
 describe('batchParameter', () => {
-    it('addSuffix should add given suffix to all object attributes', () => {
-        assert.deepEqual(addSuffix({ a: 1, b: 2, c: 3 }, 56), { a56: 1, b56: 2, c56: 3 });
-    });
-
     it('should return batchParameter', () => {
         assert.deepEqual(batchParameter(['a', 'b', 'c'])([
             { a: 1, b: 2, c: 3 },
