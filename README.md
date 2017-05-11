@@ -27,10 +27,10 @@ On the first call it receives its configuration, eg, the table name, field name,
 For example:
 
 ```js
-import insertOneQuery  from 'co-postgres-queries/queries/insertOne';
-const insertOne = insertOneQuery({
+import insertOne  from 'co-postgres-queries/queries/insertOne';
+const insertOne = insertOne({
     table: 'user',
-    fields: ['name', 'firstname'],
+    writableFields: ['name', 'firstname'],
     returnFields: ['id', 'name', 'firstname'],
 });
 ```
@@ -40,7 +40,7 @@ with the sql containing named parameter, and parameters having been sanitized ba
 For example:
 
 ```js
-insertOneQuery({ name: 'doe', firstname: 'john', other: 'data' });
+insertOne({ name: 'doe', firstname: 'john', other: 'data' });
 // would return
 {
     sql: 'INSERT INTO user (name, firstname)VALUES($name, $firstname) RETURNING id, name, firstname',
@@ -54,7 +54,7 @@ The result can then be directly passed to `client.query` to be executed.
 
 ```js
 import insertOne  from 'co-postgres-queries/queries/insertOne';
-insertOne({ table, fields, returnFields })(entity)
+insertOne({ table, writableFields, returnFields })(entity)
 ```
 
 Returns a query to insert one given entity.
@@ -62,7 +62,7 @@ Returns a query to insert one given entity.
 #### Configuration
 
 - table: the table name
-- fields: list of fields to insert
+- writableFields: list of fields that can be set
 - returnFields: list of fields exposed in the result of the query
 
 #### Parameters
@@ -76,14 +76,19 @@ A literal object in the form of:
 }
 ```
 
-### batchInsert(table, fields, returnFields)(entities)
+### batchInsert(table, writableFields, returnFields)(entities)
+
+```js
+import batchInsert from 'co-postgres-queries/queries/batchInsert';
+batchInsert(table, writableFields, returnFields)(entities);
+```
 
 allow to create a query to insert an array of entities.
 
 #### Configuration
 
 - table: the table name
-- fields: list of fields to insert
+- writableFields: list of fields that can be set
 - returnFields: list of fields exposed in the result of the query
 
 #### Parameters
@@ -445,7 +450,7 @@ Rollback the transaction to the given save point, or to its beginning if not spe
 import crud  from 'co-postgres-queries/queries/crud';
 crud({
     table,
-    fields,
+    writableFields,
     idField,
     returnFields,
 });
@@ -456,10 +461,9 @@ Creates configured queries for insertOne, batchInsert, selectOne, select, update
 #### Configuration
 
 - table: the name of the table.
-- fields: the list of the fields.
 - idField: the field where we want to search the values (default: `id`)
+- writableFields: list of fields that can be set
 - returnFields: the list of fields we want returned as result.
-- writableFields: the fields that can be updated
 - searchableFields: the fields that can be searched (usable in filter parameter). Defaults to return fields
 - specificSorts:
     allow to specify sort order for a given field. Useful when we want to order string other than by alphabetical order.

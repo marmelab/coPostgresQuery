@@ -2,7 +2,7 @@ import { insertOneQuery } from '../../lib';
 
 describe('insertOne', () => {
     it('should insert entity returning all field by default', function* () {
-        const insertOne = db.link(insertOneQuery({ table: 'tag', fields: ['name'] }));
+        const insertOne = db.link(insertOneQuery({ table: 'tag', writableFields: ['name'] }));
         const result = yield insertOne({ name: 'tag1' });
         assert.deepEqual(result.name, 'tag1');
 
@@ -11,7 +11,7 @@ describe('insertOne', () => {
     });
 
     it('should insert entity returning only specified field if given', function* () {
-        const insertOne = db.link(insertOneQuery({ table: 'tag', fields: ['name'], returnFields: ['id'] }));
+        const insertOne = db.link(insertOneQuery({ table: 'tag', writableFields: ['name'], returnFields: ['id'] }));
 
         const result = yield insertOne({ name: 'tag1' });
 
