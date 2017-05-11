@@ -10,7 +10,7 @@ describe('updateOne', () => {
         const updateOne = db.link(updateOneQuery({
             table: 'author',
             updatableFields: ['name', 'firstname'],
-            idFields: ['name'],
+            primaryKey: ['name'],
         }));
         const result = yield updateOne({ name: author.name }, { firstname: 'jane' });
         assert.deepEqual(result.firstname, 'jane');

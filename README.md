@@ -233,7 +233,7 @@ import updateOne  from 'co-postgres-queries/queries/updateOne';
 updateOne({
     table,
     updatableFields,
-    idField, // or idFields if several fields
+    primaryKey,
     returnFields,
 })(db)(ids, data);
 ```
@@ -244,8 +244,7 @@ Creates a query to update one entity.
 
 - table: the table name
 - updatableFields: the fields that can be updated
-- idField: the field to use to select each document
-- idFields: array of idField, to use in place of idField if table has several ids.
+- primaryKey: one or more fields representing the primary key. Accept array or single value. (default: `id`)
 - returnFields: the fields to be returned in the result
 
 #### Parameters
