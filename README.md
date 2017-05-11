@@ -103,7 +103,7 @@ An array of literal objects in the form of:
 
 ```js
 import selectOne  from 'co-postgres-queries/queries/selectOne';
-selectOne({ table, idFields, returnFields })(entity)
+selectOne({ table, primaryKey, returnFields })(entity)
 ```
 
 Creates a query to select one entity.
@@ -111,7 +111,7 @@ Creates a query to select one entity.
 #### Configuration
 
 - table: the table name
-- idFields: list of key fields used to select the entity (default: `id`)
+- primaryKey: one or more fields representing the primary key. Accept array or single value. (default: `id`)
 - returnFields: list of fields retrieved by the query
 
 #### Parameters
