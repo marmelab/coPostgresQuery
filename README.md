@@ -322,6 +322,54 @@ Creates a query to select an entity with selectorField IN values and keep the OR
 
 Careful, if several entity share the same value, their order is unpredictable.
 
+### transaction helper
+
+Simple helper to manage transaction
+You must retrieve a client with `pool.connect()` to use those.
+
+#### begin
+
+```js
+import begin from 'co-postgres-queries/queries/begin';
+begin();
+// { sql: 'BEGIN' }
+```
+
+create a query to start a transaction
+
+#### commit
+
+```js
+import commit from 'co-postgres-queries/queries/commit';
+commit();
+// { sql: 'COMMIT' }
+```
+
+create a query to commit a transaction
+
+#### savepoint
+
+```js
+import savepoint from 'co-postgres-queries/queries/savepoint';
+savepoint(name);
+// { sql: 'SAVEPOINT name' }
+```
+
+create a query to add a save point during transsaction
+
+#### rollback
+
+```js
+import rollback from 'co-postgres-queries/queries/rollback';
+rollback();
+// { sql: 'ROLLBACK' }
+// or
+rollback(name);
+// { sql: 'ROLLBACK to name' }
+```
+
+Rollback the transaction to the given save point, or to its beginning if not specified.
+
 ### crud
 
 ```js
@@ -484,11 +532,6 @@ Do not forget to call this when you are done.
 ### client.end
 
 Close the client. It will not return to the pool.
-
-### client.begin, client.commit, client.savepoint, client.rollback
-
-Allow to manage transaction
-You must retrieve a client with `pool.connect()` to use those.
 
 ### client.saga
 
