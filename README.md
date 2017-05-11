@@ -331,7 +331,7 @@ You must retrieve a client with `pool.connect()` to use those.
 
 ```js
 import begin from 'co-postgres-queries/queries/begin';
-begin()();
+begin();
 // { sql: 'BEGIN' }
 ```
 
@@ -341,7 +341,7 @@ create a query to start a transaction
 
 ```js
 import commit from 'co-postgres-queries/queries/commit';
-commit()();
+commit();
 // { sql: 'COMMIT' }
 ```
 
