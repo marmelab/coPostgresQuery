@@ -191,6 +191,41 @@ Creates a query to select one entity.
 - sortDir:
     Specify the sort direction, either 'ASC' or 'DESC'
 
+
+### update
+
+```js
+import update  from 'co-postgres-queries/queries/update';
+update({
+    table,
+    updatableFields,
+    filterFields, // idField
+    returnFields,
+})(db)(filters, data);
+```
+
+Creates a query to update rows.
+
+#### Configuration
+
+- table: the table name
+- updatableFields: the fields that can be updated
+- filterFields: the fields that can be used to filter the updated rows
+- returnFields: the fields to be returned in the result
+
+#### Parameters
+
+- filters:
+    literal specifying wanted value for given field
+    example:
+    ```js
+    {
+        field: 'value'
+    }
+    ```
+    will update only row for which field equal 'value'
+- data: a literal specifying the field to update
+
 ### updateOne
 
 ```js
@@ -198,9 +233,8 @@ import updateOne  from 'co-postgres-queries/queries/updateOne';
 updateOne({
     table,
     updatableFields,
-    idFields,
+    idField, // or idFields if several fields
     returnFields,
-    allowPrimaryKeyUpdate,
 })(db)(ids, data);
 ```
 
@@ -210,13 +244,13 @@ Creates a query to update one entity.
 
 - table: the table name
 - updatableFields: the fields that can be updated
-- idFields: the fields used to select the target entity (default: `id`)
+- idField: the field to use to select each document
+- idFields: array of idField, to use in place of idField if table has several ids.
 - returnFields: the fields to be returned in the result
-- allowPrimaryKeyUpdate: if true allows to update primary keys value
 
 #### Parameters
 
-- ids: either a single value for a single id, or a literal for several id:`{ id1: value, id2: otherValue }`
+- ids: either a single value for a single id, or a literal for several id:`{ id1: value, id2: otherValue }`. All configured idField must be given a value.
 - data: a literal specifying the field to update
 
 ### deleteOne
