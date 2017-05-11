@@ -128,13 +128,13 @@ A literal in the form of:
 
 Any key not present in idFields will be ignored.
 
-### selectPage
+### select
 
 ```js
-import selectPage  from 'co-postgres-queries/queries/selectPage';
-selectPage({
+import select  from 'co-postgres-queries/queries/select';
+select({
     table,
-    idFields,
+    primaryKey,
     returnFields,
     searchableFields,
     specificSorts,
@@ -149,8 +149,7 @@ Creates a query to select one entity.
 
 - table:
     the table name, accept JOIN statements
-- idFields:
-    list of key fields used to select the entity (default: `id`)
+- primaryKey: one or more fields representing the primary key. Accept array or single value. (default: `id`)
 - returnFields:
     list of fields retrieved by the query
 - searchableFields:
@@ -452,7 +451,7 @@ crud({
 });
 ```
 
-Creates configured queries for insertOne, batchInsert, selectOne, selectPage, updateOne, deleteOne and batchDelete.
+Creates configured queries for insertOne, batchInsert, selectOne, select, updateOne, deleteOne and batchDelete.
 
 #### Configuration
 
