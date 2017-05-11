@@ -291,8 +291,7 @@ Creates a query to delete one entity.
 #### Configuration
 
 - table: the table name
-- idField: the field to use to select each document (default: `id`)
-- idFields: array of idField, to use in place of idField if table has several ids.
+- primaryKey: one or more fields representing the primary key. Accept array or single value. (default: `id`)
 - returnFields: list of fields retrieved by the query
 
 #### Parameters
