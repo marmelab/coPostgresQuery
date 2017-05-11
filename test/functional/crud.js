@@ -53,10 +53,10 @@ describe('crud', () => {
         assert.deepEqual(result, { count: '1' });
     });
 
-    it('should delete entity', function* () {
+    it('should remove entity', function* () {
         const author = yield fixtureLoader.addAuthor({});
 
-        const result = yield crud.deleteOne({ id: author.id });
+        const result = yield crud.removeOne({ id: author.id });
 
         assert.deepEqual(result, author);
 
