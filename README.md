@@ -252,11 +252,38 @@ Creates a query to update one entity.
 - ids: either a single value for a single id, or a literal for several id:`{ id1: value, id2: otherValue }`. All configured idField must be given a value.
 - data: a literal specifying the field to update
 
-### deleteOne
+### remove
 
 ```js
-import deleteOne  from 'co-postgres-queries/queries/deleteOne';
-deleteOne({ table, idFields, returnFields })(db)(ids);
+import remove  from 'co-postgres-queries/queries/remove';
+remove({ table, idField, returnFields })(db)(ids);
+```
+
+Creates a query to delete entities.
+
+#### Configuration
+
+- table: the table name
+- filterFields: the fields that can be used to filter the updated rows
+- returnFields: list of fields retrieved by the query
+
+#### Parameters
+
+- filters:
+    literal specifying wanted value for given field
+    example:
+    ```js
+    {
+        field: 'value'
+    }
+    ```
+    will update only row for which field equal 'value'
+
+### removeOne
+
+```js
+import removeOne  from 'co-postgres-queries/queries/removeOne';
+removeOne({ table, idField, returnFields })(db)(ids);
 ```
 
 Creates a query to delete one entity.
@@ -264,12 +291,13 @@ Creates a query to delete one entity.
 #### Configuration
 
 - table: the table name
-- idFields: list of key fields used to select the entity (default: `id`)
+- idField: the field to use to select each document (default: `id`)
+- idFields: array of idField, to use in place of idField if table has several ids.
 - returnFields: list of fields retrieved by the query
 
 #### Parameters
 
-- ids: either a single value for a single id, or a literal for several id:`{ id1: value, id2: otherValue }`
+- ids: either a single value for a single id, or a literal for several id:`{ id1: value, id2: otherValue }`. All configured idField must be given a value.
 
 ### batchDelete(table, fields, identifier)(db)(ids)
 
