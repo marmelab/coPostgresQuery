@@ -327,7 +327,7 @@ Allow to create a query to delete several entity at once
 import upsertOne  from 'co-postgres-queries/queries/upsertOne';
 upsertOne({
     table,
-    idFields,
+    primaryKey,
     writableFields,
     returnFields,
 })(entity)
@@ -338,12 +338,9 @@ Creates a query to update one entity or create it if it does not already exists.
 #### Configuration
 
 - table: the name of the table
-- idFields: the field used to select one entity checking if it exists (default: `id`)
+- primaryKey: one or more fields representing the primary key. Accept array or single value. (default: `id`)
 - writableFields: the field that can be updated
-- autoIncrementFields: the auto increment field that should not get updated
 - returnFields: the field to return in the result
-- fields: all the fields accepted by the query, default to selectorFields + writableFields (no reason to change that)
-- insertFields: all the fields minus the autoIncrementFields (no reason to change that)
 
 #### Parameters
 
@@ -355,7 +352,7 @@ Creates a query to update one entity or create it if it does not already exists.
 import batchUpsert  from 'co-postgres-queries/queries/batchUpsert';
 batchUpsert({
     table,
-    idFields,
+    primaryKey,
     writableFields,
     returnFields,
 })(entities)
@@ -366,7 +363,7 @@ Creates a query to update a batch entity creating those that does not already ex
 #### Configuration
 
 - table: the name of the table in which to upsert
-- selectorFields: the fields used to select entity and determine if it must be updated or created.
+- primaryKey: one or more fields representing the primary key. Accept array or single value. (default: `id`)
 - writableFields: the field that can be updated
 - returnFields: the field to return in the result
 - fields: all the fields accepted by the query, default to selectorFields + writableFields (no reason to change that)

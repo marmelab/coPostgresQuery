@@ -16,7 +16,7 @@ describe('batchUpsert', () => {
     before(() => {
         batchUpsert = db.link(batchUpsertQuery({
             table: 'post',
-            selectorFields: ['author', 'date'],
+            primaryKey: ['author', 'date'],
             writableFields: ['title'],
         }));
     });
