@@ -54,7 +54,7 @@ The result can then be directly passed to `client.query` to be executed.
 
 ```js
 import insertOne  from 'co-postgres-queries/queries/insertOne';
-insertOne({ table, fields, returnFields })(db)(entity)
+insertOne({ table, fields, returnFields })(entity)
 ```
 
 Returns a query to insert one given entity.
@@ -76,7 +76,7 @@ A literal object in the form of:
 }
 ```
 
-### batchInsert(table, fields, returnFields)(db)(entities)
+### batchInsert(table, fields, returnFields)(entities)
 
 allow to create a query to insert an array of entities.
 
@@ -103,7 +103,7 @@ An array of literal objects in the form of:
 
 ```js
 import selectOne  from 'co-postgres-queries/queries/selectOne';
-selectOne({ table, idFields, returnFields })(db)(entity)
+selectOne({ table, idFields, returnFields })(entity)
 ```
 
 Creates a query to select one entity.
@@ -140,7 +140,7 @@ selectPage({
     specificSorts,
     groupByFields,
     withQuery,
-})(db)({ limit, offset, filters, sort, sortDir });
+})({ limit, offset, filters, sort, sortDir });
 ```
 
 Creates a query to select one entity.
@@ -201,7 +201,7 @@ update({
     updatableFields,
     filterFields, // idField
     returnFields,
-})(db)(filters, data);
+})(filters, data);
 ```
 
 Creates a query to update rows.
@@ -235,7 +235,7 @@ updateOne({
     updatableFields,
     primaryKey,
     returnFields,
-})(db)(ids, data);
+})(identifier, data);
 ```
 
 Creates a query to update one entity.
@@ -249,14 +249,14 @@ Creates a query to update one entity.
 
 #### Parameters
 
-- ids: either a single value for a single id, or a literal for several id:`{ id1: value, id2: otherValue }`. All configured idField must be given a value.
+- identifier: either a single value for a single primaryKey field, or a literal if several fields:`{ id1: value, id2: otherValue }`. All configured primaryKey fields must be given a value.
 - data: a literal specifying the field to update
 
 ### remove
 
 ```js
 import remove  from 'co-postgres-queries/queries/remove';
-remove({ table, idField, returnFields })(db)(ids);
+remove({ table, filterFields, returnFields })(ids);
 ```
 
 Creates a query to delete entities.
@@ -283,7 +283,7 @@ Creates a query to delete entities.
 
 ```js
 import removeOne  from 'co-postgres-queries/queries/removeOne';
-removeOne({ table, idField, returnFields })(db)(ids);
+removeOne({ table, primaryKey, returnFields })(identitfier);
 ```
 
 Creates a query to delete one entity.
@@ -296,9 +296,14 @@ Creates a query to delete one entity.
 
 #### Parameters
 
-- ids: either a single value for a single id, or a literal for several id:`{ id1: value, id2: otherValue }`. All configured idField must be given a value.
+- identitfier: either a single value for a single primaryKey field, or a literal if several fields:`{ id1: value, id2: otherValue }`. All configured primaryKey fields must be given a value.
 
-### batchDelete(table, fields, identifier)(db)(ids)
+### batchRemove
+
+```js
+import batchRemove  from 'co-postgres-queries/queries/batchRemove';
+batchRemove({ table, primaryKey, returnFields })(identifierList);
+```
 
 Allow to create a query to delete several entity at once
 
@@ -306,11 +311,11 @@ Allow to create a query to delete several entity at once
 
 - table: the table name
 - fields: list of fields to insert
-- identifier: the field used to select the entity to delete
+- primaryKey: One or more fields representing the primary key. Accept array or single value. (default: `id`)
 
 #### Parameters
 
-- ids: list of ids of the entity to delete
+- identifierList: list of identifier either an array of single value for a single primaryKey field, or an array of literal if several fields:`[{ id1: value, id2: otherValue }, ...]`. All configured primaryKey fields must be given a value.
 
 ### upsertOne
 
@@ -321,7 +326,7 @@ upsertOne({
     idFields,
     updatableFields,
     returnFields,
-})(db)(entity)
+})(entity)
 ```
 
 Creates a query to update one entity or create it if it does not already exists.
@@ -349,7 +354,7 @@ batchUpsert({
     idFields,
     updatableFields,
     returnFields,
-})(db)(entities)
+})(entities)
 ```
 
 Creates a query to update a batch entity creating those that does not already exists.
@@ -366,7 +371,12 @@ Creates a query to update a batch entity creating those that does not already ex
 
 - entities: array of entities to upsert
 
-### selectByOrderedFieldValues(table, selectorField, returnFields)(db)(values)
+### selectByOrderedFieldValues
+
+```js
+import selectByOrderedFieldValues from 'co-postgres-queries/queries/selectByOrderedFieldValues';
+selectByOrderedFieldValues(table, selectorField, returnFields)(values);
+```
 
 Creates a query to select an entity with selectorField IN values and keep the ORDER of values.
 
@@ -439,7 +449,7 @@ crud({
     fields,
     idField,
     returnFields,
-})(db)
+});
 ```
 
 Creates configured queries for insertOne, batchInsert, selectOne, selectPage, updateOne, deleteOne and batchDelete.
