@@ -197,7 +197,7 @@ Creates a query to select one entity.
 import update  from 'co-postgres-queries/queries/update';
 update({
     table,
-    updatableFields,
+    writableFields,
     filterFields, // idField
     returnFields,
 })(filters, data);
@@ -208,7 +208,7 @@ Creates a query to update rows.
 #### Configuration
 
 - table: the table name
-- updatableFields: the fields that can be updated
+- writableFields: the fields that can be updated
 - filterFields: the fields that can be used to filter the updated rows
 - returnFields: the fields to be returned in the result
 
@@ -231,7 +231,7 @@ Creates a query to update rows.
 import updateOne  from 'co-postgres-queries/queries/updateOne';
 updateOne({
     table,
-    updatableFields,
+    writableFields,
     primaryKey,
     returnFields,
 })(identifier, data);
@@ -242,7 +242,7 @@ Creates a query to update one entity.
 #### Configuration
 
 - table: the table name
-- updatableFields: the fields that can be updated
+- writableFields: the fields that can be updated
 - primaryKey: one or more fields representing the primary key. Accept array or single value. (default: `id`)
 - returnFields: the fields to be returned in the result
 
@@ -323,7 +323,7 @@ import upsertOne  from 'co-postgres-queries/queries/upsertOne';
 upsertOne({
     table,
     idFields,
-    updatableFields,
+    writableFields,
     returnFields,
 })(entity)
 ```
@@ -334,10 +334,10 @@ Creates a query to update one entity or create it if it does not already exists.
 
 - table: the name of the table
 - idFields: the field used to select one entity checking if it exists (default: `id`)
-- updatableFields: the field that can be updated
+- writableFields: the field that can be updated
 - autoIncrementFields: the auto increment field that should not get updated
 - returnFields: the field to return in the result
-- fields: all the fields accepted by the query, default to selectorFields + updatableFields (no reason to change that)
+- fields: all the fields accepted by the query, default to selectorFields + writableFields (no reason to change that)
 - insertFields: all the fields minus the autoIncrementFields (no reason to change that)
 
 #### Parameters
@@ -351,7 +351,7 @@ import batchUpsert  from 'co-postgres-queries/queries/batchUpsert';
 batchUpsert({
     table,
     idFields,
-    updatableFields,
+    writableFields,
     returnFields,
 })(entities)
 ```
@@ -362,9 +362,9 @@ Creates a query to update a batch entity creating those that does not already ex
 
 - table: the name of the table in which to upsert
 - selectorFields: the fields used to select entity and determine if it must be updated or created.
-- updatableFields: the field that can be updated
+- writableFields: the field that can be updated
 - returnFields: the field to return in the result
-- fields: all the fields accepted by the query, default to selectorFields + updatableFields (no reason to change that)
+- fields: all the fields accepted by the query, default to selectorFields + writableFields (no reason to change that)
 
 #### Parameters
 
@@ -459,7 +459,7 @@ Creates configured queries for insertOne, batchInsert, selectOne, select, update
 - fields: the list of the fields.
 - idField: the field where we want to search the values (default: `id`)
 - returnFields: the list of fields we want returned as result.
-- updatableFields: the fields that can be updated
+- writableFields: the fields that can be updated
 - searchableFields: the fields that can be searched (usable in filter parameter). Defaults to return fields
 - specificSorts:
     allow to specify sort order for a given field. Useful when we want to order string other than by alphabetical order.

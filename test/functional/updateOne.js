@@ -9,7 +9,7 @@ describe('updateOne', () => {
     it('should update entity returning all field by default', function* () {
         const updateOne = db.link(updateOneQuery({
             table: 'author',
-            updatableFields: ['name', 'firstname'],
+            writableFields: ['name', 'firstname'],
             primaryKey: ['name'],
         }));
         const result = yield updateOne({ name: author.name }, { firstname: 'jane' });
