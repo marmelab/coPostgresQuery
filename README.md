@@ -136,7 +136,7 @@ Any key not present in primaryKey will be ignored.
 ### select
 
 ```js
-import select  from 'co-postgres-queries/queries/select';
+import select from 'co-postgres-queries/queries/select';
 select({
     table,
     primaryKey,
@@ -145,6 +145,7 @@ select({
     specificSorts,
     groupByFields,
     withQuery,
+    returnOne,
 })({ limit, offset, filters, sort, sortDir });
 ```
 
@@ -174,6 +175,7 @@ Creates a query to select one entity.
     specify that we want to encompass the query in `WITH RESULT AS <query> SELECT * FROM result`
     This add a temporary result table that allow to sort on computed and joined field.
     if the table configuration contain a JOIN clause, this will be automatically set to true.
+- returnOne: Optional, if set to true, returns only the first result instead of an array.
 
 #### Parameters
 
