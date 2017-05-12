@@ -4,7 +4,7 @@ describe('batchInsert', () => {
     let batchInsert;
 
     beforeEach(() => {
-        batchInsert = db.link(batchInsertQuery({ table: 'tag', fields: ['name'] }));
+        batchInsert = db.link(batchInsertQuery({ table: 'tag', writableFields: ['name'] }));
     });
 
     it('should do nothing if no entities given', function* () {
@@ -37,7 +37,7 @@ describe('batchInsert', () => {
 
     it('should insert list of entity in a single request returning only specified field if given',
     function* () {
-        batchInsert = db.link(batchInsertQuery({ table: 'tag', fields: ['name'], returnFields: ['id'] }));
+        batchInsert = db.link(batchInsertQuery({ table: 'tag', writableFields: ['name'], returnFields: ['id'] }));
         const tags = [
             { name: 'tag1' },
             { name: 'tag2' },

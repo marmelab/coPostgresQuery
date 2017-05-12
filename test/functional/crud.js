@@ -6,8 +6,8 @@ describe('crud', () => {
     before(() => {
         crud = db.link(crudQueries({
             table: 'author',
-            fields: ['name', 'firstname'],
-            idFields: ['id'],
+            writableFields: ['name', 'firstname'],
+            primaryKey: ['id'],
             returnFields: ['name', 'firstname'],
         }));
     });
@@ -36,7 +36,7 @@ describe('crud', () => {
         const john = yield fixtureLoader.addAuthor({ name: 'doe', firstname: 'john' });
         const jane = yield fixtureLoader.addAuthor({ name: 'day', firstname: 'jane' });
 
-        const results = yield crud.selectPage();
+        const results = yield crud.select();
 
         assert.equal(results.length, 2);
         assert.equal(results[0].name, john.name);
@@ -94,7 +94,7 @@ describe('crud', () => {
             { firstname: 'jane', name: 'mae' },
         ].map(author => fixtureLoader.addAuthor(author));
 
-        const result = yield crud.selectPage();
+        const result = yield crud.select();
         result.forEach((author, index) => {
             assert.equal(author.name, authors[index].name);
             assert.equal(author.firstname, authors[index].firstname);
