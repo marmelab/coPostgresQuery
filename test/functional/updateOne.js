@@ -1,4 +1,4 @@
-import { updateOneQuery } from '../../lib';
+import { updateOne as updateOneQuery } from '../../lib';
 
 describe('updateOne', () => {
     let author;

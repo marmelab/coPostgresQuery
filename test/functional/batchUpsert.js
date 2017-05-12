@@ -1,6 +1,6 @@
 import moment from 'moment';
 
-import { batchUpsertQuery } from '../../lib';
+import { batchUpsert as batchUpsertQuery } from '../../lib';
 
 describe('batchUpsert', () => {
     let batchUpsert;

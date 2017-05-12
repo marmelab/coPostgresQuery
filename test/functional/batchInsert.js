@@ -1,4 +1,4 @@
-import { batchInsertQuery } from '../../lib';
+import { batchInsert as batchInsertQuery } from '../../lib';
 
 describe('batchInsert', () => {
     let batchInsert;

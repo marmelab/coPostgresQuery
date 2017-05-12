@@ -1,4 +1,4 @@
-import { batchRemoveQuery } from '../../lib/';
+import { batchRemove as batchRemoveQuery } from '../../lib/';
 
 describe('batchRemove', () => {
     let ids;

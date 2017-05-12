@@ -1,4 +1,4 @@
-import { insertOneQuery } from '../../lib';
+import { insertOne as insertOneQuery } from '../../lib';
 
 describe('insertOne', () => {
     it('should insert entity returning all field by default', function* () {
