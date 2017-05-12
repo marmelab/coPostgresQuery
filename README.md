@@ -116,7 +116,7 @@ Creates a query to select one entity.
 #### Configuration
 
 - table: the table name
-- primaryKey: one or more fields representing the primary key. Accept array or single value. (default: `id`)
+- primaryKey: One or more fields representing the primary key. Accept either an array or a single value. (default: `id`)
 - returnFields: list of fields retrieved by the query
 
 #### Parameters
@@ -131,7 +131,7 @@ A literal in the form of:
 }
 ```
 
-Any key not present in idFields will be ignored.
+Any key not present in primaryKey will be ignored.
 
 ### select
 
@@ -154,7 +154,7 @@ Creates a query to select one entity.
 
 - table:
     the table name, accept JOIN statements
-- primaryKey: one or more fields representing the primary key. Accept array or single value. (default: `id`)
+- primaryKey: One or more fields representing the primary key. Accept either an array or a single value. (default: `id`)
 - returnFields:
     list of fields retrieved by the query
 - searchableFields:
@@ -248,7 +248,7 @@ Creates a query to update one entity.
 
 - table: the table name
 - writableFields: the fields that can be updated
-- primaryKey: one or more fields representing the primary key. Accept array or single value. (default: `id`)
+- primaryKey: One or more fields representing the primary key. Accept either an array or a single value. (default: `id`)
 - returnFields: the fields to be returned in the result
 
 #### Parameters
@@ -260,7 +260,7 @@ Creates a query to update one entity.
 
 ```js
 import remove  from 'co-postgres-queries/queries/remove';
-remove({ table, filterFields, returnFields })(ids);
+remove({ table, filterFields, returnFields })(filters);
 ```
 
 Creates a query to delete entities.
@@ -295,7 +295,7 @@ Creates a query to delete one entity.
 #### Configuration
 
 - table: the table name
-- primaryKey: one or more fields representing the primary key. Accept array or single value. (default: `id`)
+- primaryKey: One or more fields representing the primary key. Accept either an array or a single value. (default: `id`)
 - returnFields: list of fields retrieved by the query
 
 #### Parameters
@@ -315,7 +315,7 @@ Allow to create a query to delete several entity at once
 
 - table: the table name
 - fields: list of fields to insert
-- primaryKey: One or more fields representing the primary key. Accept array or single value. (default: `id`)
+- primaryKey: One or more fields representing the primary key. Accept either an array or a single value. (default: `id`)
 
 #### Parameters
 
@@ -338,7 +338,7 @@ Creates a query to update one entity or create it if it does not already exists.
 #### Configuration
 
 - table: the name of the table
-- primaryKey: one or more fields representing the primary key. Accept array or single value. (default: `id`)
+- primaryKey: One or more fields representing the primary key. Accept either an array or a single value. (default: `id`)
 - writableFields: the field that can be updated
 - returnFields: the field to return in the result
 
@@ -363,7 +363,7 @@ Creates a query to update a batch entity creating those that does not already ex
 #### Configuration
 
 - table: the name of the table in which to upsert
-- primaryKey: one or more fields representing the primary key. Accept array or single value. (default: `id`)
+- primaryKey: One or more fields representing the primary key. Accept either an array or a single value. (default: `id`)
 - writableFields: the field that can be updated
 - returnFields: the field to return in the result
 - fields: all the fields accepted by the query, default to selectorFields + writableFields (no reason to change that)
