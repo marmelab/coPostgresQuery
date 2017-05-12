@@ -6,9 +6,9 @@ describe('crud', () => {
     before(() => {
         crud = db.link(crudQueries({
             table: 'author',
-            writableFields: ['name', 'firstname'],
+            writableCols: ['name', 'firstname'],
             primaryKey: ['id'],
-            returnFields: ['name', 'firstname'],
+            returnCols: ['name', 'firstname'],
         }));
     });
 

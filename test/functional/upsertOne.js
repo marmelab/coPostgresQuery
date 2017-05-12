@@ -15,7 +15,7 @@ describe('upsertOne', () => {
         upsertOne = db.link(upsertOneQuery({
             table: 'post',
             primaryKey: ['author', 'date'],
-            writableFields: ['author', 'date', 'title'],
+            writableCols: ['author', 'date', 'title'],
         }));
     });
 

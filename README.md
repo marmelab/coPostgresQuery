@@ -23,15 +23,15 @@ Each query helper takes the form:
 query(config)(...parameters);
 ```
 
-On the first call it receives its configuration, eg, the table name, field name, etc...
+On the first call it receives its configuration, eg, the table name, column name, etc...
 For example:
 
 ```js
 import insertOne  from 'co-postgres-queries/queries/insertOne';
 const insertOne = insertOne({
     table: 'user',
-    writableFields: ['name', 'firstname'],
-    returnFields: ['id', 'name', 'firstname'],
+    writableCols: ['name', 'firstname'],
+    returnCols: ['id', 'name', 'firstname'],
 });
 ```
 
@@ -54,7 +54,7 @@ The result can then be directly passed to `client.query` to be executed.
 
 ```js
 import insertOne  from 'co-postgres-queries/queries/insertOne';
-insertOne({ table, writableFields, returnFields })(entity)
+insertOne({ table, writableCols, returnCols })(entity)
 ```
 
 Returns a query to insert one given entity.
@@ -62,8 +62,8 @@ Returns a query to insert one given entity.
 #### Configuration
 
 - table: the table name
-- writableFields: list of fields that can be set
-- returnFields: list of fields exposed in the result of the query
+- writableCols: list of columns that can be set
+- returnCols: list of columns exposed in the result of the query
 
 #### Parameters
 
@@ -71,16 +71,16 @@ A literal object in the form of:
 
 ```js
 {
-    fieldName: value,
+    column: value,
     ...
 }
 ```
 
-### batchInsert(table, writableFields, returnFields)(rows)
+### batchInsert(table, writableCols, returnCols)(rows)
 
 ```js
 import batchInsert from 'co-postgres-queries/queries/batchInsert';
-batchInsert(table, writableFields, returnFields)(rows);
+batchInsert(table, writableCols, returnCols)(rows);
 ```
 
 allow to create a query to insert an array of rows.
@@ -88,8 +88,8 @@ allow to create a query to insert an array of rows.
 #### Configuration
 
 - table: the table name
-- writableFields: list of fields that can be set
-- returnFields: list of fields exposed in the result of the query
+- writableCols: list of columns that can be set
+- returnCols: list of columns exposed in the result of the query
 
 #### Parameters
 
@@ -98,7 +98,7 @@ An array of literal objects in the form of:
 ```js
 [
     {
-        fieldName: value,
+        column: value,
         ...
     }, ...
 ]
@@ -108,7 +108,7 @@ An array of literal objects in the form of:
 
 ```js
 import selectOne  from 'co-postgres-queries/queries/selectOne';
-selectOne({ table, primaryKey, returnFields })(entity)
+selectOne({ table, primaryKey, returnCols })(entity)
 ```
 
 Creates a query to select one entity.
@@ -116,8 +116,8 @@ Creates a query to select one entity.
 #### Configuration
 
 - table: the table name
-- primaryKey: One or more fields representing the primary key. Accept either an array or a single value. (default: `id`)
-- returnFields: list of fields retrieved by the query
+- primaryKey: One or more columns representing the primary key. Accept either an array or a single value. (default: `id`)
+- returnCols: list of columns retrieved by the query
 
 #### Parameters
 
@@ -140,10 +140,10 @@ import select  from 'co-postgres-queries/queries/select';
 select({
     table,
     primaryKey,
-    returnFields,
-    searchableFields,
+    returnCols,
+    searchableCols,
     specificSorts,
-    groupByFields,
+    groupByCols,
     withQuery,
 })({ limit, offset, filters, sort, sortDir });
 ```
@@ -154,25 +154,25 @@ Creates a query to select one entity.
 
 - table:
     the table name, accept JOIN statements
-- primaryKey: One or more fields representing the primary key. Accept either an array or a single value. (default: `id`)
-- returnFields:
-    list of fields retrieved by the query
-- searchableFields:
-    list of fields that can be searched (usable in filter parameter). Defaults to return fields
+- primaryKey: One or more columns representing the primary key. Accept either an array or a single value. (default: `id`)
+- returnCols:
+    list of columns retrieved by the query
+- searchableCols:
+    list of columns that can be searched (usable in filter parameter). Defaults to return columns
 - specificSorts:
-    allow to specify sort order for a given field. Useful when we want to order string other than by alphabetical order.
+    allow to specify sort order for a given column. Useful when we want to order string other than by alphabetical order.
     example:
     ```js
     {
         level: ['master', 'expert', 'novice']
     }
     ```
-    will order level field with all master first, then expert and finally novice
-- groupByFields
-    allow to add a GROUP BY clause to the query on the given fields
+    will order level column with all master first, then expert and finally novice
+- groupByCols
+    allow to add a GROUP BY clause to the query on the given columns
 - withQuery
     specify that we want to encompass the query in `WITH RESULT AS <query> SELECT * FROM result`
-    This add a temporary result table that allow to sort on computed and joined field.
+    This add a temporary result table that allow to sort on computed and joined column.
     if the table configuration contain a JOIN clause, this will be automatically set to true.
 
 #### Parameters
@@ -182,16 +182,16 @@ Creates a query to select one entity.
 - offset:
     number of results to be ignored
 - filters
-    literal specifying wanted value for given field
+    literal specifying wanted value for given column
     example:
     ```js
     {
-        field: 'value'
+        column: 'value'
     }
     ```
-    will return only entity for which entity.field equal 'value'
+    will return only entity for which entity.column equal 'value'
 - sort:
-    Specify the field by which to filter the result (Additionally the result will always get sorted by the entity identifiers to avoid random order)
+    Specify the column by which to filter the result (Additionally the result will always get sorted by the entity identifiers to avoid random order)
 - sortDir:
     Specify the sort direction, either 'ASC' or 'DESC'
 
@@ -202,9 +202,9 @@ Creates a query to select one entity.
 import update  from 'co-postgres-queries/queries/update';
 update({
     table,
-    writableFields,
-    filterFields, // idField
-    returnFields,
+    writableCols,
+    filterCols,
+    returnCols,
 })(filters, data);
 ```
 
@@ -213,22 +213,22 @@ Creates a query to update rows.
 #### Configuration
 
 - table: the table name
-- writableFields: the fields that can be updated
-- filterFields: the fields that can be used to filter the updated rows
-- returnFields: the fields to be returned in the result
+- writableCols: the columns that can be updated
+- filterCols: the columns that can be used to filter the updated rows
+- returnCols: the columns to be returned in the result
 
 #### Parameters
 
 - filters:
-    literal specifying wanted value for given field
+    literal specifying wanted value for given column
     example:
     ```js
     {
-        field: 'value'
+        column: 'value'
     }
     ```
-    will update only row for which field equal 'value'
-- data: a literal specifying the field to update
+    will update only row for which column equal 'value'
+- data: a literal specifying the column to update
 
 ### updateOne
 
@@ -236,9 +236,9 @@ Creates a query to update rows.
 import updateOne  from 'co-postgres-queries/queries/updateOne';
 updateOne({
     table,
-    writableFields,
+    writableCols,
     primaryKey,
-    returnFields,
+    returnCols,
 })(identifier, data);
 ```
 
@@ -247,20 +247,20 @@ Creates a query to update one entity.
 #### Configuration
 
 - table: the table name
-- writableFields: the fields that can be updated
-- primaryKey: One or more fields representing the primary key. Accept either an array or a single value. (default: `id`)
-- returnFields: the fields to be returned in the result
+- writableCols: the columns that can be updated
+- primaryKey: One or more columns representing the primary key. Accept either an array or a single value. (default: `id`)
+- returnCols: the columns to be returned in the result
 
 #### Parameters
 
-- identifier: either a single value for a single primaryKey field, or a literal if several fields:`{ id1: value, id2: otherValue }`. All configured primaryKey fields must be given a value.
-- data: a literal specifying the field to update
+- identifier: either a single value for a single primaryKey column, or a literal if several columns:`{ id1: value, id2: otherValue }`. All configured primaryKey columns must be given a value.
+- data: a literal specifying the column to update
 
 ### remove
 
 ```js
 import remove  from 'co-postgres-queries/queries/remove';
-remove({ table, filterFields, returnFields })(filters);
+remove({ table, filterCols, returnCols })(filters);
 ```
 
 Creates a query to delete rows.
@@ -268,26 +268,26 @@ Creates a query to delete rows.
 #### Configuration
 
 - table: the table name
-- filterFields: the fields that can be used to filter the updated rows
-- returnFields: list of fields retrieved by the query
+- filterCols: the columns that can be used to filter the updated rows
+- returnCols: list of columns retrieved by the query
 
 #### Parameters
 
 - filters:
-    literal specifying wanted value for given field
+    literal specifying wanted value for given column
     example:
     ```js
     {
-        field: 'value'
+        column: 'value'
     }
     ```
-    will update only row for which field equal 'value'
+    will update only row for which column equal 'value'
 
 ### removeOne
 
 ```js
 import removeOne  from 'co-postgres-queries/queries/removeOne';
-removeOne({ table, primaryKey, returnFields })(identitfier);
+removeOne({ table, primaryKey, returnCols })(identitfier);
 ```
 
 Creates a query to delete one entity.
@@ -295,18 +295,18 @@ Creates a query to delete one entity.
 #### Configuration
 
 - table: the table name
-- primaryKey: One or more fields representing the primary key. Accept either an array or a single value. (default: `id`)
-- returnFields: list of fields retrieved by the query
+- primaryKey: One or more columns representing the primary key. Accept either an array or a single value. (default: `id`)
+- returnCols: list of columns retrieved by the query
 
 #### Parameters
 
-- identitfier: either a single value for a single primaryKey field, or a literal if several fields:`{ id1: value, id2: otherValue }`. All configured primaryKey fields must be given a value.
+- identitfier: either a single value for a single primaryKey column, or a literal if several columns:`{ id1: value, id2: otherValue }`. All configured primaryKey columns must be given a value.
 
 ### batchRemove
 
 ```js
 import batchRemove  from 'co-postgres-queries/queries/batchRemove';
-batchRemove({ table, primaryKey, returnFields })(identifierList);
+batchRemove({ table, primaryKey, returnCols })(identifierList);
 ```
 
 Allow to create a query to delete several entity at once
@@ -314,12 +314,12 @@ Allow to create a query to delete several entity at once
 #### Configuration
 
 - table: the table name
-- fields: list of fields to insert
-- primaryKey: One or more fields representing the primary key. Accept either an array or a single value. (default: `id`)
+- columns: list of columns to insert
+- primaryKey: One or more columns representing the primary key. Accept either an array or a single value. (default: `id`)
 
 #### Parameters
 
-- identifierList: list of identifier either an array of single value for a single primaryKey field, or an array of literal if several fields:`[{ id1: value, id2: otherValue }, ...]`. All configured primaryKey fields must be given a value.
+- identifierList: list of identifier either an array of single value for a single primaryKey column, or an array of literal if several columns:`[{ id1: value, id2: otherValue }, ...]`. All configured primaryKey columns must be given a value.
 
 ### upsertOne
 
@@ -328,8 +328,8 @@ import upsertOne  from 'co-postgres-queries/queries/upsertOne';
 upsertOne({
     table,
     primaryKey,
-    writableFields,
-    returnFields,
+    writableCols,
+    returnCols,
 })(entity)
 ```
 
@@ -338,9 +338,9 @@ Creates a query to update one entity or create it if it does not already exists.
 #### Configuration
 
 - table: the name of the table
-- primaryKey: One or more fields representing the primary key. Accept either an array or a single value. (default: `id`)
-- writableFields: the field that can be updated
-- returnFields: the field to return in the result
+- primaryKey: One or more columns representing the primary key. Accept either an array or a single value. (default: `id`)
+- writableCols: the column that can be updated
+- returnCols: the column to return in the result
 
 #### Parameters
 
@@ -353,8 +353,8 @@ import batchUpsert  from 'co-postgres-queries/queries/batchUpsert';
 batchUpsert({
     table,
     primaryKey,
-    writableFields,
-    returnFields,
+    writableCols,
+    returnCols,
 })(rows)
 ```
 
@@ -363,33 +363,37 @@ Creates a query to update a batch entity creating those that does not already ex
 #### Configuration
 
 - table: the name of the table in which to upsert
-- primaryKey: One or more fields representing the primary key. Accept either an array or a single value. (default: `id`)
-- writableFields: the field that can be updated
-- returnFields: the field to return in the result
-- fields: all the fields accepted by the query, default to selectorFields + writableFields (no reason to change that)
+- primaryKey: One or more columns representing the primary key. Accept either an array or a single value. (default: `id`)
+- writableCols: the column that can be updated
+- returnCols: the column to return in the result
+- columns: all the columns accepted by the query, default to selectorcolumns + writableCols (no reason to change that)
 
 #### Parameters
 
 - rows: array of rows to upsert
 
-### selectByOrderedFieldValues
+### selectByOrderedColValues
 
 ```js
-import selectByOrderedFieldValues from 'co-postgres-queries/queries/selectByOrderedFieldValues';
-selectByOrderedFieldValues(table, selectorField, returnFields)(values);
+import selectByOrderedColValues from 'co-postgres-queries/queries/selectByOrderedColValues';
+selectByOrderedColValues({
+    table,
+    filterCol,
+    returnCols,
+})(values);
 ```
 
-Creates a query to select an entity with selectorField IN values and keep the ORDER of values.
+Creates a query to select an entity with primaryKey IN values and keep the ORDER of values.
 
 #### Configuration
 
 - table: the name of the table in which to upsert
-- selectorField: the field used to select entity
-- returnFields: the field to return in the result
+- filterCol: the column of the table we want to use to select
+- returnCols: the column to return in the result
 
 #### Parameters
 
-- values: array of values to retrieve. The array order will determine the result order.
+- values: array of identifier to retrieve. The array order will determine the result order.
 
 Careful, if several entity share the same value, their order is unpredictable.
 
@@ -451,9 +455,9 @@ Rollback the transaction to the given save point, or to its beginning if not spe
 import crud  from 'co-postgres-queries/queries/crud';
 crud({
     table,
-    writableFields,
-    idField,
-    returnFields,
+    writableCols,
+    primaryKey,
+    returnCols,
 });
 ```
 
@@ -462,23 +466,23 @@ Creates configured queries for insertOne, batchInsert, selectOne, select, update
 #### Configuration
 
 - table: the name of the table.
-- idField: the field where we want to search the values (default: `id`)
-- writableFields: list of fields that can be set
-- returnFields: the list of fields we want returned as result.
-- searchableFields: the fields that can be searched (usable in filter parameter). Defaults to return fields
+- primaryKey: One or more columns representing the primary key. Accept either an array or a single value. (default: `id`)
+- writableCols: list of columns that can be set
+- returnCols: the list of columns we want returned as result.
+- searchableCols: the columns that can be searched (usable in filter parameter). Defaults to return columns
 - specificSorts:
-    allow to specify sort order for a given field. Useful when we want to order string other than by alphabetical order.
+    allow to specify sort order for a given column. Useful when we want to order string other than by alphabetical order.
     example:
     ```js
     {
         level: ['master', 'expert', 'novice']
     }
     ```
-    will order level field with all master first, then expert and finally novice
-- groupByFields: allow to add a GROUP BY clause to the query on the given fields
+    will order level column with all master first, then expert and finally novice
+- groupByCols: allow to add a GROUP BY clause to the query on the given columns
 - withQuery:
     specify that we want to encompass the query in `WITH RESULT AS <query> SELECT * FROM result`
-    This add a temporary result table that allow to sort on computed and joined field.
+    This add a temporary result table that allow to sort on computed and joined column.
     if the table configuration contain a JOIN clause, this will be automatically set to true.
 
 ## PgPool
