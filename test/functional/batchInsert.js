@@ -7,7 +7,7 @@ describe('batchInsert', () => {
         batchInsert = db.link(batchInsertQuery({ table: 'tag', writableFields: ['name'] }));
     });
 
-    it('should do nothing if no entities given', function* () {
+    it('should do nothing if no rows given', function* () {
         const result = yield batchInsert();
 
         assert.deepEqual(result, []);
@@ -19,7 +19,7 @@ describe('batchInsert', () => {
         assert.deepEqual(result, []);
     });
 
-    it('should insert list of entity in a single request returning all field by default',
+    it('should insert list of row in a single request returning all field by default',
     function* () {
         const tags = [
             { name: 'tag1' },
@@ -35,7 +35,7 @@ describe('batchInsert', () => {
         assert.deepEqual(result, savedTags);
     });
 
-    it('should insert list of entity in a single request returning only specified field if given',
+    it('should insert list of row in a single request returning only specified field if given',
     function* () {
         batchInsert = db.link(batchInsertQuery({ table: 'tag', writableFields: ['name'], returnFields: ['id'] }));
         const tags = [

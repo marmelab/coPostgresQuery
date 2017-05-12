@@ -12,7 +12,7 @@ describe('removeOne', () => {
         author = yield fixtureLoader.addAuthor({});
     });
 
-    it('should delete entity once executed', function* () {
+    it('should delete row once executed', function* () {
         const result = yield removeOne({ id: author.id });
         assert.deepEqual(result, author);
 

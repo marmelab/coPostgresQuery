@@ -23,7 +23,7 @@ describe('upsertOne', () => {
         post = yield fixtureLoader.addPost({ author: 'john', date: currentMonth, title: 'title' });
     });
 
-    it('should create unexisting entities', function* () {
+    it('should create unexisting rows', function* () {
         const newPost = { author: 'jane', date: lastMonth, title: 'title2' };
         yield upsertOne(newPost);
 
@@ -40,7 +40,7 @@ describe('upsertOne', () => {
         ]);
     });
 
-    it('should create entities when not all selector match', function* () {
+    it('should create rows when not all selector match', function* () {
         const newPost = { author: 'john', date: lastMonth, title: 'john last month' };
         const result = yield upsertOne(newPost);
 
@@ -62,7 +62,7 @@ describe('upsertOne', () => {
         ]);
     });
 
-    it('should update existing entities (both selector values match)', function* () {
+    it('should update existing row (both selector values match)', function* () {
         const updatedPost = { author: 'john', date: currentMonth, title: 'updated title' };
         const result = yield upsertOne(updatedPost);
         assert.deepEqual(result, {

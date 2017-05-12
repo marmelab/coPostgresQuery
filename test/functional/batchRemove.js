@@ -22,7 +22,7 @@ describe('batchRemove', () => {
         ids = tags.map(tag => tag.id);
     });
 
-    it('should remove entities', function* () {
+    it('should remove rows', function* () {
         const result = yield batchRemove(ids.slice(1));
 
         assert.deepEqual(result, tags.slice(1));

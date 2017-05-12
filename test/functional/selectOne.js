@@ -7,7 +7,7 @@ describe('functional selectOne', () => {
         author = yield fixtureLoader.addAuthor({});
     });
 
-    it('should select entity once executed', function* () {
+    it('should select row once executed', function* () {
         const selectOne = db.link(selectOneQuery({
             table: 'author',
             idFields: ['id'],

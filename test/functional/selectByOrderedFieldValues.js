@@ -12,7 +12,7 @@ describe('functional selectByOrderedFieldValues', () => {
         .map(fixtureLoader.addAuthor);
     });
 
-    it('should select entity by id once executed and keep order', function* () {
+    it('should select row by id once executed and keep order', function* () {
         const selectByIds = db.link(selectByOrderedFieldValuesQuery({
             table: 'author',
             selectorField: 'id',
@@ -30,7 +30,7 @@ describe('functional selectByOrderedFieldValues', () => {
         assert.deepEqual(result2, [authors[1], authors[0]]);
     });
 
-    it('should select entity by name (same value for several entry) once executed and keep order',
+    it('should select row by name (same value for several entry) once executed and keep order',
     function* () {
         const selectByIds = db.link(selectByOrderedFieldValuesQuery({
             table: 'author',

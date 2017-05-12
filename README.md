@@ -76,14 +76,14 @@ A literal object in the form of:
 }
 ```
 
-### batchInsert(table, writableFields, returnFields)(entities)
+### batchInsert(table, writableFields, returnFields)(rows)
 
 ```js
 import batchInsert from 'co-postgres-queries/queries/batchInsert';
-batchInsert(table, writableFields, returnFields)(entities);
+batchInsert(table, writableFields, returnFields)(rows);
 ```
 
-allow to create a query to insert an array of entities.
+allow to create a query to insert an array of rows.
 
 #### Configuration
 
@@ -263,7 +263,7 @@ import remove  from 'co-postgres-queries/queries/remove';
 remove({ table, filterFields, returnFields })(filters);
 ```
 
-Creates a query to delete entities.
+Creates a query to delete rows.
 
 #### Configuration
 
@@ -355,7 +355,7 @@ batchUpsert({
     primaryKey,
     writableFields,
     returnFields,
-})(entities)
+})(rows)
 ```
 
 Creates a query to update a batch entity creating those that does not already exists.
@@ -370,7 +370,7 @@ Creates a query to update a batch entity creating those that does not already ex
 
 #### Parameters
 
-- entities: array of entities to upsert
+- rows: array of rows to upsert
 
 ### selectByOrderedFieldValues
 
