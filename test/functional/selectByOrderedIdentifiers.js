@@ -1,6 +1,6 @@
-import { selectByOrderedColValues } from '../../lib';
+import { selectByOrderedIdentifiers } from '../../lib';
 
-describe('functional selectByOrderedColValues', () => {
+describe('functional selectByOrderedIdentifiers', () => {
     let authors;
 
     before(function* () {
@@ -13,9 +13,9 @@ describe('functional selectByOrderedColValues', () => {
     });
 
     it('should select row by id once executed and keep order', function* () {
-        const selectByIds = db.link(selectByOrderedColValues({
+        const selectByIds = db.link(selectByOrderedIdentifiers({
             table: 'author',
-            filterCol: 'id',
+            primaryKey: 'id',
             returnCols: [
                 'id',
                 'name',
@@ -32,9 +32,9 @@ describe('functional selectByOrderedColValues', () => {
 
     it('should select row by name (same value for several entry) once executed and keep order',
     function* () {
-        const selectByIds = db.link(selectByOrderedColValues({
+        const selectByIds = db.link(selectByOrderedIdentifiers({
             table: 'author',
-            filterCol: 'name',
+            primaryKey: 'name',
             returnCols: [
                 'id',
                 'name',

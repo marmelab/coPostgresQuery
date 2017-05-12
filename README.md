@@ -54,15 +54,15 @@ The result can then be directly passed to `client.query` to be executed.
 
 ```js
 import insertOne  from 'co-postgres-queries/queries/insertOne';
-insertOne({ table, writableCols, returnCols })(entity)
+insertOne({ table, writableCols, returnCols })(row)
 ```
 
-Returns a query to insert one given entity.
+Returns a query to insert one given row.
 
 #### Configuration
 
 - table: the table name
-- writableCols: list of columns that can be set
+- writableCols: lisft of columns that can be set
 - returnCols: list of columns exposed in the result of the query
 
 #### Parameters
@@ -108,10 +108,10 @@ An array of literal objects in the form of:
 
 ```js
 import selectOne  from 'co-postgres-queries/queries/selectOne';
-selectOne({ table, primaryKey, returnCols })(entity)
+selectOne({ table, primaryKey, returnCols })(row)
 ```
 
-Creates a query to select one entity.
+Creates a query to select one row.
 
 #### Configuration
 
@@ -148,7 +148,7 @@ select({
 })({ limit, offset, filters, sort, sortDir });
 ```
 
-Creates a query to select one entity.
+Creates a query to select one row.
 
 #### Configuration
 
@@ -189,9 +189,9 @@ Creates a query to select one entity.
         column: 'value'
     }
     ```
-    will return only entity for which entity.column equal 'value'
+    will return only row for which row.column equal 'value'
 - sort:
-    Specify the column by which to filter the result (Additionally the result will always get sorted by the entity identifiers to avoid random order)
+    Specify the column by which to filter the result (Additionally the result will always get sorted by the row identifiers to avoid random order)
 - sortDir:
     Specify the sort direction, either 'ASC' or 'DESC'
 
@@ -242,7 +242,7 @@ updateOne({
 })(identifier, data);
 ```
 
-Creates a query to update one entity.
+Creates a query to update one row.
 
 #### Configuration
 
@@ -290,7 +290,7 @@ import removeOne  from 'co-postgres-queries/queries/removeOne';
 removeOne({ table, primaryKey, returnCols })(identitfier);
 ```
 
-Creates a query to delete one entity.
+Creates a query to delete one row.
 
 #### Configuration
 
@@ -309,7 +309,7 @@ import batchRemove  from 'co-postgres-queries/queries/batchRemove';
 batchRemove({ table, primaryKey, returnCols })(identifierList);
 ```
 
-Allow to create a query to delete several entity at once
+Allow to create a query to delete several row at once
 
 #### Configuration
 
@@ -330,10 +330,10 @@ upsertOne({
     primaryKey,
     writableCols,
     returnCols,
-})(entity)
+})(row)
 ```
 
-Creates a query to update one entity or create it if it does not already exists.
+Creates a query to update one row or create it if it does not already exists.
 
 #### Configuration
 
@@ -344,7 +344,7 @@ Creates a query to update one entity or create it if it does not already exists.
 
 #### Parameters
 
-- entity: the entity to upsert
+- row: the row to upsert
 
 ### batchUpsert
 
@@ -358,7 +358,7 @@ batchUpsert({
 })(rows)
 ```
 
-Creates a query to update a batch entity creating those that does not already exists.
+Creates a query to update a batch row creating those that does not already exists.
 
 #### Configuration
 
@@ -372,30 +372,28 @@ Creates a query to update a batch entity creating those that does not already ex
 
 - rows: array of rows to upsert
 
-### selectByOrderedColValues
+### selectByOrderedIdentifiers
 
 ```js
-import selectByOrderedColValues from 'co-postgres-queries/queries/selectByOrderedColValues';
-selectByOrderedColValues({
+import selectByOrderedIdentifiers from 'co-postgres-queries/queries/selectByOrderedIdentifiers';
+selectByOrderedIdentifiers({
     table,
-    filterCol,
+    primaryKey,
     returnCols,
 })(values);
 ```
 
-Creates a query to select an entity with primaryKey IN values and keep the ORDER of values.
+Creates a query to select multiple row given an array of identifier. The result will keep the order of the identifier. Due to the nature of the query, this will only work for primaryKey composed of a single column.
 
 #### Configuration
 
 - table: the name of the table in which to upsert
-- filterCol: the column of the table we want to use to select
+- primaryKey: primaryKey of the table (this will only work with primaryKey of a single column)
 - returnCols: the column to return in the result
 
 #### Parameters
 
 - values: array of identifier to retrieve. The array order will determine the result order.
-
-Careful, if several entity share the same value, their order is unpredictable.
 
 ### transaction helper
 
