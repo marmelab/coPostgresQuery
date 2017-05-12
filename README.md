@@ -10,7 +10,7 @@ Utility to generate and execute postgresql queries with ease.
 
 The library can be divided in two parts:
 
-1. `PgPool`, that allows to connect to the postgres database and execute query.
+1. [`PgPool`](###PgPool), that allows to connect to the postgres database and execute query.
 
 ```js
 import PgPool from 'co-postgres-queries';
@@ -32,7 +32,7 @@ pool.connect()
     });
 ```
 
-2. The query builders (insertOne, selectOne, etc..) that allow to generate sql, and the corresponding parameters.
+2. The [querybuilders](###query-builder) (insertOne, selectOne, etc..) that allow to generate sql, and the corresponding parameters.
 
 Each query builder takes the form:
 
@@ -65,13 +65,13 @@ insertOne({ name: 'doe', firstname: 'john', other: 'data' });
 }
 ```
 
-The result can then be directly passed to `client.query` to be executed.
+The result can then be directly passed to [`client.query`](####client.query) to be executed.
 
 ```js
 client.query(insertOne({ name: 'doe', firstname: 'john', other: 'data' }));
 ```
 
-There is also a crud helper function to generate basic crud queries for a given table:
+There is also a [`crud`](####crud) helper function to generate basic crud queries for a given table:
 
 ```js
 const userCrud = crud({
@@ -84,7 +84,7 @@ const userCrud = crud({
 
 This will configure query builders for `selectOne`, `select`, `insert`, `updateOne`, `deleteOne`, `countAll` and `batchInsert` in one literal.
 
-coPostGresQueries provides the `saga` command to execute the generated query as effect in a generator.
+coPostGresQueries provides the [`saga`](####client.saga) command to execute the generated query as effect in a generator.
 
 ```js
 function* subscribeUser(userId) {
