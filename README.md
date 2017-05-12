@@ -395,13 +395,17 @@ Careful, if several entity share the same value, their order is unpredictable.
 
 ### transaction helper
 
+```js
+import { begin, commit, savepoint, rollback } from 'co-postgres-queries/queries/transaction';
+```
+
 Simple helper to manage transaction
 You must retrieve a client with `pool.connect()` to use those.
 
 #### begin
 
 ```js
-import begin from 'co-postgres-queries/queries/begin';
+import begin from 'co-postgres-queries/queries/transaction/begin';
 begin();
 // { sql: 'BEGIN' }
 ```
@@ -411,7 +415,7 @@ create a query to start a transaction
 #### commit
 
 ```js
-import commit from 'co-postgres-queries/queries/commit';
+import commit from 'co-postgres-queries/queries/transaction/commit';
 commit();
 // { sql: 'COMMIT' }
 ```
@@ -421,7 +425,7 @@ create a query to commit a transaction
 #### savepoint
 
 ```js
-import savepoint from 'co-postgres-queries/queries/savepoint';
+import savepoint from 'co-postgres-queries/queries/transaction/savepoint';
 savepoint(name);
 // { sql: 'SAVEPOINT name' }
 ```
@@ -431,7 +435,7 @@ create a query to add a save point during transsaction
 #### rollback
 
 ```js
-import rollback from 'co-postgres-queries/queries/rollback';
+import rollback from 'co-postgres-queries/queries/transaction/rollback';
 rollback();
 // { sql: 'ROLLBACK' }
 // or
