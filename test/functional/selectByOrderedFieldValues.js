@@ -1,4 +1,4 @@
-import { selectByOrderedFieldValuesQuery } from '../../lib';
+import { selectByOrderedFieldValues as selectByOrderedFieldValuesQuery } from '../../lib';
 
 describe('functional selectByOrderedFieldValues', () => {
     let authors;

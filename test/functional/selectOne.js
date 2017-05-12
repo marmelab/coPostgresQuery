@@ -1,4 +1,4 @@
-import { selectOneQuery } from '../../lib';
+import { selectOne as selectOneQuery } from '../../lib';
 
 describe('functional selectOne', () => {
     let author;

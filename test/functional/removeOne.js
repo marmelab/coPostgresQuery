@@ -1,4 +1,4 @@
-import { removeOneQuery } from '../../lib';
+import { removeOne as removeOneQuery } from '../../lib';
 
 describe('removeOne', () => {
     let author;

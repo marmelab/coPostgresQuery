@@ -1,4 +1,4 @@
-import { crudQueries } from '../../lib';
+import { crud as crudQueries } from '../../lib';
 
 describe('crud', () => {
     let crud;
