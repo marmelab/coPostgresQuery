@@ -1,6 +1,6 @@
-import { selectByOrderedFieldValues as selectByOrderedFieldValuesQuery } from '../../lib';
+import { selectByOrderedIdentifiers } from '../../lib';
 
-describe('functional selectByOrderedFieldValues', () => {
+describe('functional selectByOrderedIdentifiers', () => {
     let authors;
 
     before(function* () {
@@ -12,11 +12,11 @@ describe('functional selectByOrderedFieldValues', () => {
         .map(fixtureLoader.addAuthor);
     });
 
-    it('should select entity by id once executed and keep order', function* () {
-        const selectByIds = db.link(selectByOrderedFieldValuesQuery({
+    it('should select row by id once executed and keep order', function* () {
+        const selectByIds = db.link(selectByOrderedIdentifiers({
             table: 'author',
-            selectorField: 'id',
-            returnFields: [
+            primaryKey: 'id',
+            returnCols: [
                 'id',
                 'name',
                 'firstname',
@@ -30,12 +30,12 @@ describe('functional selectByOrderedFieldValues', () => {
         assert.deepEqual(result2, [authors[1], authors[0]]);
     });
 
-    it('should select entity by name (same value for several entry) once executed and keep order',
+    it('should select row by name (same value for several entry) once executed and keep order',
     function* () {
-        const selectByIds = db.link(selectByOrderedFieldValuesQuery({
+        const selectByIds = db.link(selectByOrderedIdentifiers({
             table: 'author',
-            selectorField: 'name',
-            returnFields: [
+            primaryKey: 'name',
+            returnCols: [
                 'id',
                 'name',
                 'firstname',

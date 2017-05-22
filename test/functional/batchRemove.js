@@ -1,15 +1,15 @@
-import { batchRemove as batchRemoveQuery } from '../../lib/';
+import { batchRemove } from '../../lib/';
 
 describe('batchRemove', () => {
     let ids;
     let tags;
-    let batchRemove;
+    let dbBatchRemove;
 
     before(() => {
-        batchRemove = db.link(batchRemoveQuery({
+        dbBatchRemove = db.link(batchRemove({
             table: 'tag',
-            fields: ['id', 'name'],
-            idFields: 'id',
+            returnCols: ['id', 'name'],
+            primaryKey: 'id',
         }));
     });
 
@@ -22,8 +22,8 @@ describe('batchRemove', () => {
         ids = tags.map(tag => tag.id);
     });
 
-    it('should remove entities', function* () {
-        const result = yield batchRemove(ids.slice(1));
+    it('should remove rows', function* () {
+        const result = yield dbBatchRemove(ids.slice(1));
 
         assert.deepEqual(result, tags.slice(1));
 

@@ -6,10 +6,10 @@ describe('updateOne', () => {
         author = yield fixtureLoader.addAuthor({ name: 'john', firstname: 'doe' });
     });
 
-    it('should update entity returning all field by default', function* () {
+    it('should update row returning all column by default', function* () {
         const updateOne = db.link(updateOneQuery({
             table: 'author',
-            writableFields: ['name', 'firstname'],
+            writableCols: ['name', 'firstname'],
             primaryKey: ['name'],
         }));
         const result = yield updateOne({ name: author.name }, { firstname: 'jane' });

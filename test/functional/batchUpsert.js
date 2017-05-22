@@ -17,7 +17,7 @@ describe('batchUpsert', () => {
         batchUpsert = db.link(batchUpsertQuery({
             table: 'post',
             primaryKey: ['author', 'date'],
-            writableFields: ['title'],
+            writableCols: ['title'],
         }));
     });
 
@@ -30,7 +30,7 @@ describe('batchUpsert', () => {
         ].map(fixtureLoader.addPost);
     });
 
-    it('should update array of entities in a single request', function* () {
+    it('should update array of rows in a single request', function* () {
         const newPost = [
             { author: 'john', date: currentMonth, title: '1 vs 100' },
             { author: 'jane', date: lastMonth, title: '2 low' },
@@ -50,7 +50,7 @@ describe('batchUpsert', () => {
         ]);
     });
 
-    it('should create unexisting entities', function* () {
+    it('should create unexisting rows', function* () {
         const newPost = [
             { author: 'john', date: currentMonth, title: '1 vs 100' },
             { author: 'john', date: twoMonthAgo, title: '6 branched star' },

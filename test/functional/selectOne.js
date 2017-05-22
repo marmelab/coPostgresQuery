@@ -7,11 +7,11 @@ describe('functional selectOne', () => {
         author = yield fixtureLoader.addAuthor({});
     });
 
-    it('should select entity once executed', function* () {
+    it('should select row once executed', function* () {
         const selectOne = db.link(selectOneQuery({
             table: 'author',
-            idFields: ['id'],
-            returnFields: [
+            primaryKey: ['id'],
+            returnCols: [
                 'id',
                 'name',
                 'firstname',
@@ -26,8 +26,8 @@ describe('functional selectOne', () => {
     it('should return undefined if no author match once executed', function* () {
         const selectOne = db.link(selectOneQuery({
             table: 'author',
-            idFields: ['id'],
-            returnFields: [
+            primaryKey: ['id'],
+            returnCols: [
                 'name',
                 'firstname',
             ],
