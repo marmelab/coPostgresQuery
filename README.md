@@ -244,7 +244,7 @@ Closes the client. It will not return to the pool.
 
 #### client.saga
 
-Takes a generator yielding object queries (`{ sql, parameters }`), and return an async function that run the generator executing the yielded query.
+Takes a generator yielding object queries (`{ sql, parameters }`), and returns an async function that run the generator executing the yielded query.
 
 ```js
 function* getUserAndDoSomething(id) {
