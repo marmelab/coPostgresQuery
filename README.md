@@ -10,7 +10,7 @@ Utility to generate and execute postgresql queries with ease.
 
 The library can be divided in two parts:
 
-1. [`PgPool`](#), that allows to connect to the postgres database and execute queries.
+1. [`PgPool`](#pgpool), that allows to connect to the postgres database and execute queries.
 
 ```js
 import PgPool from 'co-postgres-queries';
