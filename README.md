@@ -240,7 +240,7 @@ Do not forget to call this when you are done.
 
 #### client.end
 
-Close the client. It will not return to the pool.
+Closes the client. It will not return to the pool.
 
 #### client.saga
 
