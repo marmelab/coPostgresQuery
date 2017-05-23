@@ -119,7 +119,7 @@ since the generator yield only query objects, it is easily testable.
 ### PgPool
 
 Extends [node-pg-pool](https://github.com/brianc/node-pg-pool)
-Allow to connect to postgresql and execute query
+Allows to connect to postgresql and execute query
 It adds:
 
 - Support for named parameters.
