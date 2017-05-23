@@ -32,7 +32,7 @@ pool.connect()
     });
 ```
 
-2. The [querybuilders](###query-builder) (insertOne, selectOne, etc..) that allow to generate sql, and the corresponding parameters.
+2. The [querybuilders](#query-builder) (insertOne, selectOne, etc..) that allow to generate sql, and the corresponding parameters.
 
 Each query builder takes the form:
 
