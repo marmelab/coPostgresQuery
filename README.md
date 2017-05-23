@@ -53,7 +53,10 @@ const insertOne = insertOne({
 ```
 
 On the second call it takes the query parameters and returns an object of the form `{ sql, parameters }`,
-with the sql containing named parameter, and parameters having been sanitized based on the configuration.
+
+- sql: the sql string that may contain named parameters
+- parameters: the sanitized named parameters and their values.
+
 For example:
 
 ```js
@@ -65,13 +68,13 @@ insertOne({ name: 'doe', firstname: 'john', other: 'data' });
 }
 ```
 
-The result can then be directly passed to [`client.query`](####client.query) to be executed.
+The result can then be directly passed to [`client.query`](#clientquery) to be executed.
 
 ```js
 client.query(insertOne({ name: 'doe', firstname: 'john', other: 'data' }));
 ```
 
-There is also a [`crud`](####crud) helper function to generate basic crud queries for a given table:
+There is also a [`crud`](#crud) helper function to generate basic crud queries for a given table:
 
 ```js
 const userCrud = crud({
@@ -84,7 +87,7 @@ const userCrud = crud({
 
 This will configure query builders for `selectOne`, `select`, `insert`, `updateOne`, `deleteOne`, `countAll` and `batchInsert` in one literal.
 
-coPostGresQueries provides the [`saga`](####client.saga) command to execute the generated query as effect in a generator.
+coPostGresQueries provides the [`saga`](#clientsaga) command to execute the generated query as effect in a generator.
 
 ```js
 function* subscribeUser(userId) {
@@ -125,8 +128,8 @@ It adds:
 - Support for named parameters.
 - query: Now return the list of results.
 - Added queryOne: Same as query but return only one result instead of an array.
-- Helper method ([begin, savepoint, rollback, commit][###client.begin, client.commit, client.savepoint, client.rollback]) to handle transactions on the client.
-- Helper method ([link][### client.link]) to link a query helper to the client or pool.
+- Helper method ([begin](#begin), [savepoint](#savepoint), [rollback](#rollback), [commit](#commit) to handle transactions on the client.
+- Helper method ([link][#clientlink]) to link a query helper to the client or pool.
 
 #### Creating a pool
 
