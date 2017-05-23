@@ -235,7 +235,7 @@ yield crud.insertOne({ col1: 'val1', col2: 'val2' });
 
 #### client.release
 
-Return the client to the pool, to be used again.
+Returns the client to the pool, to be used again.
 Do not forget to call this when you are done.
 
 #### client.end
