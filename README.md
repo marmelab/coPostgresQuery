@@ -112,7 +112,7 @@ function* subscribeUser(userId) {
 client.saga(getUserAndDoSomething(5)).then(...);
 ```
 
-since the generator yield only query Object, it is easily testable.
+since the generator yield only query objects, it is easily testable.
 
 ## Api
 
