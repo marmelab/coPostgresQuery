@@ -216,7 +216,7 @@ Transactions are not possible this way since the client would change on each que
 
 #### client.link
 
-Take a query or a literal of query and returns a function that takes the query parameter and executes it
+Takes a query or a literal of query and returns a function that Takess the query parameter and executes it
 
 ```js
 const query = insertOneQuery('table', ['col1', 'col2']);
