@@ -27,7 +27,7 @@
     "mocha": "3.4.2",
     "moment": "2.18.1"
   },
-  "dependencies": {
+  "peerDependencies": {
     "pg": "6.2.3"
   },
   "repository": {
