@@ -2,7 +2,7 @@
   "name": "co-postgres-queries",
   "version": "1.0.1",
   "description": "",
-  "main": "./index.js",
+  "main": "./build/index.js",
   "scripts": {
     "test": "node_modules/mocha/bin/mocha test/*.js test/**/*.js",
     "build": "make build"
