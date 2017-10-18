@@ -26,10 +26,10 @@
     "eslint-plugin-react": "7.0.1",
     "mocha": "3.4.2",
     "moment": "2.18.1",
-    "pg": "6.2.3"
+    "pg": "^6.2.3"
   },
   "peerDependencies": {
-    "pg": "6.2.3"
+    "pg": "^6.2.3"
   },
   "repository": {
     "type": "git",
