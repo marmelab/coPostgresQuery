@@ -504,20 +504,21 @@ A literal object with:
     }
     ```
     will return only row for which row.column equal 'value'
+    You can pass null as value, and coPostgresQueries, will automatically replace it with IS NULL
     the column name can be appended with the following modifier:
-        - not_: !=
+        - not_: != or `IS NOT NULL` if value is null
         - from_: cast to date and compare with >=
         - to_: cast to date and compare with <=
         - like_: ILIKE (match value with case insensitive)
 
-    It is also possible to mathc to all searchable column with match:
+    It is also possible to match to all searchable column with match:
 
     ```js
         {
             match: 'value',
         }
     ```
-    will return only row for which any serachableCols matching value (case insensitive).
+    will return only row for which any searchableCols matching value (case insensitive).
 
 - sort:
     Specify the column by which to filter the result (Additionally the result will always get sorted by the row identifiers to avoid random order)
