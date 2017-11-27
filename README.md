@@ -418,7 +418,7 @@ An array of literal objects in the form of:
 
 ```js
 import selectOne  from 'co-postgres-queries/queries/selectOne';
-selectOne({ table, primaryKey, returnCols })(row)
+selectOne({ table, primaryKey, returnCols, permanentFilters })(row)
 ```
 
 Creates a query to select one row.
@@ -428,6 +428,7 @@ Creates a query to select one row.
 - table: the table name
 - primaryKey: One or more columns representing the primary key. Accept either an array or a single value. (default: `id`)
 - returnCols: list of columns retrieved by the query
+- permanentFilters: List of filters applied by default, e. g. for a soft delete with permanentFilters as `{ deleted_at: null}`
 
 ##### Parameters
 
