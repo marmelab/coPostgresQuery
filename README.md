@@ -528,6 +528,20 @@ A literal object with:
 - sortDir:
     Specify the sort direction, either 'ASC' or 'DESC'
 
+#### countAll
+
+```js
+import countAll  from 'co-postgres-queries/queries/countAll';
+countAll({ table, permanentFilters })()
+```
+
+Creates a query to count all rows.
+
+##### Configuration
+
+- table: the table name
+- permanentFilters: List of filters applied by default, e. g. for a soft delete with permanentFilters as `{ deleted_at: null}`
+
 
 #### update
 
