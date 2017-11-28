@@ -456,6 +456,7 @@ select({
     specificSorts,
     groupByCols,
     withQuery,
+    permanentFilters,
     returnOne,
 })({ limit, offset, filters, sort, sortDir });
 ```
@@ -486,6 +487,7 @@ Creates a query to select one row.
     specify that we want to encompass the query in `WITH RESULT AS <query> SELECT * FROM result`
     This add a temporary result table that allow to sort on computed and joined column.
     if the table configuration contain a JOIN clause, this will be automatically set to true.
+- permanentFilters: List of filters applied by default, e. g. for a soft delete with permanentFilters as `{ deleted_at: null}`
 - returnOne: Optional, if set to true, returns only the first result instead of an array.
 
 ##### Parameters
