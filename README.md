@@ -756,6 +756,7 @@ crud({
     writableCols,
     primaryKey,
     returnCols,
+    permanentFilters,
 });
 ```
 
@@ -782,6 +783,7 @@ Creates configured queries for insertOne, batchInsert, selectOne, select, update
     specify that we want to encompass the query in `WITH RESULT AS <query> SELECT * FROM result`
     This add a temporary result table that allow to sort on computed and joined column.
     if the table configuration contain a JOIN clause, this will be automatically set to true.
+- permanentFilters: List of filters applied by default, e. g. for a soft delete with permanentFilters as `{ deleted_at: null}`
 
 #### transaction helper
 
