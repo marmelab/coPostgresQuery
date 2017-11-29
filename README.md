@@ -689,6 +689,7 @@ upsertOne({
     primaryKey,
     writableCols,
     returnCols,
+    permanentFilters,
 })(row)
 ```
 
@@ -700,6 +701,7 @@ Creates a query to update one row or create it if it does not already exists.
 - primaryKey: One or more columns representing the primary key. Accept either an array or a single value. (default: `id`)
 - writableCols: the column that can be updated
 - returnCols: the column to return in the result
+- permanentFilters: List of filters applied by default, e. g. for a soft delete with permanentFilters as `{ deleted_at: null}`
 
 ##### Parameters
 
