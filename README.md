@@ -552,6 +552,7 @@ update({
     writableCols,
     filterCols,
     returnCols,
+    permanentFilters,
 })(filters, data);
 ```
 
@@ -563,6 +564,7 @@ Creates a query to update rows.
 - writableCols: the columns that can be updated
 - filterCols: the columns that can be used to filter the updated rows
 - returnCols: the columns to be returned in the result
+- permanentFilters: List of filters applied by default, e. g. for a soft delete with permanentFilters as `{ deleted_at: null}`
 
 ##### Parameters
 
@@ -588,6 +590,7 @@ updateOne({
     writableCols,
     primaryKey,
     returnCols,
+    permanentFilters,
 })(identifier, data);
 ```
 
@@ -599,6 +602,7 @@ Creates a query to update one row.
 - writableCols: the columns that can be updated
 - primaryKey: One or more columns representing the primary key. Accept either an array or a single value. (default: `id`)
 - returnCols: the columns to be returned in the result
+- permanentFilters: List of filters applied by default, e. g. for a soft delete with permanentFilters as `{ deleted_at: null}`
 
 ##### Parameters
 
