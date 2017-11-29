@@ -660,7 +660,7 @@ The identifier: either a single value for a single primaryKey column, or a liter
 
 ```js
 import batchRemove  from 'co-postgres-queries/queries/batchRemove';
-batchRemove({ table, primaryKey, returnCols })(identifierList);
+batchRemove({ table, primaryKey, returnCols, permanentFilters })(identifierList);
 ```
 
 Allow to create a query to delete several row at once
@@ -670,6 +670,7 @@ Allow to create a query to delete several row at once
 - table: the table name
 - columns: list of columns to insert
 - primaryKey: One or more columns representing the primary key. Accept either an array or a single value. (default: `id`)
+- permanentFilters: List of filters applied by default, e. g. for a soft delete with permanentFilters as `{ deleted_at: null}`
 
 ##### Parameters
 
