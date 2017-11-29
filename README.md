@@ -716,6 +716,7 @@ batchUpsert({
     primaryKey,
     writableCols,
     returnCols,
+    permanentFilters,
 })(rows)
 ```
 
@@ -728,6 +729,7 @@ Creates a query to update a batch row creating those that does not already exist
 - writableCols: the column that can be updated
 - returnCols: the column to return in the result
 - columns: all the columns accepted by the query, default to selectorcolumns + writableCols (no reason to change that)
+- permanentFilters: List of filters applied by default, e. g. for a soft delete with permanentFilters as `{ deleted_at: null}`
 
 ##### Parameters
 
