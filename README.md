@@ -611,7 +611,7 @@ Two arguments:
 
 ```js
 import remove  from 'co-postgres-queries/queries/remove';
-remove({ table, filterCols, returnCols })(filters);
+remove({ table, filterCols, returnCols, permanentFilters })(filters);
 ```
 
 Creates a query to delete rows.
@@ -621,6 +621,7 @@ Creates a query to delete rows.
 - table: the table name
 - filterCols: the columns that can be used to filter the updated rows
 - returnCols: list of columns retrieved by the query
+- permanentFilters: List of filters applied by default, e. g. for a soft delete with permanentFilters as `{ deleted_at: null}`
 
 ##### Parameters
 
@@ -639,7 +640,7 @@ will update only row for which column equal 'value'
 
 ```js
 import removeOne  from 'co-postgres-queries/queries/removeOne';
-removeOne({ table, primaryKey, returnCols })(identitfier);
+removeOne({ table, primaryKey, returnCols, permanentFilters })(identitfier);
 ```
 
 Creates a query to delete one row.
@@ -649,6 +650,7 @@ Creates a query to delete one row.
 - table: the table name
 - primaryKey: One or more columns representing the primary key. Accept either an array or a single value. (default: `id`)
 - returnCols: list of columns retrieved by the query
+- permanentFilters: List of filters applied by default, e. g. for a soft delete with permanentFilters as `{ deleted_at: null}`
 
 ##### Parameters
 
