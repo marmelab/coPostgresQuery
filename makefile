@@ -18,7 +18,13 @@ build:
 test:
 	@docker-compose up -d db
 	@sleep 3s # Let the DB start
+	($(MAKE) test-start && $(MAKE) test-stop) || ($(MAKE) test-stop && exit 1)
+
+test-start:
 	@docker-compose run test
+
+test-stop:
+	@docker-compose down
 
 install:
 	docker-compose run --rm npm install

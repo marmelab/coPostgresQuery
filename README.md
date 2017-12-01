@@ -418,7 +418,7 @@ An array of literal objects in the form of:
 
 ```js
 import selectOne  from 'co-postgres-queries/queries/selectOne';
-selectOne({ table, primaryKey, returnCols })(row)
+selectOne({ table, primaryKey, returnCols, permanentFilters })(row)
 ```
 
 Creates a query to select one row.
@@ -428,6 +428,7 @@ Creates a query to select one row.
 - table: the table name
 - primaryKey: One or more columns representing the primary key. Accept either an array or a single value. (default: `id`)
 - returnCols: list of columns retrieved by the query
+- permanentFilters: List of filters applied by default, e. g. for a soft delete with permanentFilters as `{ deleted_at: null}`
 
 ##### Parameters
 
@@ -455,6 +456,7 @@ select({
     specificSorts,
     groupByCols,
     withQuery,
+    permanentFilters,
     returnOne,
 })({ limit, offset, filters, sort, sortDir });
 ```
@@ -485,6 +487,7 @@ Creates a query to select one row.
     specify that we want to encompass the query in `WITH RESULT AS <query> SELECT * FROM result`
     This add a temporary result table that allow to sort on computed and joined column.
     if the table configuration contain a JOIN clause, this will be automatically set to true.
+- permanentFilters: List of filters applied by default, e. g. for a soft delete with permanentFilters as `{ deleted_at: null}`
 - returnOne: Optional, if set to true, returns only the first result instead of an array.
 
 ##### Parameters
@@ -525,6 +528,20 @@ A literal object with:
 - sortDir:
     Specify the sort direction, either 'ASC' or 'DESC'
 
+#### countAll
+
+```js
+import countAll  from 'co-postgres-queries/queries/countAll';
+countAll({ table, permanentFilters })()
+```
+
+Creates a query to count all rows.
+
+##### Configuration
+
+- table: the table name
+- permanentFilters: List of filters applied by default, e. g. for a soft delete with permanentFilters as `{ deleted_at: null}`
+
 
 #### update
 
@@ -535,6 +552,7 @@ update({
     writableCols,
     filterCols,
     returnCols,
+    permanentFilters,
 })(filters, data);
 ```
 
@@ -546,6 +564,7 @@ Creates a query to update rows.
 - writableCols: the columns that can be updated
 - filterCols: the columns that can be used to filter the updated rows
 - returnCols: the columns to be returned in the result
+- permanentFilters: List of filters applied by default, e. g. for a soft delete with permanentFilters as `{ deleted_at: null}`
 
 ##### Parameters
 
@@ -571,6 +590,7 @@ updateOne({
     writableCols,
     primaryKey,
     returnCols,
+    permanentFilters,
 })(identifier, data);
 ```
 
@@ -582,6 +602,7 @@ Creates a query to update one row.
 - writableCols: the columns that can be updated
 - primaryKey: One or more columns representing the primary key. Accept either an array or a single value. (default: `id`)
 - returnCols: the columns to be returned in the result
+- permanentFilters: List of filters applied by default, e. g. for a soft delete with permanentFilters as `{ deleted_at: null}`
 
 ##### Parameters
 
@@ -594,7 +615,7 @@ Two arguments:
 
 ```js
 import remove  from 'co-postgres-queries/queries/remove';
-remove({ table, filterCols, returnCols })(filters);
+remove({ table, filterCols, returnCols, permanentFilters })(filters);
 ```
 
 Creates a query to delete rows.
@@ -604,6 +625,7 @@ Creates a query to delete rows.
 - table: the table name
 - filterCols: the columns that can be used to filter the updated rows
 - returnCols: list of columns retrieved by the query
+- permanentFilters: List of filters applied by default, e. g. for a soft delete with permanentFilters as `{ deleted_at: null}`
 
 ##### Parameters
 
@@ -622,7 +644,7 @@ will update only row for which column equal 'value'
 
 ```js
 import removeOne  from 'co-postgres-queries/queries/removeOne';
-removeOne({ table, primaryKey, returnCols })(identitfier);
+removeOne({ table, primaryKey, returnCols, permanentFilters })(identitfier);
 ```
 
 Creates a query to delete one row.
@@ -632,6 +654,7 @@ Creates a query to delete one row.
 - table: the table name
 - primaryKey: One or more columns representing the primary key. Accept either an array or a single value. (default: `id`)
 - returnCols: list of columns retrieved by the query
+- permanentFilters: List of filters applied by default, e. g. for a soft delete with permanentFilters as `{ deleted_at: null}`
 
 ##### Parameters
 
@@ -641,7 +664,7 @@ The identifier: either a single value for a single primaryKey column, or a liter
 
 ```js
 import batchRemove  from 'co-postgres-queries/queries/batchRemove';
-batchRemove({ table, primaryKey, returnCols })(identifierList);
+batchRemove({ table, primaryKey, returnCols, permanentFilters })(identifierList);
 ```
 
 Allow to create a query to delete several row at once
@@ -651,6 +674,7 @@ Allow to create a query to delete several row at once
 - table: the table name
 - columns: list of columns to insert
 - primaryKey: One or more columns representing the primary key. Accept either an array or a single value. (default: `id`)
+- permanentFilters: List of filters applied by default, e. g. for a soft delete with permanentFilters as `{ deleted_at: null}`
 
 ##### Parameters
 
@@ -665,6 +689,7 @@ upsertOne({
     primaryKey,
     writableCols,
     returnCols,
+    permanentFilters,
 })(row)
 ```
 
@@ -676,6 +701,7 @@ Creates a query to update one row or create it if it does not already exists.
 - primaryKey: One or more columns representing the primary key. Accept either an array or a single value. (default: `id`)
 - writableCols: the column that can be updated
 - returnCols: the column to return in the result
+- permanentFilters: List of filters applied by default, e. g. for a soft delete with permanentFilters as `{ deleted_at: null}`
 
 ##### Parameters
 
@@ -690,6 +716,7 @@ batchUpsert({
     primaryKey,
     writableCols,
     returnCols,
+    permanentFilters,
 })(rows)
 ```
 
@@ -702,6 +729,7 @@ Creates a query to update a batch row creating those that does not already exist
 - writableCols: the column that can be updated
 - returnCols: the column to return in the result
 - columns: all the columns accepted by the query, default to selectorcolumns + writableCols (no reason to change that)
+- permanentFilters: List of filters applied by default, e. g. for a soft delete with permanentFilters as `{ deleted_at: null}`
 
 ##### Parameters
 
@@ -739,6 +767,7 @@ crud({
     writableCols,
     primaryKey,
     returnCols,
+    permanentFilters,
 });
 ```
 
@@ -765,6 +794,7 @@ Creates configured queries for insertOne, batchInsert, selectOne, select, update
     specify that we want to encompass the query in `WITH RESULT AS <query> SELECT * FROM result`
     This add a temporary result table that allow to sort on computed and joined column.
     if the table configuration contain a JOIN clause, this will be automatically set to true.
+- permanentFilters: List of filters applied by default, e. g. for a soft delete with permanentFilters as `{ deleted_at: null}`
 
 #### transaction helper
 
