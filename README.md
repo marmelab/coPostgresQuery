@@ -513,6 +513,7 @@ A literal object with:
         - from_: cast to date and compare with >=
         - to_: cast to date and compare with <=
         - like_: ILIKE (match value with case insensitive)
+        - not_like_: NOT ILIKE (not match value with case insensitive)
 
     It is also possible to match to all searchable column with match:
 
