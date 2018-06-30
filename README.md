@@ -10,29 +10,32 @@ Utility to generate and execute postgresql queries with ease.
 
 The library can be divided in two parts:
 
-1. [`PgPool`](#pgpool), that allows to connect to the postgres database and execute queries.
+1.  [`PgPool`](#pgpool), that allows to connect to the postgres database and execute queries.
 
 ```js
-import PgPool from 'co-postgres-queries';
+import PgPool from "co-postgres-queries";
 const clientOptions = {
-    user,
-    password,
-    database,
-    host,
-    port
+  user,
+  password,
+  database,
+  host,
+  port
 };
 const pool = new PgPool(clientOptions);
 
-pool.connect()
-    .then((client) => {
-        return client.query('SELECT * from user WHERE firstname = $firstname', { firstname: 'john' });
-    })
-    .then(rows => {
-        // do something with all the user named john
+pool
+  .connect()
+  .then(client => {
+    return client.query("SELECT * from user WHERE firstname = $firstname", {
+      firstname: "john"
     });
+  })
+  .then(rows => {
+    // do something with all the user named john
+  });
 ```
 
-2. The [querybuilders](#query-builder) (insertOne, selectOne, etc..) that allows to generate sql, and the corresponding parameters.
+2.  The [querybuilders](#query-builder) (insertOne, selectOne, etc..) that allows to generate sql, and the corresponding parameters.
 
 Each query builder takes the form:
 
@@ -44,11 +47,11 @@ On the first call it receives its configuration, eg, the table name, column name
 For example:
 
 ```js
-import insertOne  from 'co-postgres-queries/queries/insertOne';
+import insertOne from "co-postgres-queries/queries/insertOne";
 const insertOne = insertOne({
-    table: 'user',
-    writableCols: ['name', 'firstname'],
-    returnCols: ['id', 'name', 'firstname'],
+  table: "user",
+  writableCols: ["name", "firstname"],
+  returnCols: ["id", "name", "firstname"]
 });
 ```
 
@@ -71,17 +74,17 @@ insertOne({ name: 'doe', firstname: 'john', other: 'data' });
 The result can then be directly passed to [`client.query`](#clientquery) to be executed.
 
 ```js
-client.query(insertOne({ name: 'doe', firstname: 'john', other: 'data' }));
+client.query(insertOne({ name: "doe", firstname: "john", other: "data" }));
 ```
 
 There is also a [`crud`](#crud) helper function to generate basic crud queries for a given table:
 
 ```js
 const userCrud = crud({
-    table: 'user',
-    primaryKey: 'id',
-    writableCols: ['name', 'firstname', 'mail'],
-    returnCols: ['id', 'name', 'firstname', 'mail'],
+  table: "user",
+  primaryKey: "id",
+  writableCols: ["name", "firstname", "mail"],
+  returnCols: ["id", "name", "firstname", "mail"]
 });
 ```
 
@@ -134,18 +137,18 @@ It adds:
 #### Creating a pool
 
 ```js
-import PgPool from 'co-postgres-queries';
+import PgPool from "co-postgres-queries";
 const clientOptions = {
-    user,
-    password,
-    database,
-    host,
-    port
+  user,
+  password,
+  database,
+  host,
+  port
 };
 const poolingOptions = {
-    max, // Max number of clients to create (defaults to 10)
-    idleTimeoutMillis // how long a client is allowed to remain idle before being closed (defaults to 30 000 ms)
-}
+  max, // Max number of clients to create (defaults to 10)
+  idleTimeoutMillis // how long a client is allowed to remain idle before being closed (defaults to 30 000 ms)
+};
 const pool = new PgPool(clientOptions, poolingOptions);
 ```
 
@@ -153,20 +156,20 @@ const pool = new PgPool(clientOptions, poolingOptions);
 
 ```js
 const pool = new pgPool();
-pool.connect().then((client) => {
-    // use the client
+pool.connect().then(client => {
+  // use the client
 });
 
 // async/await
 (async () => {
-    const pool = new pgPool();
-    const client = await pool.connect();
+  const pool = new pgPool();
+  const client = await pool.connect();
 })();
 
 // co
-co(function* () {
-    const pool = new pgPool();
-    const client = yield pool.connect();
+co(function*() {
+  const pool = new pgPool();
+  const client = yield pool.connect();
 });
 ```
 
@@ -180,25 +183,30 @@ Executes a query, it takes three parameters:
 
 ```js
 // query use named parameter
-client.query('SELECT $name::text as name', { name: 'world' }) // query return a promise
-.then((result) => {
+client
+  .query("SELECT $name::text as name", { name: "world" }) // query return a promise
+  .then(result => {
     // result contain directly the row
     console.log(`Hello ${result[0].name}`);
-});
+  });
 
 // It work with async/await
-(async() => {
-    const pool = new PgPool();
-    const result = await pool.query('SELECT $name::text as name', { name: 'world' });
+(async () => {
+  const pool = new PgPool();
+  const result = await pool.query("SELECT $name::text as name", {
+    name: "world"
+  });
 
-    console.log(`Hello ${result[0].name}`);
-})()
+  console.log(`Hello ${result[0].name}`);
+})();
 // Or with co
-co(function* () {
-    const pool = new PgPool();
-    const result = yield pool.query('SELECT $name::text as name', { name: 'world' });
+co(function*() {
+  const pool = new PgPool();
+  const result = yield pool.query("SELECT $name::text as name", {
+    name: "world"
+  });
 
-    console.log(`Hello ${result[0].name}`);
+  console.log(`Hello ${result[0].name}`);
 });
 ```
 
@@ -206,8 +214,8 @@ co(function* () {
 
 ```js
 pool.query({
-    sql: 'SELECT $name::text as name',
-    parameters: { name: 'world' },
+  sql: "SELECT $name::text as name",
+  parameters: { name: "world" }
 });
 ```
 
@@ -317,7 +325,9 @@ Since the generator yield plain objects, they can be easily tested without needi
 
 ```js
 const iterator = someQueryGenerator();
-const { value: { sql, parameters } } = iterator.next();
+const {
+  value: { sql, parameters }
+} = iterator.next();
 // we get the generated sql and parameters.
 
 iterator.next(queryResult); // we can pass what we want as result
@@ -337,11 +347,11 @@ On the first call it receives its configuration, eg, the table name, column name
 For example:
 
 ```js
-import insertOne  from 'co-postgres-queries/queries/insertOne';
+import insertOne from "co-postgres-queries/queries/insertOne";
 const insertOne = insertOne({
-    table: 'user',
-    writableCols: ['name', 'firstname'],
-    returnCols: ['id', 'name', 'firstname'],
+  table: "user",
+  writableCols: ["name", "firstname"],
+  returnCols: ["id", "name", "firstname"]
 });
 ```
 
@@ -363,8 +373,8 @@ The result can then be directly passed to `client.query` to be executed.
 #### insertOne
 
 ```js
-import insertOne  from 'co-postgres-queries/queries/insertOne';
-insertOne({ table, writableCols, returnCols })(row)
+import insertOne from "co-postgres-queries/queries/insertOne";
+insertOne({ table, writableCols, returnCols })(row);
 ```
 
 Returns a query to insert one given row.
@@ -389,7 +399,7 @@ A literal object in the form of:
 #### batchInsert(table, writableCols, returnCols)(rows)
 
 ```js
-import batchInsert from 'co-postgres-queries/queries/batchInsert';
+import batchInsert from "co-postgres-queries/queries/batchInsert";
 batchInsert(table, writableCols, returnCols)(rows);
 ```
 
@@ -417,8 +427,8 @@ An array of literal objects in the form of:
 #### selectOne
 
 ```js
-import selectOne  from 'co-postgres-queries/queries/selectOne';
-selectOne({ table, primaryKey, returnCols, permanentFilters })(row)
+import selectOne from "co-postgres-queries/queries/selectOne";
+selectOne({ table, primaryKey, returnCols, permanentFilters })(row);
 ```
 
 Creates a query to select one row.
@@ -447,17 +457,17 @@ Any key not present in primaryKey will be ignored.
 #### select
 
 ```js
-import select from 'co-postgres-queries/queries/select';
+import select from "co-postgres-queries/queries/select";
 select({
-    table,
-    primaryKey,
-    returnCols,
-    searchableCols,
-    specificSorts,
-    groupByCols,
-    withQuery,
-    permanentFilters,
-    returnOne,
+  table,
+  primaryKey,
+  returnCols,
+  searchableCols,
+  specificSorts,
+  groupByCols,
+  withQuery,
+  permanentFilters,
+  returnOne
 })({ limit, offset, filters, sort, sortDir });
 ```
 
@@ -466,27 +476,27 @@ Creates a query to select one row.
 ##### Configuration
 
 - table:
-    the table name, accept JOIN statements
+  the table name, accept JOIN statements
 - primaryKey: One or more columns representing the primary key. Accept either an array or a single value. (default: `id`)
 - returnCols:
-    list of columns retrieved by the query
+  list of columns retrieved by the query
 - searchableCols:
-    list of columns that can be searched (usable in filter parameter). Defaults to return columns
+  list of columns that can be searched (usable in filter parameter). Defaults to return columns
 - specificSorts:
-    allow to specify sort order for a given column. Useful when we want to order string other than by alphabetical order.
-    example:
-    ```js
-    {
-        level: ['master', 'expert', 'novice']
-    }
-    ```
-    will order level column with all master first, then expert and finally novice
+  allow to specify sort order for a given column. Useful when we want to order string other than by alphabetical order.
+  example:
+  ```js
+  {
+    level: ["master", "expert", "novice"];
+  }
+  ```
+  will order level column with all master first, then expert and finally novice
 - groupByCols
-    allow to add a GROUP BY clause to the query on the given columns
+  allow to add a GROUP BY clause to the query on the given columns
 - withQuery
-    specify that we want to encompass the query in `WITH RESULT AS <query> SELECT * FROM result`
-    This add a temporary result table that allow to sort on computed and joined column.
-    if the table configuration contain a JOIN clause, this will be automatically set to true.
+  specify that we want to encompass the query in `WITH RESULT AS <query> SELECT * FROM result`
+  This add a temporary result table that allow to sort on computed and joined column.
+  if the table configuration contain a JOIN clause, this will be automatically set to true.
 - permanentFilters: List of filters applied by default, e. g. for a soft delete with permanentFilters as `{ deleted_at: null}`
 - returnOne: Optional, if set to true, returns only the first result instead of an array.
 
@@ -495,65 +505,62 @@ Creates a query to select one row.
 A literal object with:
 
 - limit:
-    number of results to be returned
+  number of results to be returned
 - offset:
-    number of results to be ignored
+  number of results to be ignored
 - filters
-    literal specifying wanted value for given column
-    example:
-    ```js
-    {
-        column: 'value'
-    }
-    ```
-    will return only row for which row.column equal 'value'
-    You can pass null as value, and coPostgresQueries, will automatically replace it with IS NULL
-    the column name can be appended with the following modifier:
-        - not_: != or `IS NOT NULL` if value is null
-        - from_: cast to date and compare with >=
-        - to_: cast to date and compare with <=
-        - like_: ILIKE (match value with case insensitive)
-        - not_like_: NOT ILIKE (not match value with case insensitive)
+  literal specifying wanted value for given column
+  example:
 
-    It is also possible to match to all searchable column with match:
+  ```js
+  {
+    column: "value";
+  }
+  ```
 
-    ```js
-        {
-            match: 'value',
-        }
-    ```
-    will return only row for which any searchableCols matching value (case insensitive).
+  will return only row for which row.column equal 'value'
+  You can pass null as value, and coPostgresQueries, will automatically replace it with IS NULL
+  the column name can be appended with the following modifier: - not*: != or `IS NOT NULL` if value is null - from*: cast to date and compare with >= - to*: cast to date and compare with <= - like*: ILIKE (match value with case insensitive) - not*like*: NOT ILIKE (not match value with case insensitive)
+
+  It is also possible to match to all searchable column with match:
+
+  ```js
+      {
+          match: 'value',
+      }
+  ```
+
+  will return only row for which any searchableCols matching value (case insensitive).
 
 - sort:
-    Specify the column by which to filter the result (Additionally the result will always get sorted by the row identifiers to avoid random order)
+  Specify the column by which to filter the result (Additionally the result will always get sorted by the row identifiers to avoid random order)
 - sortDir:
-    Specify the sort direction, either 'ASC' or 'DESC'
+  Specify the sort direction, either 'ASC' or 'DESC'
 
 #### countAll
 
 ```js
-import countAll  from 'co-postgres-queries/queries/countAll';
-countAll({ table, permanentFilters })()
+import countAll from "co-postgres-queries/queries/countAll";
+countAll({ table, permanentFilters })({ filters: { enabled: true } });
 ```
 
-Creates a query to count all rows.
+Create a query to count all rows. It also takes an optional plain object parameter `filters`, applied to the query in addition to the `permanentFilters`.
 
 ##### Configuration
 
 - table: the table name
 - permanentFilters: List of filters applied by default, e. g. for a soft delete with permanentFilters as `{ deleted_at: null}`
 
-
 #### update
 
 ```js
-import update  from 'co-postgres-queries/queries/update';
+import update from "co-postgres-queries/queries/update";
 update({
-    table,
-    writableCols,
-    filterCols,
-    returnCols,
-    permanentFilters,
+  table,
+  writableCols,
+  filterCols,
+  returnCols,
+  permanentFilters
 })(filters, data);
 ```
 
@@ -572,26 +579,26 @@ Creates a query to update rows.
 Two arguments:
 
 - filters:
-    literal specifying wanted value for given column
-    example:
-    ```js
-    {
-        column: 'value'
-    }
-    ```
-    will update only row for which column equal 'value'
+  literal specifying wanted value for given column
+  example:
+  ```js
+  {
+    column: "value";
+  }
+  ```
+  will update only row for which column equal 'value'
 - data: a literal specifying the new values
 
 #### updateOne
 
 ```js
-import updateOne  from 'co-postgres-queries/queries/updateOne';
+import updateOne from "co-postgres-queries/queries/updateOne";
 updateOne({
-    table,
-    writableCols,
-    primaryKey,
-    returnCols,
-    permanentFilters,
+  table,
+  writableCols,
+  primaryKey,
+  returnCols,
+  permanentFilters
 })(identifier, data);
 ```
 
@@ -615,7 +622,7 @@ Two arguments:
 #### remove
 
 ```js
-import remove  from 'co-postgres-queries/queries/remove';
+import remove from "co-postgres-queries/queries/remove";
 remove({ table, filterCols, returnCols, permanentFilters })(filters);
 ```
 
@@ -635,7 +642,7 @@ example:
 
 ```js
 {
-    column: 'value'
+  column: "value";
 }
 ```
 
@@ -644,7 +651,7 @@ will update only row for which column equal 'value'
 #### removeOne
 
 ```js
-import removeOne  from 'co-postgres-queries/queries/removeOne';
+import removeOne from "co-postgres-queries/queries/removeOne";
 removeOne({ table, primaryKey, returnCols, permanentFilters })(identitfier);
 ```
 
@@ -664,8 +671,10 @@ The identifier: either a single value for a single primaryKey column, or a liter
 #### batchRemove
 
 ```js
-import batchRemove  from 'co-postgres-queries/queries/batchRemove';
-batchRemove({ table, primaryKey, returnCols, permanentFilters })(identifierList);
+import batchRemove from "co-postgres-queries/queries/batchRemove";
+batchRemove({ table, primaryKey, returnCols, permanentFilters })(
+  identifierList
+);
 ```
 
 Allow to create a query to delete several row at once
@@ -684,14 +693,14 @@ The list of identifier either an array of single value for a single primaryKey c
 #### upsertOne
 
 ```js
-import upsertOne  from 'co-postgres-queries/queries/upsertOne';
+import upsertOne from "co-postgres-queries/queries/upsertOne";
 upsertOne({
-    table,
-    primaryKey,
-    writableCols,
-    returnCols,
-    permanentFilters,
-})(row)
+  table,
+  primaryKey,
+  writableCols,
+  returnCols,
+  permanentFilters
+})(row);
 ```
 
 Creates a query to update one row or create it if it does not already exists.
@@ -711,14 +720,14 @@ the row to upsert
 #### batchUpsert
 
 ```js
-import batchUpsert  from 'co-postgres-queries/queries/batchUpsert';
+import batchUpsert from "co-postgres-queries/queries/batchUpsert";
 batchUpsert({
-    table,
-    primaryKey,
-    writableCols,
-    returnCols,
-    permanentFilters,
-})(rows)
+  table,
+  primaryKey,
+  writableCols,
+  returnCols,
+  permanentFilters
+})(rows);
 ```
 
 Creates a query to update a batch row creating those that does not already exists.
@@ -739,11 +748,11 @@ The array of rows to upsert
 #### selectByOrderedIdentifiers
 
 ```js
-import selectByOrderedIdentifiers from 'co-postgres-queries/queries/selectByOrderedIdentifiers';
+import selectByOrderedIdentifiers from "co-postgres-queries/queries/selectByOrderedIdentifiers";
 selectByOrderedIdentifiers({
-    table,
-    primaryKey,
-    returnCols,
+  table,
+  primaryKey,
+  returnCols
 })(values);
 ```
 
@@ -762,13 +771,13 @@ The array of identifier to retrieve. The array order will determine the result o
 #### crud
 
 ```js
-import crud  from 'co-postgres-queries/queries/crud';
+import crud from "co-postgres-queries/queries/crud";
 crud({
-    table,
-    writableCols,
-    primaryKey,
-    returnCols,
-    permanentFilters,
+  table,
+  writableCols,
+  primaryKey,
+  returnCols,
+  permanentFilters
 });
 ```
 
@@ -782,25 +791,30 @@ Creates configured queries for insertOne, batchInsert, selectOne, select, update
 - returnCols: the list of columns we want returned as result.
 - searchableCols: the columns that can be searched (usable in filter parameter). Defaults to return columns
 - specificSorts:
-    allow to specify sort order for a given column. Useful when we want to order string other than by alphabetical order.
-    example:
-    ```js
-    {
-        level: ['master', 'expert', 'novice']
-    }
-    ```
-    will order level column with all master first, then expert and finally novice
+  allow to specify sort order for a given column. Useful when we want to order string other than by alphabetical order.
+  example:
+  ```js
+  {
+    level: ["master", "expert", "novice"];
+  }
+  ```
+  will order level column with all master first, then expert and finally novice
 - groupByCols: allow to add a GROUP BY clause to the query on the given columns
 - withQuery:
-    specify that we want to encompass the query in `WITH RESULT AS <query> SELECT * FROM result`
-    This add a temporary result table that allow to sort on computed and joined column.
-    if the table configuration contain a JOIN clause, this will be automatically set to true.
+  specify that we want to encompass the query in `WITH RESULT AS <query> SELECT * FROM result`
+  This add a temporary result table that allow to sort on computed and joined column.
+  if the table configuration contain a JOIN clause, this will be automatically set to true.
 - permanentFilters: List of filters applied by default, e. g. for a soft delete with permanentFilters as `{ deleted_at: null}`
 
 #### transaction helper
 
 ```js
-import { begin, commit, savepoint, rollback } from 'co-postgres-queries/queries/transaction';
+import {
+  begin,
+  commit,
+  savepoint,
+  rollback
+} from "co-postgres-queries/queries/transaction";
 ```
 
 Simple helper to manage transaction
@@ -809,7 +823,7 @@ You must retrieve a client with `pool.connect()` to use those.
 ##### begin
 
 ```js
-import begin from 'co-postgres-queries/queries/transaction/begin';
+import begin from "co-postgres-queries/queries/transaction/begin";
 begin();
 // { sql: 'BEGIN' }
 ```
@@ -819,7 +833,7 @@ create a query to start a transaction
 ##### commit
 
 ```js
-import commit from 'co-postgres-queries/queries/transaction/commit';
+import commit from "co-postgres-queries/queries/transaction/commit";
 commit();
 // { sql: 'COMMIT' }
 ```
@@ -829,7 +843,7 @@ create a query to commit a transaction
 ##### savepoint
 
 ```js
-import savepoint from 'co-postgres-queries/queries/transaction/savepoint';
+import savepoint from "co-postgres-queries/queries/transaction/savepoint";
 savepoint(name);
 // { sql: 'SAVEPOINT name' }
 ```
@@ -839,7 +853,7 @@ create a query to add a save point during transsaction
 ##### rollback
 
 ```js
-import rollback from 'co-postgres-queries/queries/transaction/rollback';
+import rollback from "co-postgres-queries/queries/transaction/rollback";
 rollback();
 // { sql: 'ROLLBACK' }
 // or
