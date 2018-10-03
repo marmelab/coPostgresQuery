@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "configurable.js": "1.0.0",
-    "pg": "6.1.0"
+    "pg": "6.4.2"
   },
   "repository": {
     "type": "git",
