@@ -532,7 +532,7 @@ Other SQL matching operators may be used by specifying some prefixes to the colu
 ```js
 {
     not_first_name: "John",           // first_name != "John"
-    not_last_paid_at: null,           // not_last_paid IS NOT NULL
+    not_last_paid_at: null,           // last_paid_at IS NOT NULL
     from_last_paid_at: '2010-01-01',  // last_paid_at >= '2010-01-01' 
     to_last_paid_at: '3010-01-01',    // last_paid_at <= '3010-01-01'
     like_position: 'Sales',           // position ILIKE '%Sales%'
