@@ -504,31 +504,49 @@ Creates a query to select one row.
 
 A literal object with:
 
-- limit:
-  number of results to be returned
-- offset:
-  number of results to be ignored
-- filters
-  literal specifying wanted value for given column
-  example:
+* **limit:** number of results to be returned
+* **offset:** number of results to be ignored
+* **filters:** a object taking as keys the column to filter on and as values the filter values
 
-  ```js
-  {
-    column: "value";
-  }
-  ```
+For instance, specifying the following **filters** value:
 
-  will return only row for which row.column equal 'value'
-  You can pass null as value, and coPostgresQueries, will automatically replace it with IS NULL
-  the column name can be appended with the following modifier: - not*: != or `IS NOT NULL` if value is null - from*: cast to date and compare with >= - to*: cast to date and compare with <= - like*: ILIKE (match value with case insensitive) - not*like*: NOT ILIKE (not match value with case insensitive)
+```js
+{
+    first_name: "John",
+    last_name: "Doe",
+    last_paid_at: null,
+}
+```
 
-  It is also possible to match to all searchable column with match:
+Will produce the following `WHERE` clause:
 
-  ```js
-      {
-          match: 'value',
-      }
-  ```
+```sql
+WHERE
+    first_name = 'John'
+    AND last_name = 'Doe'
+    AND last_paid_at IS NULL
+```
+
+Other SQL matching operators may be used by specifying some prefixes to the column names. For instance:
+
+```js
+{
+    not_first_name: "John",           // first_name != "John"
+    not_last_paid_at: null,           // last_paid_at IS NOT NULL
+    from_last_paid_at: '2010-01-01',  // last_paid_at >= '2010-01-01' 
+    to_last_paid_at: '3010-01-01',    // last_paid_at <= '3010-01-01'
+    like_position: 'Sales',           // position ILIKE '%Sales%'
+    not_like_position: 'Manager'      // position NOT ILIKE '%Manager%'
+}
+```
+
+It is also possible to match to all searchable column with match:
+
+```js
+{
+    match: 'value',
+}
+```
 
   will return only row for which any searchableCols matching value (case insensitive).
 
