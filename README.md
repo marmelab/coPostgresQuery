@@ -476,7 +476,14 @@ Creates a query to select one row.
 ##### Configuration
 
 - table:
-  the table name, accept JOIN statements
+  the table name, accept JOIN statements    
+  exemple:
+  
+  ```js
+  {
+    table: 'table1 JOIN table2 ON table1.table2_id = table2.id'
+  }
+  ```
 - primaryKey: One or more columns representing the primary key. Accept either an array or a single value. (default: `id`)
 - returnCols:
   list of columns retrieved by the query
