@@ -1,3 +1,4 @@
+sudo: required
 language: node_js
 
 node_js:
@@ -10,12 +11,21 @@ services:
   - postgresql
 
 addons:
-  postgresql: "9.5"
+  postgresql: "9.6"
 
 env:
   global:
     - PGUSER=postgres
     - PGHOST=localhost
+  matrix:
+    - POSTGRESQL_VERSION=9.5
+    - POSTGRESQL_VERSION=9.6
+    - POSTGRESQL_VERSION=10
+    - POSTGRESQL_VERSION=11
+
+
+before_install:
+  - bash test/install-postgres-on-travis.sh
 
 before_script:
   - psql -c 'CREATE DATABASE travis_db;'
