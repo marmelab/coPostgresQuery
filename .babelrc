@@ -1,13 +1,22 @@
 {
     "presets": [
-        ["env", {
-            "targets": {
-                "node": "current"
-            },
-            "include": ["transform-es2015-spread"],
-            "useBuiltIns": true
-        }]
+        [
+            "env",
+            {
+                "targets": {
+                    "node": "6"
+                },
+                "include": [
+                    "transform-es2015-spread"
+                ],
+                "useBuiltIns": true
+            }
+        ]
     ],
-    "plugins": ["transform-object-rest-spread"],
-    "ignore": ["./node_modules"]
+    "plugins": [
+        "transform-object-rest-spread"
+    ],
+    "ignore": [
+        "./node_modules"
+    ]
 }

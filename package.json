@@ -17,12 +17,12 @@
         "url": "https://github.com/marmelab/coPostgresQuery/issues"
     },
     "devDependencies": {
-        "babel-cli": "6.24.1",
-        "babel-eslint": "7.2.3",
-        "babel-plugin-transform-object-rest-spread": "6.23.0",
-        "babel-polyfill": "6.23.0",
-        "babel-preset-env": "1.5.2",
-        "babel-register": "6.24.1",
+        "babel-cli": "~6.26.0",
+        "babel-eslint": "~10.0.1",
+        "babel-plugin-transform-object-rest-spread": "~6.26.0",
+        "babel-polyfill": "~6.26.0",
+        "babel-preset-env": "~1.7.0",
+        "babel-register": "~6.26.0",
         "chai": "4.0.2",
         "co-mocha": "1.2.0",
         "eslint": "~5.9.0",
