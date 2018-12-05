@@ -7,9 +7,9 @@ before(function* () {
     global.assert = assert;
 
     global.pgPool = new PgPool({
-        user: 'postgres',
-        database: 'postgres',
-        host: 'db',
+        user: process.env.PGUSER,
+        database: process.env.PGPASSWORD,
+        host: process.env.PGHOST,
     }, {
         max: 30,
         idleTimeoutMillis: 30000,

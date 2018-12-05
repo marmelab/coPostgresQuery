@@ -1,11 +1,30 @@
-sudo: required
-services:
-  - docker
 language: node_js
+
 node_js:
-  - "6"
-script:
-  - make test
+  - "6"     # legacy
+  - "8"     # maintenance
+  - "lts/*" # LTS
+  - "node"  # latest
+
+services:
+  - postgresql
+
+addons:
+  postgresql: "9.5"
+
+env:
+  global:
+    - PGUSER=postgres
+    - PGHOST=localhost
+
+before_script:
+  - psql -c 'CREATE DATABASE travis_db;'
+  - export PGDATABASE=travis_db
+
 cache:
   directories:
   - node_modules
+
+branches:
+  only:
+    - master

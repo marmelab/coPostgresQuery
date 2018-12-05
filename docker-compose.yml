@@ -19,9 +19,14 @@ test:
   volumes:
     - .:/app
   working_dir: /app
-  command: node_modules/mocha/bin/mocha "test/setup.js" "test/**/*.js" "./lib/**/*.spec.js"
+  command: npm run test
   links:
     - db
+  environment:
+    - PGHOST=db
+    - PGDATABASE=postgres
+    - PGUSER=postgres
+    - PGPASSWORD=postgres
 
 db:
   image: postgres:9.5

@@ -1,38 +1,45 @@
 {
-  "name": "co-postgres-queries",
-  "version": "1.2.2",
-  "description": "",
-  "main": "./index.js",
-  "scripts": {
-    "test": "node_modules/mocha/bin/mocha test/*.js test/**/*.js",
-    "build": "make build"
-  },
-  "author": "",
-  "license": "MIT",
-  "devDependencies": {
-    "babel-cli": "6.24.1",
-    "babel-eslint": "7.2.3",
-    "babel-plugin-transform-object-rest-spread": "6.23.0",
-    "babel-polyfill": "6.23.0",
-    "babel-preset-env": "1.5.2",
-    "babel-register": "6.24.1",
-    "chai": "4.0.2",
-    "co-mocha": "1.2.0",
-    "eslint": "3.19.0",
-    "eslint-config-airbnb": "15.0.1",
-    "eslint-plugin-import": "2.3.0",
-    "eslint-plugin-jsx-a11y": "5.0.3",
-    "eslint-plugin-mocha": "4.9.0",
-    "eslint-plugin-react": "7.0.1",
-    "mocha": "3.4.2",
-    "moment": "2.18.1",
-    "pg": "^6.2.3"
-  },
-  "peerDependencies": {
-    "pg": "^6.2.3"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/marmelab/coPostgresQuery.git"
-  }
+    "name": "co-postgres-queries",
+    "version": "1.2.2",
+    "description": "Query builder for PostgreSQL in Node.js, built for async",
+    "main": "./index.js",
+    "scripts": {
+        "test": "mocha 'test/setup.js' 'test/**/*.js' './lib/**/*.spec.js'",
+        "build": "make build"
+    },
+    "engines": {
+        "node": ">=6"
+    },
+    "author": "Thiery Michel <thiery@marmelab.com>",
+    "license": "MIT",
+    "homepage": "https://github.com/marmelab/coPostgresQuery",
+    "bugs": {
+        "url": "https://github.com/marmelab/coPostgresQuery/issues"
+    },
+    "devDependencies": {
+        "babel-cli": "6.24.1",
+        "babel-eslint": "7.2.3",
+        "babel-plugin-transform-object-rest-spread": "6.23.0",
+        "babel-polyfill": "6.23.0",
+        "babel-preset-env": "1.5.2",
+        "babel-register": "6.24.1",
+        "chai": "4.0.2",
+        "co-mocha": "1.2.0",
+        "eslint": "3.19.0",
+        "eslint-config-airbnb": "15.0.1",
+        "eslint-plugin-import": "2.3.0",
+        "eslint-plugin-jsx-a11y": "5.0.3",
+        "eslint-plugin-mocha": "4.9.0",
+        "eslint-plugin-react": "7.0.1",
+        "mocha": "3.4.2",
+        "moment": "2.18.1",
+        "pg": "^6.2.3"
+    },
+    "peerDependencies": {
+        "pg": "^6.2.3"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/marmelab/coPostgresQuery.git"
+    }
 }
