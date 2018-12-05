@@ -4,7 +4,7 @@
     "description": "Query builder for PostgreSQL in Node.js, built for async",
     "main": "./index.js",
     "scripts": {
-        "test": "mocha 'test/setup.js' 'test/**/*.js' './lib/**/*.spec.js'",
+        "test": "mocha --exit 'test/setup.js' 'test/**/*.js' './lib/**/*.spec.js'",
         "build": "make build"
     },
     "engines": {
