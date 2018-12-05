@@ -1,5 +1,6 @@
 node:
   image: mhart/alpine-node:6.5.0
+  user: "${UID}:${GID}"
   volumes:
     - .:/app
   working_dir: /app
