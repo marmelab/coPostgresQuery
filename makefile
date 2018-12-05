@@ -16,11 +16,13 @@ build:
 	cp README.md ./build/README.md
 
 test:
-	@docker-compose up -d db
-	@sleep 3s # Let the DB start
 	($(MAKE) test-start && $(MAKE) test-stop) || ($(MAKE) test-stop && exit 1)
 
-test-start:
+start-db:
+	@docker-compose up -d db
+	@sleep 3s # Let the DB start
+
+test-start: start-db
 	@docker-compose run test
 
 test-stop:
