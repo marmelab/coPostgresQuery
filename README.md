@@ -1,6 +1,15 @@
+> :warning: **Deprecated**
+>
+> This library is deprecated as we progressively move to [marmelab/postgres-queries](https://github.com/marmelab/postgres-queries).
+> Use at your own risk and expect no update unless a security issue threaten legacy applications.
+
 # coPostgresQueries
 
 Utility to generate and execute postgresql queries with ease.
+
+**Requirements**
+- Node.js >= 6
+- PostgreSQL >= 9.5
 
 ## Install
 
@@ -478,7 +487,7 @@ Creates a query to select one row.
 - table:
   the table name, accept JOIN statements    
   exemple:
-  
+
   ```js
   {
     table: 'table1 JOIN table2 ON table1.table2_id = table2.id'
@@ -540,7 +549,7 @@ Other SQL matching operators may be used by specifying some prefixes to the colu
 {
     not_first_name: "John",           // first_name != "John"
     not_last_paid_at: null,           // last_paid_at IS NOT NULL
-    from_last_paid_at: '2010-01-01',  // last_paid_at >= '2010-01-01' 
+    from_last_paid_at: '2010-01-01',  // last_paid_at >= '2010-01-01'
     to_last_paid_at: '3010-01-01',    // last_paid_at <= '3010-01-01'
     like_position: 'Sales',           // position ILIKE '%Sales%'
     not_like_position: 'Manager'      // position NOT ILIKE '%Manager%'
