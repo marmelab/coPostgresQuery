@@ -2,7 +2,7 @@
     "name": "co-postgres-queries",
     "version": "1.2.3",
     "description": "Query builder for PostgreSQL in Node.js, built for async",
-    "main": "./index.js",
+    "main": "./build/index.js",
     "scripts": {
         "test": "mocha --exit 'test/setup.js' 'test/**/*.js' './lib/**/*.spec.js'",
         "build": "make build"
