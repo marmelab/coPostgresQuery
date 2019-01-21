@@ -1,6 +1,6 @@
 {
     "name": "co-postgres-queries",
-    "version": "1.2.3",
+    "version": "1.2.4",
     "description": "Query builder for PostgreSQL in Node.js, built for async",
     "main": "./build/index.js",
     "scripts": {
